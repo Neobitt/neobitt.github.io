@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DPCCrea</title>
+    <title>DPCCrea - Creadores</title>
     <style>
         /* === ESTILOS HACKER ÉPICOS === */
         :root {
@@ -155,7 +155,7 @@
             opacity: 0.3;
         }
         
-        /* === MENÚ HAMBURGUESA REDISEÑADO === */
+        /* === MENÚ HAMBURGUESA === */
         .hamburger {
             position: fixed;
             top: 25px;
@@ -293,57 +293,142 @@
             50% { transform: translate(2px, -2px); }
         }
         
-        /* === CONTENIDO PRINCIPAL === */
-        header {
-            background: #000;
-            padding: 6rem 0;
+        /* === CARRUSEL CREADORES === */
+        .creators {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
             text-align: center;
-            border-bottom: 4px solid var(--hacker-cyan);
         }
         
-        h1 {
-            font-size: 4.5rem;
+        .creators h2 {
+            font-size: 3rem;
             color: var(--hacker-green);
-            text-shadow: 0 0 25px var(--hacker-cyan);
-            letter-spacing: 5px;
+            text-shadow: 0 0 20px var(--hacker-cyan);
+            margin-bottom: 40px;
             animation: glitch 1.5s linear infinite;
         }
         
-        /* Galería (4 columnas) */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            padding: 40px;
-            max-width: 1500px;
-            margin: 0 auto;
-        }
-        
-        .gallery-item {
-            border: 4px solid var(--hacker-green);
-            border-radius: 15px;
-            overflow: hidden;
-            aspect-ratio: 1/1;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 0 15px rgba(0, 247, 255, 0.2);
+        .carousel {
             position: relative;
-            cursor: pointer;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
         }
         
-        .gallery-item:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 30px var(--hacker-cyan);
-        }
-        
-        .gallery img {
+        .carousel-inner {
+            display: flex;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.5s ease-in-out;
         }
         
-        .gallery-item:hover img {
+        .creator-card {
+            flex: 0 0 100%;
+            border: 3px solid var(--hacker-green);
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 15px rgba(0, 247, 255, 0.2);
+            text-align: center;
+            position: relative;
+        }
+        
+        .creator-card.ex-creator {
+            border-color: #ff0000;
+            opacity: 0.7;
+            filter: grayscale(50%);
+        }
+        
+        .creator-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 2px solid var(--hacker-cyan);
+            border-radius: 50%;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--hacker-cyan);
+            transition: transform 0.3s ease;
+        }
+        
+        .creator-card img:hover {
             transform: scale(1.05);
+            animation: glitch 0.5s linear infinite;
+        }
+        
+        .creator-card h3 {
+            color: var(--hacker-cyan);
+            font-size: 2rem;
+            text-shadow: 0 0 10px var(--hacker-cyan);
+            margin-bottom: 15px;
+        }
+        
+        .creator-card p.role {
+            color: var(--hacker-green);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .creator-card p.description {
+            color: #fff;
+            font-size: 1.2rem;
+            line-height: 1.4;
+        }
+        
+        .creator-card.ex-creator h3,
+        .creator-card.ex-creator p.role {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        
+        .creator-card.ex-creator img {
+            border-color: #ff0000;
+            box-shadow: 0 0 15px #ff0000;
+        }
+        
+        .creator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--hacker-cyan), transparent);
+            animation: scan-card 2s linear infinite;
+        }
+        
+        @keyframes scan-card {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: #111;
+            border: 2px solid var(--hacker-green);
+            color: var(--hacker-cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--hacker-cyan);
+        }
+        
+        .carousel-btn:hover {
+            background: var(--hacker-cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--hacker-cyan);
+        }
+        
+        .carousel-btn.prev {
+            left: 10px;
+        }
+        
+        .carousel-btn.next {
+            right: 10px;
         }
     </style>
 </head>
@@ -384,33 +469,65 @@
     <nav id="navMenu">
         <img src="assets/imagenes/logo.png" alt="DPCCrea Logo" class="logo">
         <ul>
-            <li><a href="#inicio">INICIO</a></li>
-            <li><a href="#catalogo">CATÁLOGO PRO</a></li>
-            <li><a href="cretor.html">CREADORES</a></li>
-            <li><a href="cretor.html">MODO DIOS</a></li>
+            <li><a href="index.html">INICIO</a></li>
+            <li><a href="index.html#catalogo">CATÁLOGO PRO</a></li>
+            <li><a href="creators.html">CREADORES</a></li>
+            <li><a href="#secret">MODO DIOS</a></li>
         </ul>
     </nav>
     
-    <!-- === CONTENIDO PRINCIPAL === -->
-    <header id="inicio">
-        <h1>DPCCrea</h1>
-        <p style="margin-top: 1rem; color: var(--hacker-cyan); font-size: 1.5rem;">// DISEÑADO POR L_Adriano //</p>
-    </header>
-    
-    <div class="gallery" id="catalogo">
-        <div class="gallery-item" onclick="window.location.href='Mediación.html'">
-            <img src="assets/imagenes/1.jpg" alt="Diseño Épico 1">
+    <!-- === CARRUSEL CREADORES === -->
+    <section class="creators">
+        <h2>// CREADORES //</h2>
+        <div class="carousel">
+            <div class="carousel-inner" id="carouselInner">
+                <div class="creator-card">
+                    <img src="assets/creators/creator1.gif" alt="CyberSmith">
+                    <h3>Mathias</h3>
+                    <p class="role">Líder</p>
+                    <p class="description">Creador de interfaces que desafían la realidad.</p>
+                </div>
+                <div class="creator-card">
+                    <img src="assets/creators/creator2.gif" alt="NeonCrafter">
+                    <h3>Edwin</h3>
+                    <p class="role">Hacker Gráfico</p>
+                    <p class="description">Transforma píxeles en arte ciberpunk.</p>
+                </div>
+                <div class="creator-card">
+                    <img src="assets/creators/creator3.gif" alt="CodeNinja">
+                    <h3>Diaz</h3>
+                    <p class="role">Desarrollador Principal</p>
+                    <p class="description">Escribe código que rompe las reglas.</p>
+                </div>
+                <div class="creator-card">
+                    <img src="assets/creators/creator4.gif" alt="PixelPhantom">
+                    <h3>Chapoñan</h3>
+                    <p class="role">Artista Visual</p>
+                    <p class="description">Crea visiones que iluminan la oscuridad.</p>
+                </div>
+                <div class="creator-card">
+                    <img src="assets/creators/creator5.gif" alt="DataSorcerer">
+                    <h3>Caycho</h3>
+                    <p class="role">Analista de Datos</p>
+                    <p class="description">Domina los secretos de la información.</p>
+                </div>
+                <div class="creator-card">
+                    <img src="assets/creators/creator6.gif" alt="GlitchMaster">
+                    <h3>Guevara</h3>
+                    <p class="role">Especialista en Animaciones</p>
+                    <p class="description">Da vida a los errores digitales.</p>
+                </div>
+                <div class="creator-card ex-creator">
+                    <img src="assets/creators/creator7.gif" alt="ShadowByte">
+                    <h3>Chaucas</h3>
+                    <p class="role">Ex-Creador Community Manager</p>
+                    <p class="description">Leyenda que dejó su marca en el sistema.</p>
+                </div>
+            </div>
+            <button class="carousel-btn prev" id="prevBtn"><</button>
+            <button class="carousel-btn next" id="nextBtn">></button>
         </div>
-        <div class="gallery-item" onclick="window.location.href='sexualidad.html'">
-            <img src="assets/imagenes/2.jpg" alt="Diseño Épico 2">
-        </div>
-        <div class="gallery-item" onclick="window.location.href='arbol.html'">
-            <img src="assets/imagenes/3.jpg" alt="Diseño Épico 3">
-        </div>
-        <div class="gallery-item" onclick="window.location.href='1.html'">
-            <img src="assets/imagenes/4.jpg" alt="Diseño Épico 4">
-        </div>
-    </div>
+    </section>
 
     <script>
         // ===== PANTALLA DE CARGA =====
@@ -423,15 +540,13 @@
         const systemMessages = [
             {text: "> Conectando con servidor DPCCREA...", type: ""},
             {text: "[OK] Conexión establecida", type: "success"},
-            {text: "> Cargando módulo de diseño...", type: ""},
+            {text: "> Cargando módulo de creadores...", type: ""},
             {text: "[WARNING] Alto consumo de recursos gráficos", type: "warning"},
             {text: "> Inicializando base de datos...", type: ""},
             {text: "[OK] 1428 registros cargados", type: "success"},
             {text: "> Verificando licencia...", type: ""},
             {text: "[OK] Licencia Premium activa", type: "success"},
-            {text: "> Cargando catálogo de productos...", type: ""},
-            {text: "[ERROR] No se encontró el archivo: /img/portada.jpg", type: "error"},
-            {text: "> Solucionando errores...", type: ""},
+            {text: "> Cargando datos de creadores...", type: ""},
             {text: "[OK] Sistema listo para usar", type: "success"}
         ];
         
@@ -599,6 +714,31 @@
                 hamburger.children[0].style.transform = 'none';
                 hamburger.children[1].style.opacity = '1';
                 hamburger.children[2].style.transform = 'none';
+            }
+        });
+        
+        // ===== CARRUSEL =====
+        const carouselInner = document.getElementById('carouselInner');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const cards = carouselInner.children;
+        let currentIndex = 0;
+        
+        function updateCarousel() {
+            carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                updateCarousel();
             }
         });
     </script>
