@@ -25,6 +25,14 @@
             overflow-x: hidden;
         }
         
+        .content {
+            transition: filter 0.5s ease;
+        }
+        
+        .content.blur {
+            filter: blur(5px);
+        }
+        
         /* === PANTALLA DE CARGA HACKER PRO === */
         .loader {
             position: fixed;
@@ -135,6 +143,114 @@
         @keyframes blink {
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
+        }
+
+        /* === CUADRO DE ACTUALIZACIÓN === */
+        .update-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px double var(--hacker-green);
+            padding: 30px;
+            box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green);
+            z-index: 9998;
+            text-align: center;
+            animation: glitch 1.5s linear infinite;
+            backdrop-filter: blur(5px);
+            display: none;
+        }
+        
+        .update-popup.active {
+            display: block;
+        }
+        
+        .update-asterisks {
+            color: var(--hacker-green);
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--hacker-cyan);
+            margin-bottom: 15px;
+            animation: glitch 1.5s linear infinite;
+        }
+        
+        .update-popup h2 {
+            color: var(--hacker-cyan);
+            font-size: 2rem;
+            text-shadow: 0 0 15px var(--hacker-cyan);
+            margin-bottom: 20px;
+        }
+        
+        .update-section {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .update-section h3 {
+            color: var(--hacker-cyan);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--hacker-cyan);
+            margin-bottom: 10px;
+            animation: glitch 1.5s linear infinite;
+        }
+        
+        .update-section ul {
+            list-style: none;
+            color: var(--hacker-green);
+            font-size: 1rem;
+            text-shadow: 0 0 8px var(--hacker-green);
+        }
+        
+        .update-section ul li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .update-section ul li:before {
+            content: '-';
+            position: absolute;
+            left: 0;
+        }
+        
+        .update-button {
+            background: #111;
+            border: 2px solid var(--hacker-green);
+            color: var(--hacker-cyan);
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: not-allowed;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--hacker-cyan);
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+        
+        .update-button.enabled {
+            cursor: pointer;
+            opacity: 1;
+        }
+        
+        .update-button.enabled:hover {
+            background: var(--hacker-cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--hacker-cyan);
+            animation: glitch 0.5s linear infinite;
+        }
+
+        /* === VERSIÓN EN ESQUINA === */
+        .version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: var(--hacker-green);
+            font-size: 0.9rem;
+            text-shadow: 0 0 10px var(--hacker-cyan);
+            font-family: 'Courier New', monospace;
+            z-index: 1000;
         }
 
         /* === FONDO MATRIX Y PARTÍCULAS === */
@@ -352,21 +468,39 @@
     <div class="loader" id="loader">
         <div class="loader-content">
             <div class="loader-header">DPCCREA SYSTEM BOOT</div>
-            
             <div class="loader-status">Iniciando sistema... <span class="cursor">_</span></div>
-            
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
-            
             <div class="loader-messages" id="loaderMessages">
                 <div class="message">> Inicializando módulos...</div>
                 <div class="message">> Cargando recursos gráficos...</div>
                 <div class="message">> Verificando conexiones...</div>
             </div>
-            
             <div class="loader-footer">© DPCCREA SECURITY SYSTEM v3.1.4</div>
         </div>
+    </div>
+    
+    <!-- === CUADRO DE ACTUALIZACIÓN === -->
+    <div class="update-popup" id="updatePopup">
+        <p class="update-asterisks">* * * NUEVA ACTUALIZACIÓN * * *</p>
+        <h2>ACTUALIZACIÓN</h2>
+        <p style="color: var(--hacker-green); font-size: 1.2rem; margin-bottom: 20px;">Nueva versión del sistema DPCCrea detectada.</p>
+        <div class="update-section">
+            <h3>NOVEDADES</h3>
+            <ul>
+                <li>Nueva galería con 8 imágenes</li>
+                <li>Cuadro de actualización implementado</li>
+                <li>Versión 0.00 en la esquina inferior</li>
+            </ul>
+        </div>
+        <div class="update-section">
+            <h3>BUGS SOLUCIONADOS</h3>
+            <ul>
+                <li>Corregido blur en menú de actualización</li>
+            </ul>
+        </div>
+        <button class="update-button" id="updateButton" disabled>Aceptar</button>
     </div>
     
     <!-- === FONDO MATRIX Y PARTÍCULAS === -->
@@ -384,33 +518,50 @@
     <nav id="navMenu">
         <img src="assets/imagenes/logo.png" alt="DPCCrea Logo" class="logo">
         <ul>
-            <li><a href="#inicio">INICIO</a></li>
+            <li><a href="index.html">INICIO</a></li>
             <li><a href="pdf.html">Diapositiva</a></li>
-            <li><a href="cretor.html">CREADORES</a></li>
+            <li><a href="creators.html">CREADORES</a></li>
             <li><a href="juego.html">Juego</a></li>
         </ul>
     </nav>
     
     <!-- === CONTENIDO PRINCIPAL === -->
-    <header id="inicio">
-        <h1>DPCCrea</h1>
-        <p style="margin-top: 1rem; color: var(--hacker-cyan); font-size: 1.5rem;">// DISEÑADO POR L_Adriano //</p>
-    </header>
-    
-    <div class="gallery" id="catalogo">
-        <div class="gallery-item" onclick="window.location.href='Mediación.html'">
-            <img src="assets/imagenes/1.jpg" alt="Diseño Épico 1">
-        </div>
-        <div class="gallery-item" onclick="window.location.href='sexualidad.html'">
-            <img src="assets/imagenes/2.jpg" alt="Diseño Épico 2">
-        </div>
-        <div class="gallery-item" onclick="window.location.href='arbol.html'">
-            <img src="assets/imagenes/3.jpg" alt="Diseño Épico 3">
-        </div>
-        <div class="gallery-item" onclick="window.location.href='pdf.html'">
-            <img src="assets/imagenes/4.jpg" alt="Diseño Épico 4">
+    <div class="content" id="mainContent">
+        <header id="inicio">
+            <h1>DPCCrea</h1>
+            <p style="margin-top: 1rem; color: var(--hacker-cyan); font-size: 1.5rem;">// DISEÑADO POR L_Adriano //</p>
+        </header>
+        
+        <div class="gallery" id="catalogo">
+            <div class="gallery-item" onclick="window.location.href='Mediación.html'">
+                <img src="assets/imagenes/1.jpg" alt="Diseño Épico 1">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='sexualidad.html'">
+                <img src="assets/imagenes/2.jpg" alt="Diseño Épico 2">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='arbol.html'">
+                <img src="assets/imagenes/3.jpg" alt="Diseño Épico 3">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='pdf.html'">
+                <img src="assets/imagenes/4.jpg" alt="Diseño Épico 4">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='nueva1.html'">
+                <img src="assets/imagenes/5.jpg" alt="Diseño Épico 5">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='nueva2.html'">
+                <img src="assets/imagenes/6.jpg" alt="Diseño Épico 6">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='nueva3.html'">
+                <img src="assets/imagenes/7.jpg" alt="Diseño Épico 7">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='nueva4.html'">
+                <img src="assets/imagenes/8.jpg" alt="Diseño Épico 8">
+            </div>
         </div>
     </div>
+    
+    <!-- === VERSIÓN === -->
+    <div class="version">Versión 0.00</div>
 
     <script>
         // ===== PANTALLA DE CARGA =====
@@ -418,6 +569,9 @@
         const progressBar = document.getElementById('progressBar');
         const loaderMessages = document.getElementById('loaderMessages');
         const statusText = document.querySelector('.loader-status');
+        const updatePopup = document.getElementById('updatePopup');
+        const updateButton = document.getElementById('updateButton');
+        const mainContent = document.getElementById('mainContent');
         
         // Mensajes de sistema simulados
         const systemMessages = [
@@ -467,6 +621,14 @@
                     loader.style.opacity = '0';
                     setTimeout(() => {
                         loader.style.display = 'none';
+                        // Mostrar cuadro de actualización
+                        mainContent.classList.add('blur');
+                        updatePopup.classList.add('active');
+                        // Activar botón después de 3 segundos
+                        setTimeout(() => {
+                            updateButton.disabled = false;
+                            updateButton.classList.add('enabled');
+                        }, 3000);
                     }, 500);
                 }, 1000);
             }
@@ -478,6 +640,14 @@
             if (progress < 90) return "Optimizando rendimiento...";
             return "Finalizando procesos...";
         }
+        
+        // Cerrar cuadro de actualización
+        updateButton.addEventListener('click', () => {
+            if (!updateButton.disabled) {
+                updatePopup.classList.remove('active');
+                mainContent.classList.remove('blur');
+            }
+        });
         
         // Iniciar la simulación
         setTimeout(updateProgress, 1000);
