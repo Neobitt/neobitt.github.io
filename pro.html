@@ -1,53 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Contador de Visitas</title>
-<style>
+  <meta charset="UTF-8">
+  <title>Contador de Visitas</title>
+  <style>
     body {
-        background-color: #111;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        flex-direction: column;
-        font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
     }
-    h1 {
-        font-size: 50px;
+    #contador {
+      font-size: 3rem;
+      font-weight: bold;
+      animation: rgb 3s infinite;
     }
-    #visitas {
-        font-size: 80px;
-        font-weight: bold;
-        animation: rgbColor 3s infinite linear;
+    @keyframes rgb {
+      0% { color: red; }
+      33% { color: lime; }
+      66% { color: cyan; }
+      100% { color: red; }
     }
-    @keyframes rgbColor {
-        0% { color: red; }
-        33% { color: lime; }
-        66% { color: cyan; }
-        100% { color: red; }
-    }
-</style>
+  </style>
 </head>
 <body>
-    <h1>Visitas</h1>
-    <div id="visitas">Cargando...</div>
+  <div>
+    <h1>Visitas:</h1>
+    <div id="contador">Cargando...</div>
+  </div>
 
-<script>
-    function mostrarVisitas(data) {
-        document.getElementById("visitas").textContent = data.value;
+  <script>
+    const BIN_ID = "689ac212ae596e708fc7e70c";
+    const API_KEY = "$2a$10$AWCmCk2fH/5IjukXs/YojeQgnhf.rOtZ3l/hLUcuhQO8fb9YMqhWu";
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+    async function actualizarVisitas() {
+      try {
+        // 1. Leer visitas actuales
+        let res = await fetch(BIN_URL, {
+          headers: { "X-Master-Key": API_KEY }
+        });
+        let data = await res.json();
+        let visitas = data.record.visitas || 0;
+
+        // 2. Sumar 1
+        visitas++;
+
+        // 3. Guardar nuevo valor
+        await fetch(BIN_URL, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": API_KEY
+          },
+          body: JSON.stringify({ visitas })
+        });
+
+        // 4. Mostrar en pantalla
+        document.getElementById("contador").textContent = visitas;
+      } catch (e) {
+        document.getElementById("contador").textContent = "Error 😢";
+        console.error("Error:", e);
+      }
     }
 
-    // Usamos JSONP para evitar bloqueos CORS
-    var script = document.createElement("script");
-    script.src = "https://api.countapi.dev/get/neobitt/visitas?callback=mostrarVisitas";
-    document.body.appendChild(script);
-
-    // También incrementamos el contador
-    var script2 = document.createElement("script");
-    script2.src = "https://api.countapi.dev/hit/neobitt/visitas?callback=mostrarVisitas";
-    document.body.appendChild(script2);
-</script>
+    actualizarVisitas();
+  </script>
 </body>
 </html>
