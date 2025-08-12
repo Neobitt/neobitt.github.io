@@ -41,19 +41,19 @@
         function actualizarVisitas() {
             fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}/up`)
                 .then(res => {
-                    if (!res.ok) throw new Error("No se pudo incrementar");
+                    if (!res.ok) throw new Error(`Error al incrementar: ${res.status}`);
                     return fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}`);
                 })
                 .then(res => {
-                    if (!res.ok) throw new Error("No se pudo obtener el contador");
+                    if (!res.ok) throw new Error(`Error al obtener contador: ${res.status}`);
                     return res.json();
                 })
                 .then(data => {
                     document.getElementById("visitas").textContent = data.count;
                 })
                 .catch(err => {
-                    console.error("Error detectado:", err);
-                    document.getElementById("visitas").textContent = "Error 😢";
+                    document.getElementById("visitas").textContent = "Error: " + err.message;
+                    console.error(err);
                 });
         }
 
