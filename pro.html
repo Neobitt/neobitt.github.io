@@ -35,40 +35,21 @@
     <div id="visitas">Cargando...</div>
 
     <script>
-        const token = "ut_XaabeclG1gIVmdeenojJmER27tG1KkrYsj9KiyXY"; // tu API Token
         const workspace = "miweb"; // slug del workspace
         const counter = "miweb"; // slug del counter
 
-        // Función para actualizar visitas
         function actualizarVisitas() {
-            fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}/up`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
-                }
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("Error al incrementar: " + res.status);
-                return fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Accept": "application/json"
-                    }
+            fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}/up`)
+                .then(() => fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}`))
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Visitas actuales:", data.count);
+                    document.getElementById("visitas").textContent = data.count;
+                })
+                .catch(err => {
+                    console.error("Error detectado:", err);
+                    document.getElementById("visitas").textContent = "Error 😢";
                 });
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("Error al leer: " + res.status);
-                return res.json();
-            })
-            .then(data => {
-                console.log("Datos recibidos:", data);
-                document.getElementById("visitas").textContent = data.count;
-            })
-            .catch(err => {
-                console.error("Error detectado:", err);
-                document.getElementById("visitas").textContent = "Error 😢";
-            });
         }
 
         actualizarVisitas();
