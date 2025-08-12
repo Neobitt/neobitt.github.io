@@ -34,27 +34,28 @@
 
   <script>
     const BIN_ID = "689ac212ae596e708fc7e70c";
-    const API_KEY = "$2a$10$AWCmCk2fH/5IjukXs/YojeQgnhf.rOtZ3l/hLUcuhQO8fb9YMqhWu";
+    const ACCESS_KEY = "epes"; // Tu X-Access-Key
+    const MASTER_KEY = "$2a$10$w0jFJOdeLItsGRtK6SZFtu29ZAKx5.9glTKEWG54yiBuWBXVj.gwe"; // Tu X-Master-Key
     const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
     async function actualizarVisitas() {
       try {
-        // 1. Leer visitas actuales
+        // 1. Leer visitas actuales (GET con Access Key)
         let res = await fetch(BIN_URL, {
-          headers: { "X-Master-Key": API_KEY }
+          headers: { "X-Access-Key": ACCESS_KEY }
         });
         let data = await res.json();
-        let visitas = data.record.visitas || 0;
+        let visitas = data.record?.visitas || 0;
 
         // 2. Sumar 1
         visitas++;
 
-        // 3. Guardar nuevo valor
+        // 3. Guardar nuevo valor (PUT con Master Key)
         await fetch(BIN_URL, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "X-Master-Key": API_KEY
+            "X-Master-Key": MASTER_KEY
           },
           body: JSON.stringify({ visitas })
         });
