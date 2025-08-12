@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Contador de visitas</title>
+<title>Contador de Visitas</title>
 <style>
     body {
         background-color: #111;
@@ -35,15 +35,19 @@
     <div id="visitas">Cargando...</div>
 
 <script>
-    fetch("https://api.countapi.xyz/hit/neobitt")
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("visitas").textContent = data.value;
-        })
-        .catch(err => {
-            document.getElementById("visitas").textContent = "Error";
-            console.error("Error al cargar el contador:", err);
-        });
+    function mostrarVisitas(data) {
+        document.getElementById("visitas").textContent = data.value;
+    }
+
+    // Usamos JSONP para evitar bloqueos CORS
+    var script = document.createElement("script");
+    script.src = "https://api.countapi.dev/get/neobitt/visitas?callback=mostrarVisitas";
+    document.body.appendChild(script);
+
+    // También incrementamos el contador
+    var script2 = document.createElement("script");
+    script2.src = "https://api.countapi.dev/hit/neobitt/visitas?callback=mostrarVisitas";
+    document.body.appendChild(script2);
 </script>
 </body>
 </html>
