@@ -35,20 +35,25 @@
     <div id="visitas">Cargando...</div>
 
     <script>
-        const workspace = "miweb"; // slug del workspace
-        const counter = "miweb"; // slug del counter
+        const workspace = "miweb";
+        const counter = "miweb";
 
         function actualizarVisitas() {
             fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}/up`)
-                .then(() => fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}`))
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error("No se pudo incrementar");
+                    return fetch(`https://api.counterapi.dev/v1/${workspace}/${counter}`);
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error("No se pudo obtener el contador");
+                    return res.json();
+                })
                 .then(data => {
-                    console.log("Visitas actuales:", data.count);
                     document.getElementById("visitas").textContent = data.count;
                 })
                 .catch(err => {
                     console.error("Error detectado:", err);
-                    document.getElementById("visitas").textContent = "Error";
+                    document.getElementById("visitas").textContent = "Error 😢";
                 });
         }
 
@@ -56,4 +61,3 @@
     </script>
 </body>
 </html>
-
