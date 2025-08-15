@@ -418,6 +418,7 @@
             transition: all 0.3s ease;
             opacity: 1 !important;
             position: relative;
+            pointer-events: none; /* Desactiva clics */
         }
         
         .counter-container div {
@@ -429,6 +430,13 @@
             box-shadow: 0 0 15px var(--hacker-cyan);
             min-height: 40px;
             min-width: 100px;
+            pointer-events: none; /* Desactiva clics */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animación suave */
+        }
+        
+        .counter-container:hover div {
+            transform: scale(1.05); /* Efecto de escala al pasar el mouse */
+            box-shadow: 0 0 25px var(--hacker-cyan), 0 0 15px var(--hacker-green); /* Brillo más intenso */
         }
         
         .counter-container img {
@@ -436,6 +444,7 @@
             max-width: 100%;
             height: auto;
             border: none;
+            pointer-events: none; /* Desactiva clics */
         }
         
         .counter-fallback {
@@ -543,18 +552,18 @@
         <div class="update-section">
             <h3>NOVEDADES</h3>
             <ul>
-                <li>Nueva galería con 8 imágenes</li>
+                <li>Contador de visitas</li>
                 <li>Cuadro de actualización implementado</li>
-                <li>xxdd?</li>
+                <li>-</li>
             </ul>
         </div>
         <div class="update-section">
             <h3>BUGS SOLUCIONADOS</h3>
             <ul>
-                <li>Corregido blur en menú de actualización</li>
-                <li>Corregido centrado del cuadro de actualización</li>
-                <li>Corregido problema de centrado persistente del cuadro de actualización</li>
-                <li>Corregido error de sintaxis en el contexto del canvas</li>
+                <li>-</li>
+                <li>-</li>
+                <li>-</li>
+                <li>-</li>
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
@@ -585,9 +594,7 @@
                 </div>
                 <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc&down=async" async></script>
                 <noscript>
-                    <a href="https://www.contadorvisitasgratis.com" title="contador de visitas">
-                        <img src="https://counter1.optistats.ovh/private/contadorvisitasgratis.php?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc" border="0" title="contador de visitas" alt="contador de visitas">
-                    </a>
+                    <img src="https://counter1.optistats.ovh/private/contadorvisitasgratis.php?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc" border="0" title="contador de visitas" alt="contador de visitas">
                 </noscript>
             </li>
         </ul>
@@ -720,7 +727,7 @@
         // Iniciar la simulación
         setTimeout(updateProgress, 1000);
         
-        // ===== DETECCIÓN DE CARGA DEL CONTADOR =====
+        // ===== DESACTIVAR ENLACES DINÁMICOS DEL CONTADOR =====
         const counterContainer = document.querySelector('#sfcwcwbjwc1qgqszpjapgf4ym5spfenubxc');
         const counterScript = document.querySelector('script[src*="counter.js"]');
         
@@ -729,6 +736,13 @@
             if (!counterContainer.innerHTML || counterContainer.innerHTML.includes('Cargando contador')) {
                 counterContainer.innerHTML = '<span class="counter-fallback">Contador no disponible</span>';
             }
+            // Buscar y desactivar enlaces dinámicos
+            const links = counterContainer.querySelectorAll('a');
+            links.forEach(link => {
+                link.removeAttribute('href'); // Elimina el atributo href
+                link.style.pointerEvents = 'none'; // Desactiva clics
+                link.style.cursor = 'default'; // Cambia el cursor para no parecer clickeable
+            });
         }, 5000); // Espera 5 segundos para verificar
         
         // Forzar recarga del script si falla
