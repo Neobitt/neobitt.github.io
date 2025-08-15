@@ -2,77 +2,36 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Contador de Visitas</title>
-<style>
-    body {
-        background-color: #111;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        flex-direction: column;
-        font-family: Arial, sans-serif;
-    }
-    h1 {
-        font-size: 50px;
-    }
-    #visitas {
-        font-size: 80px;
-        font-weight: bold;
-        animation: rgbColor 3s infinite linear;
-    }
-    @keyframes rgbColor {
-        0% { color: red; }
-        33% { color: lime; }
-        66% { color: cyan; }
-        100% { color: red; }
-    }
-</style>
+<title>Contador con límite de 24h</title>
 </head>
 <body>
-    <h1>Visitas</h1>
-    <div id="visitas">Cargando...</div>
+
+<h2>Visitas: <span id="contador">0</span></h2>
 
 <script>
-const BIN_ID = "689ac212ae596e708fc7e70c"; // Tu Bin ID
-const MASTER_KEY = "$2a$10$w0jFJOdeLItsGRtK6SZFtu29ZAKx5.9glTKEWG54yiBuWBXVj.gwe"; // Tu X-Master-Key
+const contadorElemento = document.getElementById("contador");
 
-async function actualizarVisitas() {
-    try {
-        // 1. Obtener valor actual
-        let res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-            headers: {
-                "X-Master-Key": MASTER_KEY
-            }
-        });
-        let data = await res.json();
-        let actual = data.record.visitas || 0;
+// Simulamos una base de datos con localStorage (puedes cambiar por fetch a un servidor real)
+let visitas = localStorage.getItem("contadorTotal") || 0;
 
-        // 2. Sumar 1
-        let nuevo = actual + 1;
+// Revisar si ya sumó hoy
+let ultimaVisita = localStorage.getItem("ultimaVisita");
+let hoy = new Date().toDateString();
 
-        // 3. Guardar valor nuevo
-        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Master-Key": MASTER_KEY
-            },
-            body: JSON.stringify({ visitas: nuevo })
-        });
-
-        // 4. Mostrar en pantalla
-        document.getElementById("visitas").textContent = nuevo;
-
-    } catch (error) {
-        console.error("Error:", error);
-        document.getElementById("visitas").textContent = "Error ❌";
-    }
+if (ultimaVisita !== hoy) {
+    visitas++;
+    localStorage.setItem("contadorTotal", visitas);
+    localStorage.setItem("ultimaVisita", hoy);
 }
 
-// Ejecutar cuando cargue la página
-actualizarVisitas();
+// Mostrar contador
+contadorElemento.textContent = visitas;
+
+// Simular actualización automática cada 5 segundos (puedes cambiarlo)
+setInterval(() => {
+    contadorElemento.textContent = localStorage.getItem("contadorTotal");
+}, 5000);
 </script>
+
 </body>
 </html>
