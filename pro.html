@@ -1,74 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Contador de Visitas</title>
-  <style>
+<meta charset="UTF-8">
+<title>Contador de Visitas</title>
+<style>
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
+        background-color: #111;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        font-family: Arial, sans-serif;
     }
-    #contador {
-      font-size: 3rem;
-      font-weight: bold;
-      animation: rgb 3s infinite;
+    h1 {
+        font-size: 50px;
     }
-    @keyframes rgb {
-      0% { color: red; }
-      33% { color: lime; }
-      66% { color: cyan; }
-      100% { color: red; }
+    #visitas {
+        font-size: 80px;
+        font-weight: bold;
+        animation: rgbColor 3s infinite linear;
     }
-  </style>
+    @keyframes rgbColor {
+        0% { color: red; }
+        33% { color: lime; }
+        66% { color: cyan; }
+        100% { color: red; }
+    }
+</style>
 </head>
 <body>
-  <div>
-    <h1>Visitas:</h1>
-    <div id="contador">Cargando...</div>
-  </div>
+    <h1>Visitas</h1>
+    <div id="visitas">Cargando...</div>
 
-  <script>
-    const BIN_ID = "689ac212ae596e708fc7e70c";
-    const ACCESS_KEY = "epes"; // Tu X-Access-Key
-    const MASTER_KEY = "$2a$10$w0jFJOdeLItsGRtK6SZFtu29ZAKx5.9glTKEWG54yiBuWBXVj.gwe"; // Tu X-Master-Key
-    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+<script>
+const BIN_ID = "689ac212ae596e708fc7e70c"; // Tu Bin ID
+const MASTER_KEY = "$2a$10$w0jFJOdeLItsGRtK6SZFtu29ZAKx5.9glTKEWG54yiBuWBXVj.gwe"; // Tu X-Master-Key
 
-    async function actualizarVisitas() {
-      try {
-        // 1. Leer visitas actuales (GET con Access Key)
-        let res = await fetch(BIN_URL, {
-          headers: { "X-Access-Key": ACCESS_KEY }
+async function actualizarVisitas() {
+    try {
+        // 1. Obtener valor actual
+        let res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: {
+                "X-Master-Key": MASTER_KEY
+            }
         });
         let data = await res.json();
-        let visitas = data.record?.visitas || 0;
+        let actual = data.record.visitas || 0;
 
         // 2. Sumar 1
-        visitas++;
+        let nuevo = actual + 1;
 
-        // 3. Guardar nuevo valor (PUT con Master Key)
-        await fetch(BIN_URL, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": MASTER_KEY
-          },
-          body: JSON.stringify({ visitas })
+        // 3. Guardar valor nuevo
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Master-Key": MASTER_KEY
+            },
+            body: JSON.stringify({ visitas: nuevo })
         });
 
         // 4. Mostrar en pantalla
-        document.getElementById("contador").textContent = visitas;
-      } catch (e) {
-        document.getElementById("contador").textContent = "Error 😢";
-        console.error("Error:", e);
-      }
-    }
+        document.getElementById("visitas").textContent = nuevo;
 
-    actualizarVisitas();
-  </script>
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("visitas").textContent = "Error ❌";
+    }
+}
+
+// Ejecutar cuando cargue la página
+actualizarVisitas();
+</script>
 </body>
 </html>
