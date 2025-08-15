@@ -412,19 +412,55 @@
         .counter-container {
             margin: 20px 35px;
             text-align: center;
-            color: var(--hacker-cyan);
-            font-size: 1rem;
+            color: var(--hacker-green) !important;
+            font-size: 1.2rem;
             text-shadow: 0 0 10px var(--hacker-cyan);
+            transition: all 0.3s ease;
+            opacity: 1 !important;
+            position: relative;
         }
         
         .counter-container div {
             display: inline-block;
+            background: rgba(0, 255, 65, 0.2);
+            padding: 10px 20px;
+            border: 2px solid var(--hacker-green);
+            border-radius: 5px;
+            box-shadow: 0 0 15px var(--hacker-cyan);
+            min-height: 40px;
+            min-width: 100px;
+        }
+        
+        .counter-container img {
+            display: block !important;
+            max-width: 100%;
+            height: auto;
+            border: none;
+        }
+        
+        .counter-fallback {
+            color: var(--hacker-green);
+            font-size: 1rem;
+            text-shadow: 0 0 5px var(--hacker-cyan);
         }
         
         @keyframes glitch {
             0%, 100% { transform: translate(0); }
             25% { transform: translate(-2px, 2px); }
             50% { transform: translate(2px, -2px); }
+        }
+        
+        /* Ajustes para visibilidad en dispositivos móviles */
+        @media (max-width: 768px) {
+            .counter-container {
+                font-size: 1rem;
+                margin: 10px 20px;
+            }
+            
+            .counter-container div {
+                padding: 8px 15px;
+                min-width: 80px;
+            }
         }
         
         /* === CONTENIDO PRINCIPAL === */
@@ -509,7 +545,7 @@
             <ul>
                 <li>Nueva galería con 8 imágenes</li>
                 <li>Cuadro de actualización implementado</li>
-                <li>xxxdd?</li>
+                <li>xxdd?</li>
             </ul>
         </div>
         <div class="update-section">
@@ -544,10 +580,14 @@
             <li><a href="creators.html">CREADORES</a></li>
             <li><a href="juego.html">JUEGO</a></li>
             <li class="counter-container">
-                <div id="sfc9tacqe676aky5kky5rq7cxn9ksnpzafu"></div>
-                <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=9tacqe676aky5kky5rq7cxn9ksnpzafu&down=async" async></script>
+                <div id="sfcwcwbjwc1qgqszpjapgf4ym5spfenubxc">
+                    <span class="counter-fallback">Cargando contador...</span>
+                </div>
+                <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc&down=async" async></script>
                 <noscript>
-                    <img src="https://counter1.optistats.ovh/private/contadorvisitasgratis.php?c=9tacqe676aky5kky5rq7cxn9ksnpzafu" border="0" title="contador de visitas" alt="contador de visitas">
+                    <a href="https://www.contadorvisitasgratis.com" title="contador de visitas">
+                        <img src="https://counter1.optistats.ovh/private/contadorvisitasgratis.php?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc" border="0" title="contador de visitas" alt="contador de visitas">
+                    </a>
                 </noscript>
             </li>
         </ul>
@@ -680,6 +720,22 @@
         // Iniciar la simulación
         setTimeout(updateProgress, 1000);
         
+        // ===== DETECCIÓN DE CARGA DEL CONTADOR =====
+        const counterContainer = document.querySelector('#sfcwcwbjwc1qgqszpjapgf4ym5spfenubxc');
+        const counterScript = document.querySelector('script[src*="counter.js"]');
+        
+        // Verificar si el contador carga correctamente
+        setTimeout(() => {
+            if (!counterContainer.innerHTML || counterContainer.innerHTML.includes('Cargando contador')) {
+                counterContainer.innerHTML = '<span class="counter-fallback">Contador no disponible</span>';
+            }
+        }, 5000); // Espera 5 segundos para verificar
+        
+        // Forzar recarga del script si falla
+        counterScript.onerror = () => {
+            counterContainer.innerHTML = '<span class="counter-fallback">Error al cargar contador</span>';
+        };
+        
         // ===== FONDO MATRIX =====
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
@@ -802,8 +858,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
