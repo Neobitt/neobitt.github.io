@@ -12,7 +12,11 @@
     <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
     <meta property="og:url" content="https://dpccrea.com">
     <meta property="og:type" content="website">
-    <link rel="icon" type="image/x-icon" href="assets/imagenes/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imagenes/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/imagenes/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/imagenes/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/imagenes/favicon-16x16.png">
     <style>
         :root {
             --hacker-green: #00ff41;
@@ -26,11 +30,13 @@
             box-sizing: border-box;
             font-family: 'Courier New', monospace;
         }
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             background-color: var(--dark-color);
             color: white;
-            overflow-x: hidden;
-            min-height: 100vh;
+            overflow: auto;
+            position: relative;
         }
         .content {
             transition: filter 0.5s ease;
@@ -128,26 +134,28 @@
             50% { opacity: 1; }
         }
         .update-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 500px;
-            min-height: 300px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 3px double var(--hacker-green);
-            padding: 30px;
-            box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green);
-            z-index: 9998;
-            text-align: center;
-            animation: glitch 1.5s linear infinite;
-            backdrop-filter: blur(5px);
-            display: none;
-            overflow-y: auto;
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 80vw !important;
+            max-width: 500px !important;
+            min-height: 300px !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            border: 3px double var(--hacker-green) !important;
+            padding: 30px !important;
+            box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green) !important;
+            z-index: 100000 !important;
+            text-align: center !important;
+            animation: glitch 1.5s linear infinite !important;
+            backdrop-filter: blur(5px) !important;
+            display: none !important;
+            overflow-y: auto !important;
+            margin: 0 auto !important;
         }
         .update-popup.active {
-            display: block;
+            display: grid !important;
+            place-items: center !important;
         }
         .update-asterisks {
             color: var(--hacker-green);
@@ -165,6 +173,7 @@
         .update-section {
             margin: 20px 0;
             text-align: left;
+            width: 100%;
         }
         .update-section h3 {
             color: var(--hacker-cyan);
@@ -411,6 +420,10 @@
             .hamburger div { width: 30px; height: 4px; margin: 5px 0; }
             nav { width: 280px; }
             nav .logo { width: 80px; height: 80px; }
+            .update-popup {
+                width: 90vw !important;
+                padding: 20px !important;
+            }
         }
         header {
             background: #000;
@@ -578,6 +591,21 @@
         ];
         let progress = 0;
         let messageIndex = 0;
+        function centerPopup() {
+            updatePopup.style.position = 'fixed';
+            updatePopup.style.top = '50%';
+            updatePopup.style.left = '50%';
+            updatePopup.style.transform = 'translate(-50%, -50%)';
+            updatePopup.style.margin = '0';
+            console.log('Update popup styles:', {
+                position: updatePopup.style.position,
+                top: updatePopup.style.top,
+                left: updatePopup.style.left,
+                transform: updatePopup.style.transform,
+                display: updatePopup.style.display,
+                computedStyle: window.getComputedStyle(updatePopup).getPropertyValue('top')
+            });
+        }
         function updateProgress() {
             if (progress < 100) {
                 progress += Math.random() * 5;
@@ -601,6 +629,7 @@
                         loader.style.display = 'none';
                         mainContent.classList.add('blur');
                         updatePopup.classList.add('active');
+                        centerPopup();
                         setTimeout(() => {
                             updateButton.disabled = false;
                             updateButton.classList.add('enabled');
@@ -621,6 +650,7 @@
                 mainContent.classList.remove('blur');
             }
         });
+        window.addEventListener('resize', centerPopup);
         setTimeout(updateProgress, 1000);
         const counterContainer = document.querySelector('#sfcwcwbjwc1qgqszpjapgf4ym5spfenubxc');
         const counterScript = document.querySelector('script[src*="counter.js"]');
