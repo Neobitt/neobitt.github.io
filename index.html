@@ -19,9 +19,9 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/imagenes/favicon-192x192.png">
     <style>
         :root {
-            --hacker-green: #00ff41;
-            --hacker-cyan: #00f7ff;
-            --diversity-pink: #ff00ff;
+            --golden-main: #FFD700;
+            --golden-accent: #DAA520;
+            --inclusive-purple: #8A2BE2;
             --dark-color: #000;
         }
         * {
@@ -62,23 +62,23 @@
             position: relative;
             width: 80%;
             max-width: 600px;
-            border: 3px double var(--hacker-green);
+            border: 3px double var(--golden-main);
             padding: 30px;
-            box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green);
+            box-shadow: 0 0 30px var(--golden-accent), 0 0 50px var(--golden-main);
             background: rgba(0, 0, 0, 0.85);
             animation: scanline 4s linear infinite;
         }
         @keyframes scanline {
-            0% { box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green); }
-            50% { box-shadow: 0 0 50px var(--hacker-cyan), 0 0 30px var(--hacker-green); }
-            100% { box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green); }
+            0% { box-shadow: 0 0 30px var(--golden-accent), 0 0 50px var(--golden-main); }
+            50% { box-shadow: 0 0 50px var(--golden-accent), 0 0 30px var(--golden-main); }
+            100% { box-shadow: 0 0 30px var(--golden-accent), 0 0 50px var(--golden-main); }
         }
         .loader-header {
-            color: var(--hacker-green);
+            color: var(--golden-main);
             text-align: center;
             margin-bottom: 30px;
             font-size: 2rem;
-            text-shadow: 0 0 15px var(--hacker-cyan);
+            text-shadow: 0 0 15px var(--golden-accent);
             animation: type 2s steps(20) infinite;
         }
         @keyframes type {
@@ -86,7 +86,7 @@
             50% { width: 100%; }
         }
         .loader-status {
-            color: var(--hacker-green);
+            color: var(--golden-main);
             margin-bottom: 20px;
             font-size: 1.2rem;
         }
@@ -94,7 +94,7 @@
             width: 100%;
             height: 20px;
             background: #111;
-            border: 1px solid var(--hacker-cyan);
+            border: 1px solid var(--golden-accent);
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
@@ -102,7 +102,7 @@
         .progress-bar {
             height: 100%;
             width: 0;
-            background: linear-gradient(90deg, var(--diversity-pink), var(--hacker-green), var(--hacker-cyan));
+            background: linear-gradient(90deg, var(--inclusive-purple), var(--golden-main), var(--golden-accent));
             transition: width 0.3s;
         }
         .loader-messages {
@@ -114,7 +114,7 @@
             background: #000;
         }
         .message {
-            color: var(--hacker-green);
+            color: var(--golden-main);
             margin-bottom: 5px;
             font-size: 0.9rem;
         }
@@ -122,10 +122,10 @@
         .message.error { color: #ff0000; }
         .message.warning { color: #ffff00; }
         .loader-footer {
-            color: var(--hacker-cyan);
+            color: var(--golden-accent);
             text-align: center;
             font-size: 0.8rem;
-            text-shadow: 0 0 10px var(--hacker-cyan);
+            text-shadow: 0 0 10px var(--golden-accent);
         }
         .cursor {
             animation: blink 0.7s infinite;
@@ -143,9 +143,9 @@
             max-width: 500px !important;
             min-height: 300px !important;
             background: rgba(0, 0, 0, 0.9) !important;
-            border: 3px double var(--hacker-green) !important;
+            border: 3px double var(--golden-main) !important;
             padding: 30px !important;
-            box-shadow: 0 0 30px var(--hacker-cyan), 0 0 50px var(--hacker-green) !important;
+            box-shadow: 0 0 30px var(--golden-accent), 0 0 50px var(--golden-main) !important;
             z-index: 100000 !important;
             text-align: center !important;
             animation: glitch 1.5s linear infinite !important;
@@ -159,16 +159,16 @@
             place-items: center !important;
         }
         .update-asterisks {
-            color: var(--hacker-green);
+            color: var(--golden-main);
             font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--hacker-cyan);
+            text-shadow: 0 0 10px var(--golden-accent);
             margin-bottom: 15px;
             animation: glitch 1.5s linear infinite;
         }
         .update-popup h2 {
-            color: var(--hacker-cyan);
+            color: var(--golden-accent);
             font-size: 2rem;
-            text-shadow: 0 0 15px var(--hacker-cyan);
+            text-shadow: 0 0 15px var(--golden-accent);
             margin-bottom: 20px;
         }
         .update-section {
@@ -177,17 +177,17 @@
             width: 100%;
         }
         .update-section h3 {
-            color: var(--hacker-cyan);
+            color: var(--golden-accent);
             font-size: 1.5rem;
-            text-shadow: 0 0 10px var(--hacker-cyan);
+            text-shadow: 0 0 10px var(--golden-accent);
             margin-bottom: 10px;
             animation: glitch 1.5s linear infinite;
         }
         .update-section ul {
             list-style: none;
-            color: var(--hacker-green);
+            color: var(--golden-main);
             font-size: 1rem;
-            text-shadow: 0 0 8px var(--hacker-green);
+            text-shadow: 0 0 8px var(--golden-main);
         }
         .update-section ul li {
             margin-bottom: 8px;
@@ -201,14 +201,14 @@
         }
         .update-button {
             background: #111;
-            border: 2px solid var(--hacker-green);
-            color: var(--hacker-cyan);
+            border: 2px solid var(--golden-main);
+            color: var(--golden-accent);
             font-size: 1.2rem;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: not-allowed;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px var(--hacker-cyan);
+            box-shadow: 0 0 10px var(--golden-accent);
             text-transform: uppercase;
             opacity: 0.5;
         }
@@ -217,18 +217,18 @@
             opacity: 1;
         }
         .update-button.enabled:hover {
-            background: var(--hacker-cyan);
+            background: var(--golden-accent);
             color: #000;
-            box-shadow: 0 0 20px var(--hacker-cyan);
+            box-shadow: 0 0 20px var(--golden-accent);
             animation: glitch 0.5s linear infinite;
         }
         .version {
             position: fixed;
             bottom: 10px;
             right: 10px;
-            color: var(--hacker-green);
+            color: var(--golden-main);
             font-size: 0.9rem;
-            text-shadow: 0 0 10px var(--hacker-cyan);
+            text-shadow: 0 0 10px var(--golden-accent);
             z-index: 1000;
         }
         .matrix-bg, .particles-bg {
@@ -252,7 +252,7 @@
             width: 70px;
             height: 70px;
             background: #111;
-            border: 3px double var(--hacker-green);
+            border: 3px double var(--golden-main);
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -260,26 +260,26 @@
             align-items: center;
             cursor: pointer;
             z-index: 1000;
-            box-shadow: 0 0 20px var(--hacker-cyan);
+            box-shadow: 0 0 20px var(--golden-accent);
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
         }
         @keyframes pulse {
-            0% { box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--hacker-green); }
-            50% { box-shadow: 0 0 40px var(--hacker-cyan), 0 0 20px var(--hacker-green); }
-            100% { box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--hacker-green); }
+            0% { box-shadow: 0 0 20px var(--golden-accent), 0 0 10px var(--golden-main); }
+            50% { box-shadow: 0 0 40px var(--golden-accent), 0 0 20px var(--golden-main); }
+            100% { box-shadow: 0 0 20px var(--golden-accent), 0 0 10px var(--golden-main); }
         }
         .hamburger:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 30px var(--hacker-cyan), 0 0 20px var(--hacker-green);
+            box-shadow: 0 0 30px var(--golden-accent), 0 0 20px var(--golden-main);
         }
         .hamburger div {
             width: 35px;
             height: 5px;
-            background: var(--hacker-cyan);
+            background: var(--golden-accent);
             margin: 6px 0;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px var(--hacker-cyan);
+            box-shadow: 0 0 10px var(--golden-accent);
         }
         .hamburger.active div:nth-child(1) {
             transform: rotate(45deg) translate(10px, 10px);
@@ -299,28 +299,28 @@
             background: rgba(0, 0, 0, 0.98);
             z-index: 999;
             transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            border-left: 4px double var(--hacker-cyan);
+            border-left: 4px double var(--golden-accent);
             padding-top: 120px;
             animation: scan-nav 3s linear infinite;
             overflow-x: hidden;
         }
         @keyframes scan-nav {
-            0% { border-left-color: var(--hacker-cyan); }
-            50% { border-left-color: var(--hacker-green); }
-            100% { border-left-color: var(--hacker-cyan); }
+            0% { border-left-color: var(--golden-accent); }
+            50% { border-left-color: var(--golden-main); }
+            100% { border-left-color: var(--golden-accent); }
         }
         nav.active {
             right: 0;
-            box-shadow: -10px 0 20px var(--hacker-cyan);
+            box-shadow: -10px 0 20px var(--golden-accent);
         }
         nav .logo {
             width: 100px;
             height: 100px;
             display: block;
             margin: 0 auto 20px;
-            border: 3px solid var(--hacker-green);
+            border: 3px solid var(--golden-main);
             border-radius: 50%;
-            box-shadow: 0 0 15px var(--hacker-cyan);
+            box-shadow: 0 0 15px var(--golden-accent);
             transition: transform 0.3s ease;
         }
         nav .logo:hover {
@@ -345,27 +345,27 @@
         nav ul li:nth-child(4) { transition-delay: 0.4s; }
         nav ul li:nth-child(5) { transition-delay: 0.5s; }
         nav ul li a {
-            color: var(--hacker-green);
+            color: var(--golden-main);
             text-decoration: none;
             display: block;
             padding: 18px 35px;
             font-size: 1.3rem;
             border-bottom: 1px solid #333;
-            background: rgba(0, 247, 255, 0.05);
+            background: rgba(218, 165, 32, 0.05);
             transition: all 0.3s ease;
         }
         nav ul li a:hover {
-            background: rgba(0, 247, 255, 0.15);
+            background: rgba(218, 165, 32, 0.15);
             padding-left: 45px;
-            text-shadow: 0 0 15px var(--hacker-cyan);
-            box-shadow: inset 0 0 10px var(--hacker-cyan);
+            text-shadow: 0 0 15px var(--golden-accent);
+            box-shadow: inset 0 0 10px var(--golden-accent);
         }
         .counter-container {
             margin: 20px 35px;
             text-align: center;
-            color: var(--hacker-cyan);
+            color: #00f7ff;
             font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--hacker-cyan);
+            text-shadow: 0 0 10px #00f7ff;
             transition: all 0.3s ease;
             opacity: 1;
             position: relative;
@@ -375,9 +375,9 @@
             display: inline-block;
             background: transparent;
             padding: 10px 20px;
-            border: 2px solid var(--hacker-cyan);
+            border: 2px solid #00f7ff;
             border-radius: 5px;
-            box-shadow: 0 0 15px var(--hacker-cyan);
+            box-shadow: 0 0 15px #00f7ff;
             min-height: 40px;
             min-width: 100px;
             pointer-events: none;
@@ -385,7 +385,7 @@
         }
         .counter-container:hover div {
             transform: scale(1.05);
-            box-shadow: 0 0 25px var(--hacker-cyan), 0 0 15px var(--hacker-green);
+            box-shadow: 0 0 25px #00f7ff, 0 0 15px var(--golden-main);
         }
         .counter-container img {
             display: block;
@@ -395,9 +395,9 @@
             pointer-events: none;
         }
         .counter-fallback {
-            color: var(--hacker-cyan);
+            color: #00f7ff;
             font-size: 1rem;
-            text-shadow: 0 0 5px var(--hacker-cyan);
+            text-shadow: 0 0 5px #00f7ff;
         }
         @keyframes glitch {
             0%, 100% { transform: translate(0); }
@@ -427,17 +427,23 @@
                 width: 90vw !important;
                 padding: 20px !important;
             }
+            #loginBtn, #logoutBtn {
+                top: 90px !important;
+                right: 15px !important;
+                font-size: 0.8rem !important;
+                padding: 8px 12px !important;
+            }
         }
         header {
             background: #000;
             padding: 6rem 0;
             text-align: center;
-            border-bottom: 4px solid var(--hacker-cyan);
+            border-bottom: 4px solid var(--golden-accent);
         }
         h1 {
             font-size: 4.5rem;
-            color: var(--hacker-green);
-            text-shadow: 0 0 25px var(--hacker-cyan);
+            color: var(--golden-main);
+            text-shadow: 0 0 25px var(--golden-accent);
             letter-spacing: 5px;
             animation: glitch 1.5s linear infinite;
         }
@@ -451,18 +457,18 @@
             overflow-x: hidden;
         }
         .gallery-item {
-            border: 4px solid var(--hacker-green);
+            border: 4px solid var(--golden-main);
             border-radius: 15px;
             overflow: hidden;
             aspect-ratio: 1/1;
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 0 15px var(--diversity-pink);
+            box-shadow: 0 0 15px var(--inclusive-purple);
             position: relative;
             cursor: pointer;
         }
         .gallery-item:hover {
             transform: scale(1.03);
-            box-shadow: 0 0 30px var(--hacker-cyan);
+            box-shadow: 0 0 30px var(--golden-accent);
         }
         .gallery img {
             width: 100%;
@@ -493,14 +499,17 @@
     </div>
     <div class="update-popup" id="updatePopup">
         <p class="update-asterisks">* * * NUEVA ACTUALIZACIÓN * * *</p>
-        <h2>ACTUALIZACIÓN 29/07/2025</h2>
-        <p style="color: var(--hacker-green); font-size: 1.2rem; margin-bottom: 20px;">Nueva versión del sistema DPCCrea detectada.</p>
+        <h2>ACTUALIZACIÓN 20/08/2025</h2>
+        <p style="color: var(--golden-main); font-size: 1.2rem; margin-bottom: 20px;">Nueva versión del sistema DPCCrea detectada.</p>
         <div class="update-section">
             <h3>NOVEDADES</h3>
             <ul>
                 <li>Contador de visitas</li>
                 <li>Cuadro de actualización implementado</li>
                 <li>Recursos sobre sexualidad e identidad</li>
+                <li>Nueva paleta de colores dorados</li>
+                <li>Inicio de sesión con Firebase</li>
+                <li>Corrección de error de sintaxis en Firebase</li>
             </ul>
         </div>
         <div class="update-section">
@@ -510,6 +519,7 @@
                 <li>Optimización de carga de imágenes</li>
                 <li>Fondo Matrix visible en página principal</li>
                 <li>Eliminado parpadeo de barra de desplazamiento</li>
+                <li>Error de sintaxis en script de Firebase</li>
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
@@ -542,8 +552,8 @@
     <div class="content" id="mainContent">
         <header id="inicio">
             <h1>DPCCrea</h1>
-            <p style="margin-top: 1rem; color: var(--hacker-cyan); font-size: 1.5rem;">// Recursos sobre Sexualidad, Identidad y Diversidad //</p>
-            <p style="color: var(--diversity-pink); font-size: 1.2rem;">DISEÑADO POR L_Adriano</p>
+            <p style="margin-top: 1rem; color: var(--golden-accent); font-size: 1.5rem;">// Recursos sobre Sexualidad, Identidad y Diversidad //</p>
+            <p style="color: var(--inclusive-purple); font-size: 1.2rem;">DISEÑADO POR L_Adriano</p>
         </header>
         <div class="gallery" id="catalogo">
             <div class="gallery-item" onclick="window.location.href='Mediación.html'">
@@ -572,7 +582,140 @@
             </div>
         </div>
     </div>
-    <div class="version">Versión 1.01</div>
+    <div class="version">Versión 1.05</div>
+    <!-- 🔐 INICIO DE SESIÓN CON GOOGLE (Firebase Auth) -->
+    <script type="module">
+        // Importar Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+        // Verificar si se está ejecutando localmente (file://)
+        if (window.location.protocol === 'file:') {
+            console.error('❌ Error: Los módulos ES no funcionan en file://. Por favor, usa un servidor HTTP/HTTPS.');
+            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS para usar Firebase.');
+        } else {
+            try {
+                // Configuración de Firebase
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
+                    authDomain: "dpccrea-login.firebaseapp.com",
+                    projectId: "dpccrea-login",
+                    appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
+                };
+
+                // Inicializar Firebase
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth();
+                const provider = new GoogleAuthProvider();
+
+                // Crear botón de login
+                const loginBtn = document.createElement('button');
+                loginBtn.id = 'loginBtn';
+                loginBtn.innerText = '🔐 INICIAR SESIÓN CON GOOGLE';
+                loginBtn.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 25px;
+                    background: #111;
+                    color: var(--golden-main);
+                    border: 2px solid var(--golden-accent);
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    z-index: 1000;
+                    font-family: 'Courier New', monospace;
+                    font-size: 0.9rem;
+                    box-shadow: 0 0 15px var(--golden-accent), 0 0 5px var(--inclusive-purple);
+                    text-shadow: 0 0 10px var(--golden-accent);
+                    transition: all 0.3s ease;
+                    opacity: 0.9;
+                    margin-bottom: 10px;
+                `;
+                loginBtn.onmouseover = () => loginBtn.style.transform = 'scale(1.05)';
+                loginBtn.onmouseout = () => loginBtn.style.transform = 'scale(1)';
+
+                // Crear botón de logout
+                const logoutBtn = document.createElement('button');
+                logoutBtn.id = 'logoutBtn';
+                logoutBtn.innerText = '🚪 CERRAR SESIÓN';
+                logoutBtn.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 25px;
+                    background: #331100;
+                    color: var(--golden-main);
+                    border: 2px solid var(--golden-accent);
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    z-index: 1000;
+                    font-family: 'Courier New', monospace;
+                    font-size: 0.9rem;
+                    box-shadow: 0 0 15px var(--golden-accent), 0 0 5px var(--inclusive-purple);
+                    text-shadow: 0 0 10px var(--golden-accent);
+                    transition: all 0.3s ease;
+                    opacity: 0.9;
+                    margin-bottom: 10px;
+                `;
+                logoutBtn.onmouseover = () => logoutBtn.style.transform = 'scale(1.05)';
+                logoutBtn.onmouseout = () => logoutBtn.style.transform = 'scale(1)';
+
+                // Añadir botón al DOM
+                document.body.appendChild(loginBtn);
+
+                // Detectar si el usuario ya está logueado
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        loginBtn.style.display = 'none';
+                        if (!document.getElementById('logoutBtn')) {
+                            document.body.appendChild(logoutBtn);
+                        }
+                        console.log('%c🟢 Usuario autenticado:', 'color: #FFD700', user.displayName, user.email);
+                    } else {
+                        logoutBtn.remove();
+                        loginBtn.style.display = 'block';
+                    }
+                });
+
+                // Acción de login
+                loginBtn.addEventListener('click', () => {
+                    signInWithPopup(auth, provider)
+                        .then((result) => {
+                            const user = result.user;
+                            console.log('%c🎉 Bienvenido:', 'color: #DAA520', user.displayName);
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.error('❌ Error de autenticación:', errorCode, errorMessage);
+                            let userMessage = 'Error al iniciar sesión: ' + errorMessage;
+                            if (errorCode === 'auth/popup-blocked') {
+                                userMessage = 'El popup de inicio de sesión fue bloqueado. Por favor, permite los popups en tu navegador.';
+                            } else if (errorCode === 'auth/invalid-api-key') {
+                                userMessage = 'Clave de API de Firebase inválida. Revisa la configuración en Firebase Console.';
+                            } else if (errorCode === 'auth/network-request-failed') {
+                                userMessage = 'Error de red. Verifica tu conexión a internet.';
+                            }
+                            alert(userMessage);
+                        });
+                });
+
+                // Acción de logout
+                logoutBtn.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
+                    }).catch((error) => {
+                        console.error('❌ Error al cerrar sesión:', error.code, error.message);
+                        alert('Error al cerrar sesión: ' + error.message);
+                    });
+                });
+            } catch (e) {
+                console.error('❌ Error al inicializar Firebase:', e.message);
+                alert('No se pudo inicializar Firebase. Verifica la configuración o la conexión.');
+            }
+        }
+    </script>
+    <!-- FIN DE INTEGRACIÓN DE LOGIN -->
     <script>
         const loader = document.getElementById('loader');
         const progressBar = document.getElementById('progressBar');
@@ -684,7 +827,7 @@
         function drawMatrix() {
             matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
             matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-            matrixCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--hacker-cyan').trim();
+            matrixCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--golden-accent').trim();
             matrixCtx.font = `bold ${fontSize}px monospace`;
             for (let i = 0; i < drops.length; i++) {
                 const text = chars[Math.floor(Math.random() * chars.length)];
@@ -718,7 +861,7 @@
                 if (this.y < 0 || this.y > particlesCanvas.height) this.speedY *= -1;
             }
             draw() {
-                particlesCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--hacker-cyan').trim();
+                particlesCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--golden-accent').trim();
                 particlesCtx.beginPath();
                 particlesCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 particlesCtx.fill();
