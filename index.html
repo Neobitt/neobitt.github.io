@@ -23,6 +23,7 @@
             --golden-accent: #DAA520;
             --inclusive-purple: #8A2BE2;
             --dark-color: #000;
+            --hacker-cyan: #00f7ff;
         }
         * {
             margin: 0;
@@ -135,92 +136,88 @@
             50% { opacity: 1; }
         }
         .update-popup {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            width: 80vw !important;
-            max-width: 500px !important;
-            min-height: 300px !important;
-            background: rgba(0, 0, 0, 0.9) !important;
-            border: 3px double var(--golden-main) !important;
-            padding: 30px !important;
-            box-shadow: 0 0 30px var(--golden-accent), 0 0 50px var(--golden-main) !important;
-            z-index: 100000 !important;
-            text-align: center !important;
-            animation: glitch 1.5s linear infinite !important;
-            backdrop-filter: blur(5px) !important;
-            display: none !important;
-            overflow-y: auto !important;
-            margin: 0 auto !important;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--golden-main);
+            padding: 20px;
+            box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
+            z-index: 10000;
+            text-align: center;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+            overflow-y: auto;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translate(-50%, -60%); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
         }
         .update-popup.active {
-            display: grid !important;
-            place-items: center !important;
-        }
-        .update-asterisks {
-            color: var(--golden-main);
-            font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--golden-accent);
-            margin-bottom: 15px;
-            animation: glitch 1.5s linear infinite;
+            display: flex;
         }
         .update-popup h2 {
-            color: var(--golden-accent);
-            font-size: 2rem;
-            text-shadow: 0 0 15px var(--golden-accent);
-            margin-bottom: 20px;
+            color: var(--golden-main);
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-bottom: 15px;
         }
         .update-section {
-            margin: 20px 0;
+            margin: 15px 0;
             text-align: left;
-            width: 100%;
         }
         .update-section h3 {
             color: var(--golden-accent);
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px var(--golden-accent);
-            margin-bottom: 10px;
-            animation: glitch 1.5s linear infinite;
+            font-size: 1.3rem;
+            text-shadow: 0 0 8px var(--golden-accent);
+            margin-bottom: 8px;
         }
         .update-section ul {
             list-style: none;
             color: var(--golden-main);
-            font-size: 1rem;
-            text-shadow: 0 0 8px var(--golden-main);
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--golden-main);
         }
         .update-section ul li {
-            margin-bottom: 8px;
-            padding-left: 20px;
+            margin-bottom: 6px;
+            padding-left: 15px;
             position: relative;
         }
         .update-section ul li:before {
-            content: '-';
+            content: '>';
             position: absolute;
             left: 0;
+            color: var(--inclusive-purple);
         }
         .update-button {
-            background: #111;
+            background: var(--golden-accent);
             border: 2px solid var(--golden-main);
-            color: var(--golden-accent);
-            font-size: 1.2rem;
-            padding: 10px 20px;
+            color: #000;
+            font-size: 1rem;
+            padding: 8px 15px;
             border-radius: 5px;
             cursor: not-allowed;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px var(--golden-accent);
             text-transform: uppercase;
             opacity: 0.5;
+            margin-top: 15px;
         }
         .update-button.enabled {
             cursor: pointer;
             opacity: 1;
         }
         .update-button.enabled:hover {
-            background: var(--golden-accent);
-            color: #000;
-            box-shadow: 0 0 20px var(--golden-accent);
-            animation: glitch 0.5s linear infinite;
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+            transform: scale(1.05);
         }
         .version {
             position: fixed;
@@ -363,9 +360,9 @@
         .counter-container {
             margin: 20px 35px;
             text-align: center;
-            color: #00f7ff;
+            color: var(--hacker-cyan);
             font-size: 1.2rem;
-            text-shadow: 0 0 10px #00f7ff;
+            text-shadow: 0 0 10px var(--hacker-cyan);
             transition: all 0.3s ease;
             opacity: 1;
             position: relative;
@@ -375,9 +372,9 @@
             display: inline-block;
             background: transparent;
             padding: 10px 20px;
-            border: 2px solid #00f7ff;
+            border: 2px solid var(--hacker-cyan);
             border-radius: 5px;
-            box-shadow: 0 0 15px #00f7ff;
+            box-shadow: 0 0 15px var(--hacker-cyan);
             min-height: 40px;
             min-width: 100px;
             pointer-events: none;
@@ -385,19 +382,12 @@
         }
         .counter-container:hover div {
             transform: scale(1.05);
-            box-shadow: 0 0 25px #00f7ff, 0 0 15px var(--golden-main);
-        }
-        .counter-container img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            border: none;
-            pointer-events: none;
+            box-shadow: 0 0 25px var(--hacker-cyan), 0 0 15px var(--golden-main);
         }
         .counter-fallback {
-            color: #00f7ff;
+            color: var(--hacker-cyan);
             font-size: 1rem;
-            text-shadow: 0 0 5px #00f7ff;
+            text-shadow: 0 0 5px var(--hacker-cyan);
         }
         @keyframes glitch {
             0%, 100% { transform: translate(0); }
@@ -424,14 +414,15 @@
             nav { width: 280px; }
             nav .logo { width: 80px; height: 80px; }
             .update-popup {
-                width: 90vw !important;
-                padding: 20px !important;
+                width: 95%;
+                max-width: 350px;
+                padding: 15px;
             }
             #loginBtn, #logoutBtn {
-                top: 90px !important;
-                right: 15px !important;
-                font-size: 0.8rem !important;
-                padding: 8px 12px !important;
+                top: 90px;
+                right: 15px;
+                font-size: 0.8rem;
+                padding: 8px 12px;
             }
         }
         header {
@@ -498,28 +489,21 @@
         </div>
     </div>
     <div class="update-popup" id="updatePopup">
-        <p class="update-asterisks">* * * NUEVA ACTUALIZACIÓN * * *</p>
-        <h2>ACTUALIZACIÓN 20/08/2025</h2>
-        <p style="color: var(--golden-main); font-size: 1.2rem; margin-bottom: 20px;">Nueva versión del sistema DPCCrea detectada.</p>
+        <h2>ACTUALIZACIÓN 21/08/2025</h2>
         <div class="update-section">
-            <h3>NOVEDADES</h3>
+            <h3>Novedades</h3>
             <ul>
-                <li>Contador de visitas</li>
-                <li>Cuadro de actualización implementado</li>
-                <li>Recursos sobre sexualidad e identidad</li>
-                <li>Nueva paleta de colores dorados</li>
+                <li>Contador de visitas con Firestore</li>
+                <li>Rediseño del popup de actualización</li>
                 <li>Inicio de sesión con Firebase</li>
-                <li>Corrección de error de sintaxis en Firebase</li>
             </ul>
         </div>
         <div class="update-section">
-            <h3>BUGS SOLUCIONADOS</h3>
+            <h3>Bugs Solucionados</h3>
             <ul>
-                <li>Mejorada responsividad en móviles</li>
-                <li>Optimización de carga de imágenes</li>
-                <li>Fondo Matrix visible en página principal</li>
-                <li>Eliminado parpadeo de barra de desplazamiento</li>
-                <li>Error de sintaxis en script de Firebase</li>
+                <li>Eliminado contador con publicidad</li>
+                <li>Popup de actualización redimensionado</li>
+                <li>Error de sintaxis en Firebase</li>
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
@@ -539,13 +523,9 @@
             <li><a href="creators.html">CREADORES</a></li>
             <li><a href="juego.html">JUEGO</a></li>
             <li class="counter-container">
-                <div id="sfcwcwbjwc1qgqszpjapgf4ym5spfenubxc">
+                <div id="visitor-counter">
                     <span class="counter-fallback">Cargando contador...</span>
                 </div>
-                <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc&down=async" async></script>
-                <noscript>
-                    <img src="https://counter1.optistats.ovh/private/contadorvisitasgratis.php?c=wcwbjwc1qgqszpjapgf4ym5spfenubxc" border="0" title="contador de visitas" alt="contador de visitas">
-                </noscript>
             </li>
         </ul>
     </nav>
@@ -582,12 +562,13 @@
             </div>
         </div>
     </div>
-    <div class="version">Versión 1.05</div>
-    <!-- 🔐 INICIO DE SESIÓN CON GOOGLE (Firebase Auth) -->
+    <div class="version">Versión 1.07</div>
+    <!-- 🔐 INICIO DE SESIÓN Y CONTADOR CON FIREBASE -->
     <script type="module">
         // Importar Firebase
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         // Verificar si se está ejecutando localmente (file://)
         if (window.location.protocol === 'file:') {
@@ -607,6 +588,8 @@
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth();
                 const provider = new GoogleAuthProvider();
+                const db = getFirestore();
+                const counterRef = doc(db, "visitas", "contador");
 
                 // Crear botón de login
                 const loginBtn = document.createElement('button');
@@ -634,7 +617,7 @@
                 loginBtn.onmouseover = () => loginBtn.style.transform = 'scale(1.05)';
                 loginBtn.onmouseout = () => loginBtn.style.transform = 'scale(1)';
 
-                // Crear botón de logout
+                // Crear organisatiesbotón de logout
                 const logoutBtn = document.createElement('button');
                 logoutBtn.id = 'logoutBtn';
                 logoutBtn.innerText = '🚪 CERRAR SESIÓN';
@@ -709,13 +692,52 @@
                         alert('Error al cerrar sesión: ' + error.message);
                     });
                 });
+
+                // Contador de visitas
+                const displayCounter = async () => {
+                    const counterEl = document.getElementById('visitor-counter');
+                    const today = new Date().toISOString().split('T')[0];
+                    const lastVisit = localStorage.getItem('dpccrea_lastVisit');
+                    if (lastVisit === today) {
+                        try {
+                            const docSnap = await getDoc(counterRef);
+                            if (docSnap.exists()) {
+                                const count = docSnap.data().count;
+                                counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
+                            }
+                        } catch {
+                            counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
+                        }
+                        return;
+                    }
+                    try {
+                        await updateDoc(counterRef, { count: increment(1) }).catch(() => {});
+                        localStorage.setItem('dpccrea_lastVisit', today);
+                        const docSnap = await getDoc(counterRef);
+                        if (docSnap.exists()) {
+                            const count = docSnap.data().count;
+                            counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
+                        }
+                    } catch (error) {
+                        try {
+                            const docSnap = await getDoc(counterRef);
+                            if (docSnap.exists()) {
+                                const count = docSnap.data().count;
+                                counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
+                            }
+                        } catch {
+                            counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
+                        }
+                    }
+                };
+                displayCounter();
             } catch (e) {
                 console.error('❌ Error al inicializar Firebase:', e.message);
                 alert('No se pudo inicializar Firebase. Verifica la configuración o la conexión.');
             }
         }
     </script>
-    <!-- FIN DE INTEGRACIÓN DE LOGIN -->
+    <!-- FIN DE INTEGRACIÓN DE FIREBASE -->
     <script>
         const loader = document.getElementById('loader');
         const progressBar = document.getElementById('progressBar');
@@ -739,11 +761,9 @@
         let progress = 0;
         let messageIndex = 0;
         function centerPopup() {
-            updatePopup.style.position = 'fixed';
             updatePopup.style.top = '50%';
             updatePopup.style.left = '50%';
             updatePopup.style.transform = 'translate(-50%, -50%)';
-            updatePopup.style.margin = '0';
         }
         function updateProgress() {
             if (progress < 100) {
@@ -772,7 +792,7 @@
                         setTimeout(() => {
                             updateButton.disabled = false;
                             updateButton.classList.add('enabled');
-                        }, 3000);
+                        }, 2000);
                     }, 500);
                 }, 1000);
             }
@@ -797,22 +817,6 @@
             particlesCanvas.height = window.innerHeight;
         });
         setTimeout(updateProgress, 1000);
-        const counterContainer = document.querySelector('#sfcwcwbjwc1qgqszpjapgf4ym5spfenubxc');
-        const counterScript = document.querySelector('script[src*="counter.js"]');
-        setTimeout(() => {
-            if (!counterContainer.innerHTML || counterContainer.innerHTML.includes('Cargando contador')) {
-                counterContainer.innerHTML = '<span class="counter-fallback">Contador no disponible</span>';
-            }
-            const links = counterContainer.querySelectorAll('a');
-            links.forEach(link => {
-                link.removeAttribute('href');
-                link.style.pointerEvents = 'none';
-                link.style.cursor = 'default';
-            });
-        }, 5000);
-        counterScript.onerror = () => {
-            counterContainer.innerHTML = '<span class="counter-fallback">Error al cargar contador</span>';
-        };
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
