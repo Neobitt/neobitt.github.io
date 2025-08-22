@@ -493,7 +493,7 @@
         <div class="update-section">
             <h3>Novedades</h3>
             <ul>
-                <li>Contador de visitas con Firestore</li>
+                <li>Contador de visitas en vivo con Firestore</li>
                 <li>Rediseño del popup de actualización</li>
                 <li>Inicio de sesión con Firebase</li>
             </ul>
@@ -562,13 +562,13 @@
             </div>
         </div>
     </div>
-    <div class="version">Versión 1.07</div>
+    <div class="version">Versión 1.08</div>
     <!-- 🔐 INICIO DE SESIÓN Y CONTADOR CON FIREBASE -->
     <script type="module">
         // Importar Firebase
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+        import { getFirestore, doc, getDoc, updateDoc, increment, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         // Verificar si se está ejecutando localmente (file://)
         if (window.location.protocol === 'file:') {
@@ -617,7 +617,7 @@
                 loginBtn.onmouseover = () => loginBtn.style.transform = 'scale(1.05)';
                 loginBtn.onmouseout = () => loginBtn.style.transform = 'scale(1)';
 
-                // Crear organisatiesbotón de logout
+                // Crear botón de logout
                 const logoutBtn = document.createElement('button');
                 logoutBtn.id = 'logoutBtn';
                 logoutBtn.innerText = '🚪 CERRAR SESIÓN';
@@ -693,44 +693,33 @@
                     });
                 });
 
-                // Contador de visitas
-                const displayCounter = async () => {
-                    const counterEl = document.getElementById('visitor-counter');
-                    const today = new Date().toISOString().split('T')[0];
-                    const lastVisit = localStorage.getItem('dpccrea_lastVisit');
-                    if (lastVisit === today) {
-                        try {
-                            const docSnap = await getDoc(counterRef);
-                            if (docSnap.exists()) {
-                                const count = docSnap.data().count;
-                                counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
-                            }
-                        } catch {
-                            counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
-                        }
-                        return;
+                // Contador de visitas en vivo
+                const counterEl = document.getElementById('visitor-counter');
+                onSnapshot(counterRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const count = docSnap.data().count;
+                        counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
+                    } else {
+                        counterEl.innerHTML = `<span class="counter-fallback">0</span>`;
                     }
-                    try {
-                        await updateDoc(counterRef, { count: increment(1) }).catch(() => {});
-                        localStorage.setItem('dpccrea_lastVisit', today);
-                        const docSnap = await getDoc(counterRef);
-                        if (docSnap.exists()) {
-                            const count = docSnap.data().count;
-                            counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
-                        }
-                    } catch (error) {
-                        try {
-                            const docSnap = await getDoc(counterRef);
-                            if (docSnap.exists()) {
-                                const count = docSnap.data().count;
-                                counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
-                            }
-                        } catch {
-                            counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
-                        }
-                    }
-                };
-                displayCounter();
+                }, (error) => {
+                    console.error('❌ Error al escuchar contador:', error);
+                    counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
+                });
+
+                // Aumentar contador solo si es primera visita del día
+                const today = new Date().toISOString().split('T')[0];
+                const lastVisit = localStorage.getItem('dpccrea_lastVisit');
+                if (lastVisit !== today) {
+                    updateDoc(counterRef, { count: increment(1) })
+                        .then(() => {
+                            localStorage.setItem('dpccrea_lastVisit', today);
+                            console.log('%c📈 Contador incrementado', 'color: #00f7ff');
+                        })
+                        .catch((error) => {
+                            console.error('❌ Error al aumentar contador:', error);
+                        });
+                }
             } catch (e) {
                 console.error('❌ Error al inicializar Firebase:', e.message);
                 alert('No se pudo inicializar Firebase. Verifica la configuración o la conexión.');
