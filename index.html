@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sexualidad e Identidad - DPCCrea</title>
     <meta name="description" content="Descubre artículos, guías y recursos educativos sobre sexualidad, identidad y diversidad. Información confiable, segura y respetuosa para todas las edades.">
-    <meta name="keywords" content="sexualidad, identidad, diversidad, género, educación sexual, mediación, bienestar">
+    <meta name="keywords" content="sexualidad, identidad, diversidad, género, educación sexual, mediación, bienestar, películas, libros, documentales">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Sexualidad e Identidad - DPCCrea">
-    <meta property="og:description" content="Explora recursos educativos sobre sexualidad, identidad y diversidad con un enfoque inclusivo y respetuoso.">
+    <meta property="og:description" content="Explora recursos educativos sobre sexualidad, identidad, diversidad, películas, libros y documentales con un enfoque inclusivo y respetuoso.">
     <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
     <meta property="og:url" content="https://dpccrea.com">
     <meta property="og:type" content="website">
@@ -23,7 +23,6 @@
             --golden-accent: #DAA520;
             --inclusive-purple: #8A2BE2;
             --dark-color: #000;
-            --hacker-cyan: #00f7ff;
         }
         * {
             margin: 0;
@@ -219,15 +218,6 @@
             box-shadow: 0 0 15px var(--golden-accent);
             transform: scale(1.05);
         }
-        .version {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            color: var(--golden-main);
-            font-size: 0.9rem;
-            text-shadow: 0 0 10px var(--golden-accent);
-            z-index: 1000;
-        }
         .matrix-bg, .particles-bg {
             position: fixed;
             top: 0;
@@ -244,10 +234,10 @@
         }
         .hamburger {
             position: fixed;
-            top: 25px;
-            right: 25px;
-            width: 70px;
-            height: 70px;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
             background: #111;
             border: 3px double var(--golden-main);
             border-radius: 10px;
@@ -271,21 +261,21 @@
             box-shadow: 0 0 30px var(--golden-accent), 0 0 20px var(--golden-main);
         }
         .hamburger div {
-            width: 35px;
-            height: 5px;
+            width: 30px;
+            height: 4px;
             background: var(--golden-accent);
-            margin: 6px 0;
+            margin: 5px 0;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px var(--golden-accent);
         }
         .hamburger.active div:nth-child(1) {
-            transform: rotate(45deg) translate(10px, 10px);
+            transform: rotate(45deg) translate(8px, 8px);
         }
         .hamburger.active div:nth-child(2) {
             opacity: 0;
         }
         .hamburger.active div:nth-child(3) {
-            transform: rotate(-45deg) translate(10px, -10px);
+            transform: rotate(-45deg) translate(8px, -8px);
         }
         nav {
             position: fixed;
@@ -341,6 +331,7 @@
         nav ul li:nth-child(3) { transition-delay: 0.3s; }
         nav ul li:nth-child(4) { transition-delay: 0.4s; }
         nav ul li:nth-child(5) { transition-delay: 0.5s; }
+        nav ul li:nth-child(6) { transition-delay: 0.6s; }
         nav ul li a {
             color: var(--golden-main);
             text-decoration: none;
@@ -360,34 +351,77 @@
         .counter-container {
             margin: 20px 35px;
             text-align: center;
-            color: var(--hacker-cyan);
             font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--hacker-cyan);
+            animation: rgbGlow 3s infinite;
             transition: all 0.3s ease;
-            opacity: 1;
-            position: relative;
             pointer-events: none;
         }
         .counter-container div {
             display: inline-block;
             background: transparent;
             padding: 10px 20px;
-            border: 2px solid var(--hacker-cyan);
+            border: 2px solid transparent;
             border-radius: 5px;
-            box-shadow: 0 0 15px var(--hacker-cyan);
             min-height: 40px;
             min-width: 100px;
+            animation: rgbGlow 3s infinite;
             pointer-events: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
         .counter-container:hover div {
             transform: scale(1.05);
-            box-shadow: 0 0 25px var(--hacker-cyan), 0 0 15px var(--golden-main);
         }
         .counter-fallback {
-            color: var(--hacker-cyan);
             font-size: 1rem;
-            text-shadow: 0 0 5px var(--hacker-cyan);
+            animation: rgbGlow 3s infinite;
+        }
+        @keyframes rgbGlow {
+            0% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+            33% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+            66% { color: #0000ff; text-shadow: 0 0 10px #0000ff; }
+            100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+        }
+        .auth-link {
+            cursor: pointer;
+        }
+        .gif-container {
+            margin: 2rem auto;
+            display: flex;
+            justify-content: center;
+        }
+        .gif-container img {
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--golden-main);
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--inclusive-purple);
+            transition: transform 0.3s ease;
+        }
+        .gif-container img:hover {
+            transform: scale(1.05);
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            text-align: center;
+            border-top: 4px solid var(--golden-accent);
+            margin-top: 2rem;
+        }
+        footer a {
+            color: var(--golden-main);
+            text-decoration: none;
+            font-size: 1rem;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin: 0 15px;
+        }
+        footer a:hover {
+            text-shadow: 0 0 15px var(--golden-main);
+        }
+        footer .version {
+            color: var(--golden-main);
+            font-size: 0.9rem;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-top: 10px;
         }
         @keyframes glitch {
             0%, 100% { transform: translate(0); }
@@ -405,12 +439,21 @@
             }
             .gallery {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
+                gap: 20px;
                 padding: 20px;
             }
             h1 { font-size: 3rem; }
-            .hamburger { width: 60px; height: 60px; }
-            .hamburger div { width: 30px; height: 4px; margin: 5px 0; }
+            .hamburger {
+                width: 50px;
+                height: 50px;
+                top: 15px;
+                right: 15px;
+            }
+            .hamburger div {
+                width: 25px;
+                height: 3px;
+                margin: 4px 0;
+            }
             nav { width: 280px; }
             nav .logo { width: 80px; height: 80px; }
             .update-popup {
@@ -418,12 +461,11 @@
                 max-width: 350px;
                 padding: 15px;
             }
-            #loginBtn, #logoutBtn {
-                top: 90px;
-                right: 15px;
-                font-size: 0.8rem;
-                padding: 8px 12px;
+            .gif-container img {
+                width: 150px;
+                height: 150px;
             }
+            footer a { font-size: 0.9rem; margin: 0 10px; }
         }
         header {
             background: #000;
@@ -441,8 +483,8 @@
         .gallery {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            padding: 40px;
+            gap: 30px;
+            padding: 30px;
             max-width: 1500px;
             margin: 0 auto;
             overflow-x: hidden;
@@ -493,9 +535,10 @@
         <div class="update-section">
             <h3>Novedades</h3>
             <ul>
-                <li>Contador de visitas en vivo con Firestore</li>
-                <li>Rediseño del popup de actualización</li>
-                <li>Inicio de sesión con Firebase</li>
+                <li>Contador de visitas RGB en menú hamburguesa</li>
+                <li>Términos y Condiciones en el pie de página</li>
+                <li>GIF reubicado bajo el catálogo</li>
+                <li>Nuevas secciones: Películas, Libros, Documentales</li>
             </ul>
         </div>
         <div class="update-section">
@@ -527,6 +570,7 @@
                     <span class="counter-fallback">Cargando contador...</span>
                 </div>
             </li>
+            <li id="authLink"><a href="#" class="auth-link">🔐 INICIAR SESIÓN</a></li>
         </ul>
     </nav>
     <div class="content" id="mainContent">
@@ -560,9 +604,24 @@
             <div class="gallery-item" onclick="window.location.href='nueva4.html'">
                 <img src="assets/imagenes/8.jpg" alt="Comunidad Segura">
             </div>
+            <div class="gallery-item" onclick="window.location.href='peliculas.html'">
+                <img src="assets/imagenes/9.jpg" alt="Películas">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='libros.html'">
+                <img src="assets/imagenes/10.jpg" alt="Libros">
+            </div>
+            <div class="gallery-item" onclick="window.location.href='documentales.html'">
+                <img src="assets/imagenes/11.jpg" alt="Documentales">
+            </div>
+        </div>
+        <div class="gif-container">
+            <img src="assets/imagenes/rainbow.gif" alt="Rainbow Animation">
         </div>
     </div>
-    <div class="version">Versión 1.08</div>
+    <footer>
+        <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
+        <div class="version">Versión 1.11</div>
+    </footer>
     <!-- 🔐 INICIO DE SESIÓN Y CONTADOR CON FIREBASE -->
     <script type="module">
         // Importar Firebase
@@ -591,105 +650,45 @@
                 const db = getFirestore();
                 const counterRef = doc(db, "visitas", "contador");
 
-                // Crear botón de login
-                const loginBtn = document.createElement('button');
-                loginBtn.id = 'loginBtn';
-                loginBtn.innerText = '🔐 INICIAR SESIÓN CON GOOGLE';
-                loginBtn.style.cssText = `
-                    position: fixed;
-                    top: 100px;
-                    right: 25px;
-                    background: #111;
-                    color: var(--golden-main);
-                    border: 2px solid var(--golden-accent);
-                    padding: 10px 15px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    z-index: 1000;
-                    font-family: 'Courier New', monospace;
-                    font-size: 0.9rem;
-                    box-shadow: 0 0 15px var(--golden-accent), 0 0 5px var(--inclusive-purple);
-                    text-shadow: 0 0 10px var(--golden-accent);
-                    transition: all 0.3s ease;
-                    opacity: 0.9;
-                    margin-bottom: 10px;
-                `;
-                loginBtn.onmouseover = () => loginBtn.style.transform = 'scale(1.05)';
-                loginBtn.onmouseout = () => loginBtn.style.transform = 'scale(1)';
-
-                // Crear botón de logout
-                const logoutBtn = document.createElement('button');
-                logoutBtn.id = 'logoutBtn';
-                logoutBtn.innerText = '🚪 CERRAR SESIÓN';
-                logoutBtn.style.cssText = `
-                    position: fixed;
-                    top: 100px;
-                    right: 25px;
-                    background: #331100;
-                    color: var(--golden-main);
-                    border: 2px solid var(--golden-accent);
-                    padding: 10px 15px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    z-index: 1000;
-                    font-family: 'Courier New', monospace;
-                    font-size: 0.9rem;
-                    box-shadow: 0 0 15px var(--golden-accent), 0 0 5px var(--inclusive-purple);
-                    text-shadow: 0 0 10px var(--golden-accent);
-                    transition: all 0.3s ease;
-                    opacity: 0.9;
-                    margin-bottom: 10px;
-                `;
-                logoutBtn.onmouseover = () => logoutBtn.style.transform = 'scale(1.05)';
-                logoutBtn.onmouseout = () => logoutBtn.style.transform = 'scale(1)';
-
-                // Añadir botón al DOM
-                document.body.appendChild(loginBtn);
-
-                // Detectar si el usuario ya está logueado
+                // Manejar autenticación en el menú
+                const authLink = document.getElementById('authLink');
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        loginBtn.style.display = 'none';
-                        if (!document.getElementById('logoutBtn')) {
-                            document.body.appendChild(logoutBtn);
-                        }
+                        authLink.innerHTML = '<a href="#" class="auth-link">🚪 CERRAR SESIÓN</a>';
                         console.log('%c🟢 Usuario autenticado:', 'color: #FFD700', user.displayName, user.email);
                     } else {
-                        logoutBtn.remove();
-                        loginBtn.style.display = 'block';
+                        authLink.innerHTML = '<a href="#" class="auth-link">🔐 INICIAR SESIÓN</a>';
                     }
-                });
-
-                // Acción de login
-                loginBtn.addEventListener('click', () => {
-                    signInWithPopup(auth, provider)
-                        .then((result) => {
-                            const user = result.user;
-                            console.log('%c🎉 Bienvenido:', 'color: #DAA520', user.displayName);
-                        })
-                        .catch((error) => {
-                            const errorCode = error.code;
-                            const errorMessage = error.message;
-                            console.error('❌ Error de autenticación:', errorCode, errorMessage);
-                            let userMessage = 'Error al iniciar sesión: ' + errorMessage;
-                            if (errorCode === 'auth/popup-blocked') {
-                                userMessage = 'El popup de inicio de sesión fue bloqueado. Por favor, permite los popups en tu navegador.';
-                            } else if (errorCode === 'auth/invalid-api-key') {
-                                userMessage = 'Clave de API de Firebase inválida. Revisa la configuración en Firebase Console.';
-                            } else if (errorCode === 'auth/network-request-failed') {
-                                userMessage = 'Error de red. Verifica tu conexión a internet.';
-                            }
-                            alert(userMessage);
-                        });
-                });
-
-                // Acción de logout
-                logoutBtn.addEventListener('click', () => {
-                    signOut(auth).then(() => {
-                        console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
-                    }).catch((error) => {
-                        console.error('❌ Error al cerrar sesión:', error.code, error.message);
-                        alert('Error al cerrar sesión: ' + error.message);
+                    authLink.querySelector('a').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (user) {
+                            signOut(auth).then(() => {
+                                console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
+                            }).catch((error) => {
+                                console.error('❌ Error al cerrar sesión:', error.code, error.message);
+                                alert('Error al cerrar sesión: ' + error.message);
+                            });
+                        } else {
+                            signInWithPopup(auth, provider)
+                                .then((result) => {
+                                    const user = result.user;
+                                    console.log('%c🎉 Bienvenido:', 'color: #DAA520', user.displayName);
+                                })
+                                .catch((error) => {
+                                    const errorCode = error.code;
+                                    const errorMessage = error.message;
+                                    console.error('❌ Error de autenticación:', errorCode, errorMessage);
+                                    let userMessage = 'Error al iniciar sesión: ' + errorMessage;
+                                    if (errorCode === 'auth/popup-blocked') {
+                                        userMessage = 'El popup de inicio de sesión fue bloqueado. Por favor, permite los popups en tu navegador.';
+                                    } else if (errorCode === 'auth/invalid-api-key') {
+                                        userMessage = 'Clave de API de Firebase inválida. Revisa la configuración en Firebase Console.';
+                                    } else if (errorCode === 'auth/network-request-failed') {
+                                        userMessage = 'Error de red. Verifica tu conexión a internet.';
+                                    }
+                                    alert(userMessage);
+                                });
+                        }
                     });
                 });
 
@@ -698,7 +697,7 @@
                 onSnapshot(counterRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const count = docSnap.data().count;
-                        counterEl.innerHTML = `<strong style="color:var(--hacker-cyan); text-shadow: 0 0 10px var(--hacker-cyan);">Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
+                        counterEl.innerHTML = `<strong>Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
                     } else {
                         counterEl.innerHTML = `<span class="counter-fallback">0</span>`;
                     }
@@ -714,7 +713,7 @@
                     updateDoc(counterRef, { count: increment(1) })
                         .then(() => {
                             localStorage.setItem('dpccrea_lastVisit', today);
-                            console.log('%c📈 Contador incrementado', 'color: #00f7ff');
+                            console.log('%c📈 Contador incrementado', 'color: #FFD700');
                         })
                         .catch((error) => {
                             console.error('❌ Error al aumentar contador:', error);
@@ -887,9 +886,9 @@
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
             if (navMenu.classList.contains('active')) {
-                hamburger.children[0].style.transform = 'rotate(45deg) translate(10px, 10px)';
+                hamburger.children[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
                 hamburger.children[1].style.opacity = '0';
-                hamburger.children[2].style.transform = 'rotate(-45deg) translate(10px, -10px)';
+                hamburger.children[2].style.transform = 'rotate(-45deg) translate(8px, -8px)';
             } else {
                 hamburger.children[0].style.transform = 'none';
                 hamburger.children[1].style.opacity = '1';
