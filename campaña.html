@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPCCrea presenta: EcoCiberPerú - Recicla hoy, transforma el mañana</title>
+    <meta name="description" content="DPCCrea presenta EcoCiberPerú: Recicla con estilo, apoya organizaciones, usa IA y aprende habilidades digitales. ¡Únete, causa!">
+    <meta name="keywords" content="DPCCrea, reciclaje Perú, medio ambiente, IA sostenible, responsabilidad social, habilidades digitales">
+    <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2E8B57;
+            --primary-dark: #1D5D3B;
+            --primary-light: #4CAF7D;
+            --secondary: #FF9E1B;
+            --secondary-dark: #E5890A;
+            --accent: #8A2BE2;
+            --text: #FFFFFF;
+            --text-light: #CCCCCC;
+            --background: #121212;
+            --background-alt: #1E1E1E;
+            --card-bg: #242424;
+            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            --card-hover: 0 12px 30px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s ease;
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Raleway', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--primary-light);
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 3px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2.2rem;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 139, 87, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            box-shadow: 0 5px 15px rgba(255, 158, 27, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 20px rgba(255, 158, 27, 0.4);
+        }
+
+        .btn-accent {
+            background: linear-gradient(90deg, var(--accent) 0%, #6A11CB 100%);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .btn-accent:hover {
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(120deg, var(--primary-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+            color: white;
+            padding: 7rem 0 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23000000' fill-opacity='0.2' d='M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,192C672,181,768,139,864,138.7C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center bottom;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .presenta-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        header h1 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 3.5rem;
+        }
+
+        header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            padding: 1.2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--primary-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo i {
+            margin-right: 0.5rem;
+            color: var(--secondary);
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 1001;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 35px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .hamburger div {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+            background: var(--secondary);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+            background: var(--secondary);
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--card-bg);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 100px 30px 50px;
+            transition: right 0.4s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .nav-menu.active {
+            right: 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            width: 100%;
+        }
+
+        .nav-menu li {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.4s ease;
+        }
+
+        .nav-menu.active li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-menu li:nth-child(1) { transition-delay: 0.1s; }
+        .nav-menu li:nth-child(2) { transition-delay: 0.2s; }
+        .nav-menu li:nth-child(3) { transition-delay: 0.3s; }
+        .nav-menu li:nth-child(4) { transition-delay: 0.4s; }
+        .nav-menu li:nth-child(5) { transition-delay: 0.5s; }
+        .nav-menu li:nth-child(6) { transition-delay: 0.6s; }
+
+        .nav-menu a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: block;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(46, 139, 87, 0.2);
+            padding-left: 25px;
+        }
+
+        .nav-menu a:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 0;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 0 5px 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover:before {
+            height: 70%;
+        }
+
+        .menu-bg {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            transition: width 0s 0.4s, height 0s 0.4s, opacity 0.4s;
+            opacity: 0;
+            z-index: 999;
+        }
+
+        .menu-bg.active {
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            transition: opacity 0.4s;
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2:after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bg-alt {
+            background-color: var(--background-alt);
+        }
+
+        /* Organization Cards */
+        .org-grid, .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin: 3rem 0;
+        }
+
+        .org-card, .skill-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .org-card:hover, .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-hover);
+            border-color: var(--primary);
+        }
+
+        .org-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .org-content, .skill-content {
+            padding: 2rem;
+        }
+
+        .org-card h3, .skill-card h3 {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* Form */
+        .form-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--card-shadow);
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid #333;
+            border-radius: 12px;
+            font-family: 'Raleway', sans-serif;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            background: rgba(50, 50, 50, 0.5);
+            color: var(--text);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 139, 87, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(120deg, var(--primary-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+            color: white;
+            padding: 5rem 0 2rem;
+            clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-heading {
+            font-size: 1.4rem;
+            margin-bottom: 1.8rem;
+            color: white;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-heading:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            h2 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 4rem 0;
+            }
+            
+            header {
+                padding: 6rem 0 4rem;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .org-grid, .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 0.9rem 1.8rem;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                width: 100%;
+                padding: 100px 20px 50px;
+            }
+        }
+
+        /* Utilities */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mb-3 { margin-bottom: 3rem; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        
+        /* DPCCrea Special Elements */
+        .dpccrea-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, var(--accent) 0%, #6A11CB 100%);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .impact-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(46, 139, 87, 0.1);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .impact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .impact-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .impact-label {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="nav-logo"><i class="fas fa-leaf"></i> EcoCiberPerú</a>
+            
+            <div class="hamburger-menu">
+                <div class="hamburger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            
+            <div class="menu-bg" id="menuBg"></div>
+            
+            <div class="nav-menu" id="navMenu">
+                <ul>
+                    <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="#organizaciones"><i class="fas fa-hands-helping"></i> Organizaciones</a></li>
+                    <li><a href="#etica"><i class="fas fa-seedling"></i> Ética</a></li>
+                    <li><a href="#ia"><i class="fas fa-robot"></i> IA</a></li>
+                    <li><a href="#habilidades"><i class="fas fa-graduation-cap"></i> Habilidades</a></li>
+                    <li><a href="#comentarios"><i class="fas fa-comments"></i> Comentarios</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header id="inicio">
+        <div class="container header-content fade-in">
+            <div class="dpccrea-badge">
+                <i class="fas fa-star"></i> DPCCrea presenta
+            </div>
+            
+            <h1>EcoCiberPerú</h1>
+            <p>Una iniciativa de DPCCrea para promover el reciclaje, la tecnología y la sostenibilidad en el Perú. Únete a nuestra comunidad para construir un futuro más verde.</p>
+            <a href="#comentarios" class="btn btn-secondary">¡Únete ahora! <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section>
+        <div class="container">
+            <div class="impact-stats">
+                <div class="impact-item fade-in">
+                    <div class="impact-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="impact-number">500+</div>
+                    <div class="impact-label">Toneladas recicladas</div>
+                </div>
+                <div class="impact-item fade-in delay-1">
+                    <div class="impact-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="impact-number">1,200+</div>
+                    <div class="impact-label">Personas impactadas</div>
+                </div>
+                <div class="impact-item fade-in delay-2">
+                    <div class="impact-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <div class="impact-number">2,500+</div>
+                    <div class="impact-label">Árboles plantados</div>
+                </div>
+                <div class="impact-item fade-in delay-3">
+                    <div class="impact-icon">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <div class="impact-number">15+</div>
+                    <div class="impact-label">Colegios participantes</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Organizations Section -->
+    <section id="organizaciones" class="bg-alt">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Organizaciones que lideran el cambio</h2>
+                <p>Conoce y apoya a las organizaciones peruanas que trabajan por un futuro más sostenible</p>
+            </div>
+            <div class="org-grid">
+                <div class="org-card fade-in delay-1">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%231D5D3B'/%3E%3Ccircle cx='200' cy='110' r='60' fill='white'/%3E%3Cpath d='M170,90 L230,90 L230,130 L170,130 Z' fill='%231D5D3B'/%3E%3C/svg%3E" alt="WWF Perú" class="org-img">
+                    <div class="org-content">
+                        <h3>WWF Perú</h3>
+                        <p>Protege la Amazonía y promueve la sostenibilidad ambiental. Han reforestado más de 10,000 hectáreas en 2024.</p>
+                        <a href="https://www.wwf.org.pe" class="btn btn-outline">Apóyalos</a>
+                    </div>
+                </div>
+                <div class="org-card fade-in delay-2">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%234CAF7D'/%3E%3Crect x='100' y='60' width='200' height='100' rx='10' fill='white'/%3E%3Ccircle cx='150' cy='110' r='20' fill='%234CAF7D'/%3E%3Ccircle cx='250' cy='110' r='20' fill='%234CAF7D'/%3E%3C/svg%3E" alt="Ciudad Saludable" class="org-img">
+                    <div class="org-content">
+                        <h3>Ciudad Saludable</h3>
+                        <p>Recicla más de 500 toneladas de plástico al año en Lima mediante talleres comunitarios y programas de educación.</p>
+                        <a href="https://ciudadsaludable.org" class="btn btn-outline">Apóyalos</a>
+                    </div>
+                </div>
+                <div class="org-card fade-in delay-3">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23FF9E1B'/%3E%3Cpath d='M100,80 L300,80 L300,160 L100,160 Z' fill='white'/%3E%3Ccircle cx='150' cy='120' r='25' fill='%23FF9E1B'/%3E%3Ccircle cx='250' cy='120' r='25' fill='%23FF9E1B'/%3E%3C/svg%3E" alt="EcoVida VES" class="org-img">
+                    <div class="org-content">
+                        <h3>EcoVida VES</h3>
+                        <p>Organiza ferias de reciclaje y manualidades en Villa El Salvador para niños y familias promoviendo la conciencia ambiental.</p>
+                        <a href="#" class="btn btn-outline">Apóyalos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ethics Section -->
+    <section id="etica">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Reciclar es nuestro deber</h2>
+                <p>Pequeñas acciones generan grandes cambios. Adopta estos hábitos en tu vida diaria</p>
+            </div>
+            <div class="fade-in delay-1">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); text-align: center; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <h3>Separa correctamente</h3>
+                        <p>Utiliza los tachos de reciclaje en tu colegio y comunidad (papel, plástico, orgánico).</p>
+                    </div>
+                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); text-align: center; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <h3>Reutiliza</h3>
+                        <p>Lleva tu tomatodo reutilizable y dile no a las botellas plásticas de un solo uso.</p>
+                    </div>
+                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); text-align: center; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <h3>Reduce</h3>
+                        <p>Evita cañitas y bolsas de plástico. Pequeños cambios marcan una gran diferencia.</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="formulario-compromiso.html" class="btn">Comprométete ahora</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IA Section -->
+    <section id="ia" class="bg-alt">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>IA: Aliada y desafío</h2>
+                <p>La inteligencia artificial está revolucionando el reciclaje, pero debemos usarla responsablemente</p>
+            </div>
+            <div class="fade-in delay-1">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h3 style="color: var(--primary);">Beneficios</h3>
+                        <p>Apps como RecycleSmart utilizan IA para clasificar residuos con 95% de precisión y optimizar rutas de recolección, reduciendo emisiones.</p>
+                    </div>
+                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <h3 style="color: var(--primary);">Dilemas</h3>
+                        <p>Entrenar modelos de IA consume grandes cantidades de energía, emitiendo CO2. Es crucial utilizar servidores verdes y energías renovables.</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="https://recyclesmart.com" class="btn btn-accent">Explora apps de IA</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="habilidades">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Habilidades para el futuro</h2>
+                <p>Desarrolla competencias que te prepararán para los desafíos del mañana</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card fade-in delay-1">
+                    <div class="skill-content">
+                        <div style="font-size: 3rem; color: var(--secondary); margin-bottom: 1rem;">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Diseño 💡</h3>
+                        <p>Aprende a crear logos y diseños atractivos con herramientas como Canva y Adobe Creative Suite.</p>
+                        <a href="https://www.canva.com" class="btn btn-outline">Aprende diseño</a>
+                    </div>
+                </div>
+                <div class="skill-card fade-in delay-2">
+                    <div class="skill-content">
+                        <div style="font-size: 3rem; color: var(--secondary); margin-bottom: 1rem;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Trabajo en equipo 🤝</h3>
+                        <p>Desarrolla habilidades de colaboración efectiva para proyectos grupales y comunitarios.</p>
+                        <a href="https://www.linkedin.com/learning" class="btn btn-outline">Aprende colaboración</a>
+                    </div>
+                </div>
+                <div class="skill-card fade-in delay-3">
+                    <div class="skill-content">
+                        <div style="font-size: 3rem; color: var(--secondary); margin-bottom: 1rem;">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3>Creatividad 🎨</h3>
+                        <p>Potencia tu pensamiento creativo para resolver problemas ambientales de manera innovadora.</p>
+                        <a href="https://www.canva.com" class="btn btn-outline">Explora Canva</a>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-content">
+                        <div style="font-size: 3rem; color: var(--secondary); margin-bottom: 1rem;">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Habilidades digitales 💻</h3>
+                        <p>Domina HTML, CSS y otras tecnologías para crear soluciones digitales eco-friendly.</p>
+                        <a href="https://www.codecademy.com" class="btn btn-outline">Aprende a programar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comments Section -->
+    <section id="comentarios" class="bg-alt">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>¡Tu voz cuenta! 🗣️</h2>
+                <p>Comparte tus ideas y experiencias sobre reciclaje en tu comunidad</p>
+            </div>
+            <div class="form-container fade-in delay-1">
+                <form action="https://formsubmit.co/your-email@example.com" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">¿Qué haces para cuidar el planeta?</label>
+                        <textarea id="comment" name="comment" class="form-control" placeholder="Comparte tus ideas, proyectos o experiencias..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">Enviar mensaje <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo"><i class="fas fa-leaf"></i> EcoCiberPerú</div>
+                    <p class="footer-desc">Una iniciativa de DPCCrea para promover el reciclaje, la tecnología y la sostenibilidad en el Perú.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="footer-heading">Enlaces rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li><a href="#organizaciones"><i class="fas fa-hands-helping"></i> Organizaciones</a></li>
+                        <li><a href="#etica"><i class="fas fa-seedling"></i> Ética</a></li>
+                        <li><a href="#ia"><i class="fas fa-robot"></i> IA</a></li>
+                        <li><a href="#habilidades"><i class="fas fa-graduation-cap"></i> Habilidades</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-heading">Recursos</h4>
+                    <ul class="footer-links">
+                        <li><a href="terminos.html"><i class="fas fa-file-contract"></i> Términos y Condiciones</a></li>
+                        <li><a href="privacidad.html"><i class="fas fa-shield-alt"></i> Política de Privacidad</a></li>
+                        <li><a href="contacto.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                        <li><a href="preguntas.html"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-heading">Contacto</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> info@ecociberperu.com</li>
+                        <li><i class="fas fa-phone"></i> +51 987 654 321</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Lima, Perú</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 DPCCrea presenta EcoCiberPerú - Todos los derechos reservados. Hecho con <i class="fas fa-heart" style="color: #ff4d4d;"></i> en Perú</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const menuBg = document.getElementById('menuBg');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            menuBg.classList.toggle('active');
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        // Close menu when clicking on background
+        menuBg.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            menuBg.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                menuBg.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        fadeElements.forEach(element => {
+            element.style.opacity = 0;
+            element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(element);
+        });
+        
+        // Simple counter animation for stats
+        const statNumbers = document.querySelectorAll('.impact-number');
+        const statsSection = document.querySelector('.impact-stats');
+        
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    statNumbers.forEach(number => {
+                        const target = parseInt(number.textContent);
+                        let count = 0;
+                        const duration = 2000;
+                        const increment = target / (duration / 20);
+                        
+                        const updateCount = () => {
+                            if (count < target) {
+                                count += increment;
+                                number.textContent = Math.round(count) + '+';
+                                setTimeout(updateCount, 20);
+                            } else {
+                                number.textContent = target + '+';
+                            }
+                        };
+                        
+                        updateCount();
+                    });
+                    
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        statsObserver.observe(statsSection);
+    </script>
+</body>
+</html>
