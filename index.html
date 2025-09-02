@@ -428,45 +428,6 @@
             25% { transform: translate(-2px, 2px); }
             50% { transform: translate(2px, -2px); }
         }
-        @media (max-width: 768px) {
-            .counter-container {
-                font-size: 1rem;
-                margin: 10px 20px;
-            }
-            .counter-container div {
-                padding: 8px 15px;
-                min-width: 80px;
-            }
-            .gallery {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-                padding: 20px;
-            }
-            h1 { font-size: 3rem; }
-            .hamburger {
-                width: 50px;
-                height: 50px;
-                top: 15px;
-                right: 15px;
-            }
-            .hamburger div {
-                width: 25px;
-                height: 3px;
-                margin: 4px 0;
-            }
-            nav { width: 280px; }
-            nav .logo { width: 80px; height: 80px; }
-            .update-popup {
-                width: 95%;
-                max-width: 350px;
-                padding: 15px;
-            }
-            .gif-container img {
-                width: 150px;
-                height: 150px;
-            }
-            footer a { font-size: 0.9rem; margin: 0 10px; }
-        }
         header {
             background: #000;
             padding: 6rem 0;
@@ -508,9 +469,112 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease-in-out;
+            loading: lazy;
         }
         .gallery-item:hover img {
             transform: scale(1.05);
+        }
+        .carousel-container {
+            display: none;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            border: 4px solid var(--golden-main);
+            border-radius: 15px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 15px var(--inclusive-purple);
+            position: relative;
+            cursor: pointer;
+        }
+        .carousel-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px var(--golden-accent);
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+            loading: lazy;
+        }
+        .carousel-item:hover img {
+            transform: scale(1.05);
+        }
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .carousel-nav button {
+            background: var(--golden-accent);
+            color: #000;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .carousel-nav button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+        }
+        @media (max-width: 768px) {
+            .counter-container {
+                font-size: 1rem;
+                margin: 10px 20px;
+            }
+            .counter-container div {
+                padding: 8px 15px;
+                min-width: 80px;
+            }
+            .gallery {
+                display: none;
+            }
+            .carousel-container {
+                display: block;
+            }
+            .carousel-item {
+                flex: 0 0 100%;
+            }
+            h1 { font-size: 3rem; }
+            .hamburger {
+                width: 50px;
+                height: 50px;
+                top: 15px;
+                right: 15px;
+            }
+            .hamburger div {
+                width: 25px;
+                height: 3px;
+                margin: 4px 0;
+            }
+            nav { width: 280px; }
+            nav .logo { width: 80px; height: 80px; }
+            .update-popup {
+                width: 95%;
+                max-width: 350px;
+                padding: 15px;
+            }
+            .gif-container img {
+                width: 150px;
+                height: 150px;
+            }
+            footer a { font-size: 0.9rem; margin: 0 10px; }
         }
     </style>
 </head>
@@ -539,6 +603,7 @@
                 <li>Términos y Condiciones en el pie de página</li>
                 <li>GIF reubicado bajo el catálogo</li>
                 <li>Nuevas secciones: Películas, Libros, Documentales</li>
+                <li>Catálogo en carrusel para móviles</li>
             </ul>
         </div>
         <div class="update-section">
@@ -547,6 +612,8 @@
                 <li>Eliminado contador con publicidad</li>
                 <li>Popup de actualización redimensionado</li>
                 <li>Error de sintaxis en Firebase</li>
+                <li>Contador ahora sube cada 12 horas</li>
+                <li>Catálogo pequeño en móviles</li>
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
@@ -567,7 +634,7 @@
             <li><a href="campaña.html">Campaña</a></li>
             <li class="counter-container">
                 <div id="visitor-counter">
-                    <span class="counter-fallback">Cargando contador...</span>
+                    <span class="counter-fallback">Cargando contador... 🏳️‍🌈</span>
                 </div>
             </li>
             <li id="authLink"><a href="#" class="auth-link">🔐 INICIAR SESIÓN</a></li>
@@ -614,43 +681,77 @@
                 <img src="assets/imagenes/11.jpg" alt="Documentales">
             </div>
         </div>
+        <div class="carousel-container" id="catalogo-carousel">
+            <div class="carousel" id="carousel">
+                <div class="carousel-item" onclick="window.location.href='Mediación.html'">
+                    <img src="assets/imagenes/1.jpg" alt="Mediación Escolar">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='sexualidad.html'">
+                    <img src="assets/imagenes/2.jpg" alt="Sexualidad e Identidad">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='arbol.html'">
+                    <img src="assets/imagenes/3.jpg" alt="Diversidad Cultural">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='pdf.html'">
+                    <img src="assets/imagenes/4.jpg" alt="Recursos Educativos">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='nueva1.html'">
+                    <img src="assets/imagenes/5.jpg" alt="Educación Inclusiva">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='nueva2.html'">
+                    <img src="assets/imagenes/6.jpg" alt="Bienestar Emocional">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='nueva3.html'">
+                    <img src="assets/imagenes/7.jpg" alt="Género y Equidad">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='nueva4.html'">
+                    <img src="assets/imagenes/8.jpg" alt="Comunidad Segura">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='peliculas.html'">
+                    <img src="assets/imagenes/9.jpg" alt="Películas">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='libros.html'">
+                    <img src="assets/imagenes/10.jpg" alt="Libros">
+                </div>
+                <div class="carousel-item" onclick="window.location.href='documentales.html'">
+                    <img src="assets/imagenes/11.jpg" alt="Documentales">
+                </div>
+            </div>
+            <div class="carousel-nav">
+                <button onclick="moveCarousel('carousel', -1)">◄</button>
+                <button onclick="moveCarousel('carousel', 1)">►</button>
+            </div>
+        </div>
         <div class="gif-container">
             <img src="assets/imagenes/rainbow.gif" alt="Rainbow Animation">
         </div>
     </div>
     <footer>
         <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
-        <div class="version">Versión 1.11</div>
+        <div class="version">Versión 1.12</div>
     </footer>
-    <!-- 🔐 INICIO DE SESIÓN Y CONTADOR CON FIREBASE -->
     <script type="module">
-        // Importar Firebase
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
         import { getFirestore, doc, getDoc, updateDoc, increment, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-        // Verificar si se está ejecutando localmente (file://)
         if (window.location.protocol === 'file:') {
-            console.error('❌ Error: Los módulos ES no funcionan en file://. Por favor, usa un servidor HTTP/HTTPS.');
-            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS para usar Firebase.');
+            console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
+            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.');
         } else {
             try {
-                // Configuración de Firebase
                 const firebaseConfig = {
                     apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
                     authDomain: "dpccrea-login.firebaseapp.com",
                     projectId: "dpccrea-login",
                     appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
                 };
-
-                // Inicializar Firebase
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth();
                 const provider = new GoogleAuthProvider();
                 const db = getFirestore();
                 const counterRef = doc(db, "visitas", "contador");
 
-                // Manejar autenticación en el menú
                 const authLink = document.getElementById('authLink');
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
@@ -692,27 +793,26 @@
                     });
                 });
 
-                // Contador de visitas en vivo
                 const counterEl = document.getElementById('visitor-counter');
                 onSnapshot(counterRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const count = docSnap.data().count;
-                        counterEl.innerHTML = `<strong>Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
+                        counterEl.innerHTML = `<strong>Visitas: ${new Intl.NumberFormat().format(count)} 🏳️‍🌈</strong>`;
                     } else {
-                        counterEl.innerHTML = `<span class="counter-fallback">0</span>`;
+                        counterEl.innerHTML = `<span class="counter-fallback">0 🏳️‍🌈</span>`;
                     }
                 }, (error) => {
                     console.error('❌ Error al escuchar contador:', error);
-                    counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
+                    counterEl.innerHTML = `<span class="counter-fallback">[--] 🏳️‍🌈</span>`;
                 });
 
-                // Aumentar contador solo si es primera visita del día
-                const today = new Date().toISOString().split('T')[0];
                 const lastVisit = localStorage.getItem('dpccrea_lastVisit');
-                if (lastVisit !== today) {
+                const now = Date.now();
+                const twelveHours = 12 * 60 * 60 * 1000; // 12 horas en milisegundos
+                if (!lastVisit || (now - parseInt(lastVisit)) > twelveHours) {
                     updateDoc(counterRef, { count: increment(1) })
                         .then(() => {
-                            localStorage.setItem('dpccrea_lastVisit', today);
+                            localStorage.setItem('dpccrea_lastVisit', now.toString());
                             console.log('%c📈 Contador incrementado', 'color: #FFD700');
                         })
                         .catch((error) => {
@@ -725,7 +825,6 @@
             }
         }
     </script>
-    <!-- FIN DE INTEGRACIÓN DE FIREBASE -->
     <script>
         const loader = document.getElementById('loader');
         const progressBar = document.getElementById('progressBar');
@@ -755,7 +854,7 @@
         }
         function updateProgress() {
             if (progress < 100) {
-                progress += Math.random() * 5;
+                progress += Math.random() * 10;
                 if (progress > 100) progress = 100;
                 progressBar.style.width = progress + '%';
                 if (messageIndex < systemMessages.length && progress >= (messageIndex + 1) * (100 / systemMessages.length)) {
@@ -767,7 +866,7 @@
                     messageIndex++;
                 }
                 statusText.innerHTML = getStatusText(progress) + ' <span class="cursor">_</span>';
-                setTimeout(updateProgress, 100 + Math.random() * 200);
+                setTimeout(updateProgress, 100);
             } else {
                 statusText.innerHTML = "Sistema listo <span class='cursor'>_</span>";
                 setTimeout(() => {
@@ -782,7 +881,7 @@
                             updateButton.classList.add('enabled');
                         }, 2000);
                     }, 500);
-                }, 1000);
+                }, 500);
             }
         }
         function getStatusText(progress) {
@@ -804,7 +903,7 @@
             particlesCanvas.width = window.innerWidth;
             particlesCanvas.height = window.innerHeight;
         });
-        setTimeout(updateProgress, 1000);
+        setTimeout(updateProgress, 2000);
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
@@ -895,7 +994,16 @@
                 hamburger.children[2].style.transform = 'none';
             }
         });
+        function moveCarousel(carouselId, direction) {
+            const carousel = document.getElementById(carouselId);
+            const items = carousel.children;
+            let currentIndex = parseInt(carousel.dataset.index || 0);
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = items.length - 1;
+            if (currentIndex >= items.length) currentIndex = 0;
+            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+            carousel.dataset.index = currentIndex;
+        }
     </script>
 </body>
 </html>
-
