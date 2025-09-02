@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sexualidad e Identidad - DPCCrea</title>
     <meta name="description" content="Descubre artículos, guías y recursos educativos sobre sexualidad, identidad y diversidad. Información confiable, segura y respetuosa para todas las edades.">
-    <meta name="keywords" content="sexualidad, identidad, diversidad, género, educación sexual, mediación, bienestar, películas, libros, documentales">
+    <meta name="keywords" content="sexualidad, identidad, diversidad, género, educación sexual, mediación, bienestar">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Sexualidad e Identidad - DPCCrea">
-    <meta property="og:description" content="Explora recursos educativos sobre sexualidad, identidad, diversidad, películas, libros y documentales con un enfoque inclusivo y respetuoso.">
+    <meta property="og:description" content="Explora recursos educativos sobre sexualidad, identidad y diversidad con un enfoque inclusivo y respetuoso.">
     <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
     <meta property="og:url" content="https://dpccrea.com">
     <meta property="og:type" content="website">
@@ -23,6 +23,8 @@
             --golden-accent: #DAA520;
             --inclusive-purple: #8A2BE2;
             --dark-color: #000;
+            --neon-cyan: #00CED1;
+            --neon-pink: #FF69B4;
         }
         * {
             margin: 0;
@@ -102,7 +104,7 @@
         .progress-bar {
             height: 100%;
             width: 0;
-            background: linear-gradient(90deg, var(--inclusive-purple), var(--golden-main), var(--golden-accent));
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
             transition: width 0.3s;
         }
         .loader-messages {
@@ -474,20 +476,13 @@
         .gallery-item:hover img {
             transform: scale(1.05);
         }
-        .carousel-container {
+        .list-container {
             display: none;
-            position: relative;
-            overflow: hidden;
             padding: 20px;
             max-width: 1500px;
             margin: 0 auto;
         }
-        .carousel {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-        .carousel-item {
-            flex: 0 0 100%;
+        .list-item {
             border: 4px solid var(--golden-main);
             border-radius: 15px;
             overflow: hidden;
@@ -496,42 +491,24 @@
             box-shadow: 0 0 15px var(--inclusive-purple);
             position: relative;
             cursor: pointer;
+            margin-bottom: 20px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .carousel-item:hover {
+        .list-item:hover {
             transform: scale(1.03);
             box-shadow: 0 0 30px var(--golden-accent);
         }
-        .carousel-item img {
+        .list-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease-in-out;
             loading: lazy;
         }
-        .carousel-item:hover img {
+        .list-item:hover img {
             transform: scale(1.05);
-        }
-        .carousel-nav {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
-        .carousel-nav button {
-            background: var(--golden-accent);
-            color: #000;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        .carousel-nav button:hover {
-            background: var(--golden-main);
-            box-shadow: 0 0 15px var(--golden-accent);
         }
         @media (max-width: 768px) {
             .counter-container {
@@ -545,11 +522,8 @@
             .gallery {
                 display: none;
             }
-            .carousel-container {
+            .list-container {
                 display: block;
-            }
-            .carousel-item {
-                flex: 0 0 100%;
             }
             h1 { font-size: 3rem; }
             .hamburger {
@@ -595,15 +569,15 @@
         </div>
     </div>
     <div class="update-popup" id="updatePopup">
-        <h2>ACTUALIZACIÓN 21/08/2025</h2>
+        <h2>ACTUALIZACIÓN 01/09/2025</h2>
         <div class="update-section">
             <h3>Novedades</h3>
             <ul>
                 <li>Contador de visitas RGB en menú hamburguesa</li>
                 <li>Términos y Condiciones en el pie de página</li>
                 <li>GIF reubicado bajo el catálogo</li>
-                <li>Nuevas secciones: Películas, Libros, Documentales</li>
-                <li>Catálogo en carrusel para móviles</li>
+                <li>Catálogo vertical en móviles como feed de noticias</li>
+                <li>Barra de carga con degradado celeste a rosa neón</li>
             </ul>
         </div>
         <div class="update-section">
@@ -613,7 +587,8 @@
                 <li>Popup de actualización redimensionado</li>
                 <li>Error de sintaxis en Firebase</li>
                 <li>Contador ahora sube cada 12 horas</li>
-                <li>Catálogo pequeño en móviles</li>
+                <li>Catálogo horizontal reemplazado por vertical en móviles</li>
+                <li>Eliminadas secciones de películas, libros y documentales</li>
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
@@ -671,55 +646,31 @@
             <div class="gallery-item" onclick="window.location.href='nueva4.html'">
                 <img src="assets/imagenes/8.jpg" alt="Comunidad Segura">
             </div>
-            <div class="gallery-item" onclick="window.location.href='peliculas.html'">
-                <img src="assets/imagenes/9.jpg" alt="Películas">
-            </div>
-            <div class="gallery-item" onclick="window.location.href='libros.html'">
-                <img src="assets/imagenes/10.jpg" alt="Libros">
-            </div>
-            <div class="gallery-item" onclick="window.location.href='documentales.html'">
-                <img src="assets/imagenes/11.jpg" alt="Documentales">
-            </div>
         </div>
-        <div class="carousel-container" id="catalogo-carousel">
-            <div class="carousel" id="carousel">
-                <div class="carousel-item" onclick="window.location.href='Mediación.html'">
-                    <img src="assets/imagenes/1.jpg" alt="Mediación Escolar">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='sexualidad.html'">
-                    <img src="assets/imagenes/2.jpg" alt="Sexualidad e Identidad">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='arbol.html'">
-                    <img src="assets/imagenes/3.jpg" alt="Diversidad Cultural">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='pdf.html'">
-                    <img src="assets/imagenes/4.jpg" alt="Recursos Educativos">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='nueva1.html'">
-                    <img src="assets/imagenes/5.jpg" alt="Educación Inclusiva">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='nueva2.html'">
-                    <img src="assets/imagenes/6.jpg" alt="Bienestar Emocional">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='nueva3.html'">
-                    <img src="assets/imagenes/7.jpg" alt="Género y Equidad">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='nueva4.html'">
-                    <img src="assets/imagenes/8.jpg" alt="Comunidad Segura">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='peliculas.html'">
-                    <img src="assets/imagenes/9.jpg" alt="Películas">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='libros.html'">
-                    <img src="assets/imagenes/10.jpg" alt="Libros">
-                </div>
-                <div class="carousel-item" onclick="window.location.href='documentales.html'">
-                    <img src="assets/imagenes/11.jpg" alt="Documentales">
-                </div>
+        <div class="list-container" id="catalogo-list">
+            <div class="list-item" onclick="window.location.href='Mediación.html'">
+                <img src="assets/imagenes/1.jpg" alt="Mediación Escolar">
             </div>
-            <div class="carousel-nav">
-                <button onclick="moveCarousel('carousel', -1)">◄</button>
-                <button onclick="moveCarousel('carousel', 1)">►</button>
+            <div class="list-item" onclick="window.location.href='sexualidad.html'">
+                <img src="assets/imagenes/2.jpg" alt="Sexualidad e Identidad">
+            </div>
+            <div class="list-item" onclick="window.location.href='arbol.html'">
+                <img src="assets/imagenes/3.jpg" alt="Diversidad Cultural">
+            </div>
+            <div class="list-item" onclick="window.location.href='pdf.html'">
+                <img src="assets/imagenes/4.jpg" alt="Recursos Educativos">
+            </div>
+            <div class="list-item" onclick="window.location.href='nueva1.html'">
+                <img src="assets/imagenes/5.jpg" alt="Educación Inclusiva">
+            </div>
+            <div class="list-item" onclick="window.location.href='nueva2.html'">
+                <img src="assets/imagenes/6.jpg" alt="Bienestar Emocional">
+            </div>
+            <div class="list-item" onclick="window.location.href='nueva3.html'">
+                <img src="assets/imagenes/7.jpg" alt="Género y Equidad">
+            </div>
+            <div class="list-item" onclick="window.location.href='nueva4.html'">
+                <img src="assets/imagenes/8.jpg" alt="Comunidad Segura">
             </div>
         </div>
         <div class="gif-container">
@@ -728,7 +679,7 @@
     </div>
     <footer>
         <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
-        <div class="version">Versión 1.12</div>
+        <div class="version">Versión 1.13</div>
     </footer>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
@@ -994,16 +945,6 @@
                 hamburger.children[2].style.transform = 'none';
             }
         });
-        function moveCarousel(carouselId, direction) {
-            const carousel = document.getElementById(carouselId);
-            const items = carousel.children;
-            let currentIndex = parseInt(carousel.dataset.index || 0);
-            currentIndex += direction;
-            if (currentIndex < 0) currentIndex = items.length - 1;
-            if (currentIndex >= items.length) currentIndex = 0;
-            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-            carousel.dataset.index = currentIndex;
-        }
     </script>
 </body>
 </html>
