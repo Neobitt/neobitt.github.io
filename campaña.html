@@ -301,6 +301,7 @@
         .nav-menu li:nth-child(4) { transition-delay: 0.4s; }
         .nav-menu li:nth-child(5) { transition-delay: 0.5s; }
         .nav-menu li:nth-child(6) { transition-delay: 0.6s; }
+        .nav-menu li:nth-child(7) { transition-delay: 0.7s; }
 
         .nav-menu a {
             color: var(--text);
@@ -376,14 +377,14 @@
         }
 
         /* Organization Cards */
-        .org-grid, .skills-grid {
+        .org-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2.5rem;
             margin: 3rem 0;
         }
 
-        .org-card, .skill-card {
+        .org-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
             overflow: hidden;
@@ -393,7 +394,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .org-card:hover, .skill-card:hover {
+        .org-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--card-hover);
             border-color: var(--primary);
@@ -405,52 +406,14 @@
             object-fit: cover;
         }
 
-        .org-content, .skill-content {
+        .org-content {
             padding: 2rem;
         }
 
-        .org-card h3, .skill-card h3 {
+        .org-card h3 {
             color: var(--primary-light);
             font-size: 1.5rem;
             margin-bottom: 1rem;
-        }
-
-        /* Stats Section */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--card-hover);
-            border-color: var(--primary);
-        }
-
-        .stat-number {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-light);
-            font-weight: 600;
         }
 
         /* Form */
@@ -497,6 +460,106 @@
         textarea.form-control {
             min-height: 180px;
             resize: vertical;
+        }
+
+        /* Comments Section */
+        .comments-list {
+            max-width: 700px;
+            margin: 2rem auto;
+        }
+
+        .comment {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Video Embed */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin: 2rem 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Ethics Cards */
+        .ethics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .ethics-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+
+        .ethics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover);
+        }
+
+        .ethics-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .source {
+            font-style: italic;
+            color: var(--secondary);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin: 3rem 0;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-hover);
+            border-color: var(--primary);
+        }
+
+        .skill-content {
+            padding: 2rem;
+        }
+
+        .skill-card h3 {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         /* Footer */
@@ -626,7 +689,7 @@
                 font-size: 2.5rem;
             }
             
-            .org-grid, .skills-grid {
+            .org-grid, .skills-grid, .ethics-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -698,37 +761,15 @@
             margin-bottom: 1rem;
         }
         
-        .impact-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .impact-item {
-            text-align: center;
-            padding: 1.5rem;
-            background: rgba(46, 139, 87, 0.1);
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .impact-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .impact-number {
-            font-size: 2rem;
-            font-weight: 800;
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-light);
             color: var(--primary-light);
-            margin-bottom: 0.5rem;
         }
-        
-        .impact-label {
-            color: var(--text-light);
-            font-weight: 600;
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+            color: white;
         }
     </style>
 </head>
@@ -752,8 +793,9 @@
                 <ul>
                     <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
                     <li><a href="#organizaciones"><i class="fas fa-hands-helping"></i> Organizaciones</a></li>
-                    <li><a href="#etica"><i class="fas fa-seedling"></i> Ética</a></li>
-                    <li><a href="#ia"><i class="fas fa-robot"></i> IA</a></li>
+                    <li><a href="#etica-social"><i class="fas fa-balance-scale"></i> Ética y Responsabilidad Social</a></li>
+                    <li><a href="#habitos"><i class="fas fa-seedling"></i> Hábitos Éticos</a></li>
+                    <li><a href="#ia"><i class="fas fa-robot"></i> Ética en IA</a></li>
                     <li><a href="#habilidades"><i class="fas fa-graduation-cap"></i> Habilidades</a></li>
                     <li><a href="#comentarios"><i class="fas fa-comments"></i> Comentarios</a></li>
                 </ul>
@@ -774,80 +816,65 @@
         </div>
     </header>
 
-    <!-- Stats Section -->
-    <section>
-        <div class="container">
-            <div class="impact-stats">
-                <div class="impact-item fade-in">
-                    <div class="impact-icon">
-                        <i class="fas fa-recycle"></i>
-                    </div>
-                    <div class="impact-number">500+</div>
-                    <div class="impact-label">Toneladas recicladas</div>
-                </div>
-                <div class="impact-item fade-in delay-1">
-                    <div class="impact-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="impact-number">1,200+</div>
-                    <div class="impact-label">Personas impactadas</div>
-                </div>
-                <div class="impact-item fade-in delay-2">
-                    <div class="impact-icon">
-                        <i class="fas fa-tree"></i>
-                    </div>
-                    <div class="impact-number">2,500+</div>
-                    <div class="impact-label">Árboles plantados</div>
-                </div>
-                <div class="impact-item fade-in delay-3">
-                    <div class="impact-icon">
-                        <i class="fas fa-school"></i>
-                    </div>
-                    <div class="impact-number">15+</div>
-                    <div class="impact-label">Colegios participantes</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Organizations Section -->
     <section id="organizaciones" class="bg-alt">
         <div class="container">
             <div class="section-header fade-in">
                 <h2>Organizaciones que lideran el cambio</h2>
-                <p>Alrededor de todo el mundo miles de personas luchan por el cuidado al medio ambiente y es gracias a esto que se crean diversos tipos de organizaciónes, un ejemplo de ellos serian lo siguientes:</p>
+                <p>Conoce y apoya a las organizaciones peruanas que trabajan por un futuro más sostenible</p>
             </div>
             <div class="org-grid">
                 <div class="org-card fade-in delay-1">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%231D5D3B'/%3E%3Ccircle cx='200' cy='110' r='60' fill='white'/%3E%3Cpath d='M170,90 L230,90 L230,130 L170,130 Z' fill='%231D5D3B'/%3E%3C/svg%3E" alt="WWF Perú" class="org-img">
+                    <img src="assets/imagenes/redaves.jpg" alt="Asociación de Redes Ambientales de Villa El Salvador (REDAVES)" class="org-img">
                     <div class="org-content">
-                        <h3>WWF Perú</h3>
-                        <p>Protege la Amazonía y promueve la sostenibilidad ambiental. Han reforestado más de 10,000 hectáreas en 2024.</p>
-                        <a href="https://www.wwf.org.pe" class="btn btn-outline">Apóyalos</a>
+                        <h3>REDAVES - Asociación de Redes Ambientales de Villa El Salvador</h3>
+                        <p>Alrededor del mundo miles de personas luchan por el cuidado al medio ambiente y es gracias a esto que se crean diversas organizaciones. REDAVES capacita líderes ambientales en Villa El Salvador mediante 8 talleres anuales. Promueve que los participantes repliquen lo aprendido en sus comunidades con talleres, pasacalles y ferias ambientales. Aportan materiales y equipos para la difusión de concientización ambiental.</p>
+                        <h4>Cómo podemos colaborar como estudiantes o ciudadanos:</h4>
+                        <ul style="color: var(--text-light); margin-top: 1rem;">
+                            <li>Colaborar con talleres ofrecidos a hacer videos o afiches que promuevan el cuidado al ambiente.</li>
+                            <li>Gestionar o proponer proyectos como campañas de reciclaje.</li>
+                        </ul>
+                        <a href="https://www.facebook.com/REDVES.VES/" class="btn btn-outline" target="_blank">Apóyalos</a>
+                        <div class="source">Fuente: ASOCIACION UNACEM, PUCP</div>
                     </div>
                 </div>
                 <div class="org-card fade-in delay-2">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%234CAF7D'/%3E%3Crect x='100' y='60' width='200' height='100' rx='10' fill='white'/%3E%3Ccircle cx='150' cy='110' r='20' fill='%234CAF7D'/%3E%3Ccircle cx='250' cy='110' r='20' fill='%234CAF7D'/%3E%3C/svg%3E" alt="Ciudad Saludable" class="org-img">
+                    <img src="assets/imagenes/wwf_peru.jpg" alt="WWF Perú trabajando por la conservación ambiental" class="org-img">
                     <div class="org-content">
-                        <h3>Ciudad Saludable</h3>
-                        <p>Recicla más de 500 toneladas de plástico al año en Lima mediante talleres comunitarios y programas de educación.</p>
-                        <a href="https://ciudadsaludable.org" class="btn btn-outline">Apóyalos</a>
-                    </div>
-                </div>
-                <div class="org-card fade-in delay-3">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Crect width='400' height='220' fill='%23FF9E1B'/%3E%3Cpath d='M100,80 L300,80 L300,160 L100,160 Z' fill='white'/%3E%3Ccircle cx='150' cy='120' r='25' fill='%23FF9E1B'/%3E%3Ccircle cx='250' cy='120' r='25' fill='%23FF9E1B'/%3E%3C/svg%3E" alt="EcoVida VES" class="org-img">
-                    <div class="org-content">
-                        <h3>EcoVida VES</h3>
-                        <p>Organiza ferias de reciclaje y manualidades en Villa El Salvador para niños y familias promoviendo la conciencia ambiental.</p>
-                        <a href="#" class="btn btn-outline">Apóyalos</a>
+                        <h3>WWF Perú</h3>
+                        <p>Protege especies en peligro como tigres, elefantes, tortugas marinas y osos polares. Conserva hábitats como bosques, ríos, mares y selvas. Lucha contra el cambio climático, promoviendo energías renovables. Impulsa un consumo responsable, apoyando prácticas agrícolas y pesqueras sostenibles. Una de sus iniciativas más famosas es la Hora del Planeta, donde todo el mundo apaga sus luces durante una hora para demostrar que juntos podemos actuar contra el cambio climático. La WWF nos recuerda que cuidar el medio ambiente no es solo salvar animales, es proteger nuestro propio futuro.</p>
+                        <a href="https://www.wwf.org.pe" class="btn btn-outline">Apóyalos</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Ethics Section -->
-    <section id="etica">
+    <!-- Nueva Sección: Ética y Responsabilidad Social -->
+    <section id="etica-social">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Ética y Responsabilidad Social</h2>
+                <p>Explora los principios que guían nuestro comportamiento hacia el medio ambiente y la sociedad</p>
+            </div>
+            <div class="ethics-grid">
+                <div class="ethics-card fade-in delay-1">
+                    <h3>Definición de Ética y Responsabilidad Social</h3>
+                    <p>La ética son los principios que guían nuestro comportamiento moral para actuar correctamente, mientras que la responsabilidad social es la obligación de las personas y organizaciones de considerar el impacto de sus acciones en la comunidad y el medio ambiente, tomando decisiones que beneficien a todos. La ética proporciona el marco de valores como la honestidad y la justicia, que a su vez impulsan la adopción de prácticas de responsabilidad social, resultando en una mayor confianza, reputación y sostenibilidad para quienes la ejercen.</p>
+                    <div class="source">Fuente: Universidad Veracruzana</div>
+                </div>
+                <div class="ethics-card fade-in delay-2">
+                    <h3>El Cuidado del Medio Ambiente en Perú</h3>
+                    <p>El cuidado del medio ambiente no solo es una obligación legal, sino parte de nosotros cuidar el medio ambiente y no contaminarlo. Al salir a las calles de Lima se puede evidenciar la falta de educación porque la gente lo que come o tiene basura en su mano lo tira por cualquier lado y contamina nuestro medio ambiente. Esto no puede ser así porque el medio ambiente y turistas o personas de otro país vienen y se nota la falta de educación que tenemos al no botar los desechos en la basura.</p>
+                    <p>Cuidar el medio ambiente es fundamental no solo por obligación legal, sino porque asegura nuestra propia supervivencia y la de otras especies, es un componente esencial de los derechos humanos (salud, vida, alimentación), mantiene la biodiversidad necesaria para la vida en la Tierra, garantiza la sostenibilidad de los recursos para el futuro y es una cuestión de justicia intergeneracional y con los pueblos vulnerables.</p>
+                    <div class="source">Fuente: Noticias ONU</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Hábitos Éticos -->
+    <section id="habitos" class="bg-alt">
         <div class="container">
             <div class="section-header fade-in">
                 <h2>Reciclar es nuestro deber</h2>
@@ -884,25 +911,53 @@
         </div>
     </section>
 
-    <!-- IA Section -->
-    <section id="ia" class="bg-alt">
+    <!-- IA Section Expandida -->
+    <section id="ia">
         <div class="container">
             <div class="section-header fade-in">
-                <h2>IA: Aliada y desafío</h2>
+                <h2>Ética e Inteligencia Artificial (IA)</h2>
                 <p>La inteligencia artificial está revolucionando el reciclaje, pero debemos usarla responsablemente</p>
             </div>
             <div class="fade-in delay-1">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <h3 style="color: var(--primary);">Beneficios</h3>
-                        <p>Apps como RecycleSmart utilizan IA para clasificar residuos con 95% de precisión y optimizar rutas de recolección, reduciendo emisiones.</p>
+                <div class="ethics-grid">
+                    <div class="ethics-card">
+                        <h3>Definición de Ética en IA</h3>
+                        <p>La ética en la inteligencia artificial (IA) consiste en establecer principios morales para el desarrollo y uso de la IA, asegurando que sea responsable, justa y respetuosa con los derechos humanos y el medio ambiente. Su objetivo es maximizar sus beneficios sociales mientras se minimizan los riesgos, como la discriminación algorítmica, la pérdida de privacidad y el uso malintencionado, fomentando la transparencia, la responsabilidad y la equidad en sus aplicaciones.</p>
+                        <div class="source">Fuente: UNESCO</div>
                     </div>
-                    <div style="background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--card-shadow); border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <h3 style="color: var(--primary);">Dilemas</h3>
-                        <p>Entrenar modelos de IA consume grandes cantidades de energía, emitiendo CO2. Es crucial utilizar servidores verdes y energías renovables.</p>
+                    <div class="ethics-card">
+                        <h3>¿Cómo se relaciona la ética con la inteligencia artificial?</h3>
+                        <p>La ética es un conjunto de principios morales que nos ayudan a discernir entre el bien y el mal. La ética de la IA es un campo multidisciplinario que estudia cómo optimizar el impacto beneficioso de la inteligencia artificial (IA) mientras se reducen los riesgos y los resultados adversos.</p>
+                        <div class="source">Fuente: Wikipedia</div>
+                    </div>
+                    <div class="ethics-card">
+                        <h3>Principios clave de la ética en IA</h3>
+                        <p><strong>Justicia y equidad:</strong> Asegurar que los sistemas de IA no discriminen y que sus beneficios se distribuyan de manera equitativa en la sociedad.</p>
+                        <p><strong>Privacidad y protección de datos:</strong> Proteger la información sensible de los usuarios del acceso no autorizado y el uso indebido.</p>
+                        <div class="source">Fuente: UNESCO</div>
+                    </div>
+                    <div class="ethics-card">
+                        <h3>Desafíos de la ética en IA</h3>
+                        <p><strong>Impacto social:</strong> La IA puede afectar la estructura social y la igualdad de oportunidades, por lo que es crucial considerar sus efectos en la toma de decisiones de ámbitos como el empleo o la salud.</p>
+                        <p><strong>Mal uso de la tecnología:</strong> La capacidad de la IA para rastrear debilidades puede ser explotada para realizar actividades maliciosas, como ciberataques sofisticados o la difusión de noticias falsas.</p>
+                        <div class="source">Fuente: UNESCO</div>
+                    </div>
+                    <div class="ethics-card">
+                        <h3>Uso ético de herramientas de IA para estudiantes</h3>
+                        <p>Las herramientas de inteligencia artificial (IA) se han vuelto muy útiles para estudiantes y docentes, puesto que prometen optimizar tiempo, crear contenido por nosotros, revisar, traducir y un sinnúmero de otras funciones dependiendo de nuestras necesidades. Sin embargo, es importante tener en cuenta sus limitantes para saber hasta dónde se puede confiar en su uso. La idea es entender cómo funcionan y tener siempre en mente cuáles son sus limitaciones y cómo podemos sacarles el mejor provecho.</p>
+                        <div class="source">Fuente: DuocUC</div>
                     </div>
                 </div>
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="assets/imagenes/etica_ia.jpg" alt="Imagen representativa de la ética en inteligencia artificial" style="max-width: 100%; border-radius: var(--border-radius); box-shadow: var(--card-shadow);">
+                </div>
                 <div class="text-center">
+                    <h3>Video Educativo sobre Ética en IA</h3>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/z0UNIm9asOE?si=7Rxz6EOJHBVZAxBJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
                     <a href="https://recyclesmart.com" class="btn btn-accent">Explora apps de IA</a>
                 </div>
             </div>
@@ -910,11 +965,11 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="habilidades">
+    <section id="habilidades" class="bg-alt">
         <div class="container">
             <div class="section-header fade-in">
-                <h2>Habilidades para el futuro</h2>
-                <p>Desarrolla competencias que te prepararán para los desafíos del mañana</p>
+                <h2>Tecnología y Desarrollo de Habilidades</h2>
+                <p>Desarrolla competencias que te prepararán para los desafíos del mañana, enfocándote en tecnología sostenible</p>
             </div>
             <div class="skills-grid">
                 <div class="skill-card fade-in delay-1">
@@ -923,7 +978,7 @@
                             <i class="fas fa-lightbulb"></i>
                         </div>
                         <h3>Diseño 💡</h3>
-                        <p>Aprende a crear logos y diseños atractivos con herramientas como Canva y Adobe Creative Suite.</p>
+                        <p>Aprende a crear logos y diseños atractivos con herramientas como Canva y Adobe Creative Suite, aplicados a campañas ambientales.</p>
                         <a href="https://www.canva.com" class="btn btn-outline">Aprende diseño</a>
                     </div>
                 </div>
@@ -933,7 +988,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <h3>Trabajo en equipo 🤝</h3>
-                        <p>Desarrolla habilidades de colaboración efectiva para proyectos grupales y comunitarios.</p>
+                        <p>Desarrolla habilidades de colaboración efectiva para proyectos grupales y comunitarios en sostenibilidad.</p>
                         <a href="https://www.linkedin.com/learning" class="btn btn-outline">Aprende colaboración</a>
                     </div>
                 </div>
@@ -943,7 +998,7 @@
                             <i class="fas fa-paint-brush"></i>
                         </div>
                         <h3>Creatividad 🎨</h3>
-                        <p>Potencia tu pensamiento creativo para resolver problemas ambientales de manera innovadora.</p>
+                        <p>Potencia tu pensamiento creativo para resolver problemas ambientales de manera innovadora con tecnología.</p>
                         <a href="https://www.canva.com" class="btn btn-outline">Explora Canva</a>
                     </div>
                 </div>
@@ -953,37 +1008,35 @@
                             <i class="fas fa-laptop-code"></i>
                         </div>
                         <h3>Habilidades digitales 💻</h3>
-                        <p>Domina HTML, CSS y otras tecnologías para crear soluciones digitales eco-friendly.</p>
+                        <p>Domina HTML, CSS y otras tecnologías para crear soluciones digitales eco-friendly, integrando IA ética.</p>
                         <a href="https://www.codecademy.com" class="btn btn-outline">Aprende a programar</a>
                     </div>
                 </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>(Aquí puedes agregar tu contenido personal sobre el último tema cuando lo tengas listo)</p>
             </div>
         </div>
     </section>
 
     <!-- Comments Section -->
-    <section id="comentarios" class="bg-alt">
+    <section id="comentarios">
         <div class="container">
             <div class="section-header fade-in">
                 <h2>¡Tu voz cuenta! 🗣️</h2>
                 <p>Comparte tus ideas y experiencias sobre reciclaje en tu comunidad</p>
             </div>
             <div class="form-container fade-in delay-1">
-                <form action="https://formsubmit.co/your-email@example.com" method="POST">
-                    <div class="form-group">
-                        <label for="name">Nombre</label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Tu nombre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo electrónico</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="tu@email.com" required>
-                    </div>
+                <form id="commentForm">
                     <div class="form-group">
                         <label for="comment">¿Qué haces para cuidar el planeta?</label>
                         <textarea id="comment" name="comment" class="form-control" placeholder="Comparte tus ideas, proyectos o experiencias..." required></textarea>
                     </div>
                     <button type="submit" class="btn" style="width: 100%;">Enviar mensaje <i class="fas fa-paper-plane"></i></button>
                 </form>
+            </div>
+            <div class="comments-list fade-in delay-2" id="commentsList">
+                <!-- Los comentarios aparecerán aquí -->
             </div>
         </div>
     </section>
@@ -1007,8 +1060,9 @@
                     <ul class="footer-links">
                         <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
                         <li><a href="#organizaciones"><i class="fas fa-hands-helping"></i> Organizaciones</a></li>
-                        <li><a href="#etica"><i class="fas fa-seedling"></i> Ética</a></li>
-                        <li><a href="#ia"><i class="fas fa-robot"></i> IA</a></li>
+                        <li><a href="#etica-social"><i class="fas fa-balance-scale"></i> Ética y Responsabilidad Social</a></li>
+                        <li><a href="#habitos"><i class="fas fa-seedling"></i> Hábitos Éticos</a></li>
+                        <li><a href="#ia"><i class="fas fa-robot"></i> Ética en IA</a></li>
                         <li><a href="#habilidades"><i class="fas fa-graduation-cap"></i> Habilidades</a></li>
                     </ul>
                 </div>
@@ -1084,40 +1138,38 @@
             element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
             observer.observe(element);
         });
-        
-        // Simple counter animation for stats
-        const statNumbers = document.querySelectorAll('.impact-number');
-        const statsSection = document.querySelector('.impact-stats');
-        
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    statNumbers.forEach(number => {
-                        const target = parseInt(number.textContent);
-                        let count = 0;
-                        const duration = 2000;
-                        const increment = target / (duration / 20);
-                        
-                        const updateCount = () => {
-                            if (count < target) {
-                                count += increment;
-                                number.textContent = Math.round(count) + '+';
-                                setTimeout(updateCount, 20);
-                            } else {
-                                number.textContent = target + '+';
-                            }
-                        };
-                        
-                        updateCount();
-                    });
-                    
-                    statsObserver.unobserve(entry.target);
-                }
+
+        // Comment system
+        const commentForm = document.getElementById('commentForm');
+        const commentsList = document.getElementById('commentsList');
+
+        // Load comments from localStorage
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem('comments')) || [];
+            commentsList.innerHTML = '';
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment');
+                commentElement.textContent = comment;
+                commentsList.appendChild(commentElement);
             });
-        }, { threshold: 0.5 });
-        
-        statsObserver.observe(statsSection);
+        }
+
+        // Save comment to localStorage and display
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const commentText = document.getElementById('comment').value.trim();
+            if (commentText) {
+                const comments = JSON.parse(localStorage.getItem('comments')) || [];
+                comments.unshift(commentText); // Add new comment at the top
+                localStorage.setItem('comments', JSON.stringify(comments));
+                document.getElementById('comment').value = ''; // Clear textarea
+                loadComments(); // Reload comments
+            }
+        });
+
+        // Load comments on page load
+        loadComments();
     </script>
 </body>
-
 </html>
