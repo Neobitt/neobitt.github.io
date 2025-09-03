@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -68,7 +29,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: box-sizing;
             font-family: 'Courier New', monospace;
         }
         html, body {
@@ -130,7 +91,7 @@
             border-color: var(--golden-main);
             box-shadow: 0 0 10px var(--golden-main);
         }
-        .login-button, .register-button, .google-button, .logout-button {
+        .login-button, .register-button, .google-button, .logout-button, .edit-profile-button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -155,7 +116,7 @@
             width: 24px;
             height: 24px;
         }
-        .login-button:hover, .register-button:hover, .google-button:hover, .logout-button:hover {
+        .login-button:hover, .register-button:hover, .google-button:hover, .logout-button:hover, .edit-profile-button:hover {
             background: var(--golden-main);
             box-shadow: 0 0 15px var(--golden-accent);
             transform: scale(1.05);
@@ -199,6 +160,60 @@
             text-shadow: 0 0 5px var(--golden-accent);
             margin-bottom: 20px;
         }
+        .activity-section {
+            margin: 20px 0;
+            text-align: left;
+        }
+        .activity-section h4 {
+            color: var(--golden-accent);
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px var(--golden-accent);
+            margin-bottom: 10px;
+        }
+        .activity-section ul {
+            list-style: none;
+            color: var(--golden-main);
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--golden-main);
+        }
+        .activity-section ul li {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        .activity-section ul li:before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--inclusive-purple);
+        }
+        .counter-container {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: rgbGlow 3s infinite;
+        }
+        .counter-container div {
+            display: inline-block;
+            background: transparent;
+            padding: 10px 20px;
+            border: 2px solid var(--golden-main);
+            border-radius: 5px;
+            min-height: 40px;
+            min-width: 150px;
+            animation: rgbGlow 3s infinite;
+            transition: transform 0.3s ease;
+        }
+        .counter-container:hover div {
+            transform: scale(1.05);
+        }
+        @keyframes rgbGlow {
+            0% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+            33% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+            66% { color: #0000ff; text-shadow: 0 0 10px #0000ff; }
+            100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+        }
         .error-message {
             color: #ff0000;
             font-size: 0.9rem;
@@ -217,6 +232,10 @@
             .profile-container img {
                 width: 80px;
                 height: 80px;
+            }
+            .counter-container div {
+                min-width: 120px;
+                padding: 8px 15px;
             }
         }
     </style>
@@ -239,11 +258,23 @@
         <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Foto de Perfil">
         <h3 id="profileName">Usuario</h3>
         <p id="profileEmail">correo@ejemplo.com</p>
+        <div class="counter-container">
+            <div id="user-visits">Visitas: 0</div>
+        </div>
+        <div class="activity-section">
+            <h4>Actividad Reciente</h4>
+            <ul id="recentActivity">
+                <li>Visitaste la página de inicio - 03/09/2025</li>
+                <li>Exploraste la campaña ambiental - 03/09/2025</li>
+            </ul>
+        </div>
+        <button class="edit-profile-button" id="editProfileButton">Editar Perfil</button>
         <button class="logout-button" id="logoutButton">Cerrar Sesión</button>
     </div>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         if (window.location.protocol === 'file:') {
             console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
@@ -258,6 +289,7 @@
                 };
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth();
+                const db = getFirestore();
                 const provider = new GoogleAuthProvider();
                 const loginContainer = document.getElementById('loginContainer');
                 const profileContainer = document.getElementById('profileContainer');
@@ -265,12 +297,14 @@
                 const registerButton = document.getElementById('registerButton');
                 const googleButton = document.getElementById('googleButton');
                 const logoutButton = document.getElementById('logoutButton');
+                const editProfileButton = document.getElementById('editProfileButton');
                 const errorMessage = document.getElementById('errorMessage');
                 const profilePhoto = document.getElementById('profilePhoto');
                 const profileName = document.getElementById('profileName');
                 const profileEmail = document.getElementById('profileEmail');
+                const userVisits = document.getElementById('user-visits');
 
-                onAuthStateChanged(auth, (user) => {
+                onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         loginContainer.style.display = 'none';
                         profileContainer.classList.add('active');
@@ -278,6 +312,26 @@
                         profileName.textContent = user.displayName || user.email.split('@')[0] || 'Usuario';
                         profileEmail.textContent = user.email || 'correo@ejemplo.com';
                         console.log('%c🟢 Usuario autenticado:', 'color: #FFD700', user.displayName || user.email, user.email);
+                        const userDocRef = doc(db, 'users', user.uid);
+                        const lastVisit = localStorage.getItem(`lastVisit_${user.uid}`);
+                        const now = Date.now();
+                        const twelveHours = 12 * 60 * 60 * 1000;
+                        try {
+                            const userDoc = await getDoc(userDocRef);
+                            if (!userDoc.exists()) {
+                                await setDoc(userDocRef, { visits: 0 });
+                            }
+                            if (!lastVisit || (now - parseInt(lastVisit)) > twelveHours) {
+                                await updateDoc(userDocRef, { visits: increment(1) });
+                                localStorage.setItem(`lastVisit_${user.uid}`, now.toString());
+                                console.log('%c📈 Contador de visitas incrementado', 'color: #FFD700');
+                            }
+                            const updatedDoc = await getDoc(userDocRef);
+                            userVisits.textContent = `Visitas: ${updatedDoc.data().visits || 0}`;
+                        } catch (error) {
+                            console.error('❌ Error al gestionar visitas:', error);
+                            userVisits.textContent = 'Visitas: [--]';
+                        }
                     } else {
                         loginContainer.style.display = 'block';
                         profileContainer.classList.remove('active');
@@ -377,6 +431,11 @@
                         errorMessage.textContent = 'Error al cerrar sesión: ' + error.message;
                         errorMessage.style.display = 'block';
                     });
+                });
+
+                editProfileButton.addEventListener('click', () => {
+                    alert('Función de edición de perfil no implementada aún. ¡Próximamente!');
+                    console.log('%c✏️ Intento de edición de perfil', 'color: #FFD700');
                 });
             } catch (e) {
                 console.error('❌ Error al inicializar Firebase:', e.message);
