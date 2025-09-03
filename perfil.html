@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - DPCCrea</title>
-    <meta name="description" content="Inicia sesión o regístrate en DPCCrea para acceder a tu perfil y recursos personalizados sobre sexualidad, identidad y diversidad.">
-    <meta name="keywords" content="inicio de sesión, registro, perfil, autenticación, sexualidad, identidad, diversidad">
+    <meta name="description" content="Crea tu perfil en DPCCrea con un nombre de usuario o Google y personaliza tu foto para acceder a recursos sobre sexualidad, identidad y diversidad.">
+    <meta name="keywords" content="perfil, nombre de usuario, google, autenticación, sexualidad, identidad, diversidad">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Perfil - DPCCrea">
-    <meta property="og:description" content="Inicia sesión o regístrate con tu email o Google para acceder a tu perfil en DPCCrea.">
+    <meta property="og:description" content="Crea o accede a tu perfil en DPCCrea con un nombre de usuario o Google y sube tu foto de perfil.">
     <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
     <meta property="og:url" content="https://dpccrea.com/perfil.html">
     <meta property="og:type" content="website">
@@ -29,7 +29,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: box-sizing;
+            box-sizing: border-box;
             font-family: 'Courier New', monospace;
         }
         html, body {
@@ -91,7 +91,7 @@
             border-color: var(--golden-main);
             box-shadow: 0 0 10px var(--golden-main);
         }
-        .login-button, .register-button, .google-button, .logout-button, .edit-profile-button {
+        .login-button, .google-button, .logout-button, .edit-profile-button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -116,7 +116,7 @@
             width: 24px;
             height: 24px;
         }
-        .login-button:hover, .register-button:hover, .google-button:hover, .logout-button:hover, .edit-profile-button:hover {
+        .login-button:hover, .google-button:hover, .logout-button:hover, .edit-profile-button:hover {
             background: var(--golden-main);
             box-shadow: 0 0 15px var(--golden-accent);
             transform: scale(1.05);
@@ -147,6 +147,10 @@
             border: 2px solid var(--golden-main);
             box-shadow: 0 0 15px var(--inclusive-purple);
             margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .profile-container img:hover {
+            transform: scale(1.05);
         }
         .profile-container h3 {
             color: var(--golden-main);
@@ -220,6 +224,28 @@
             margin-top: 10px;
             display: none;
         }
+        input[type="file"] {
+            display: none;
+        }
+        .upload-label {
+            display: inline-block;
+            padding: 10px;
+            margin: 10px 0;
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--golden-accent);
+            text-transform: uppercase;
+        }
+        .upload-label:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+            transform: scale(1.05);
+        }
         @media (max-width: 768px) {
             .login-container, .profile-container {
                 width: 95%;
@@ -243,11 +269,9 @@
 <body>
     <canvas id="matrixCanvas" class="matrix-bg"></canvas>
     <div class="login-container" id="loginContainer">
-        <h2>Iniciar Sesión</h2>
-        <input type="email" id="email" placeholder="Correo electrónico" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
+        <h2>Crear o Acceder a Perfil</h2>
+        <input type="text" id="username" placeholder="Nombre de usuario" required>
         <button class="login-button" id="loginButton">Iniciar Sesión</button>
-        <button class="register-button" id="registerButton">Registrarse</button>
         <button class="google-button" id="googleButton">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
             Iniciar con Google
@@ -256,8 +280,9 @@
     </div>
     <div class="profile-container" id="profileContainer">
         <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Foto de Perfil">
+        <label for="profilePhotoInput" class="upload-label">Subir Foto</label>
+        <input type="file" id="profilePhotoInput" accept="image/*">
         <h3 id="profileName">Usuario</h3>
-        <p id="profileEmail">correo@ejemplo.com</p>
         <div class="counter-container">
             <div id="user-visits">Visitas: 0</div>
         </div>
@@ -273,8 +298,8 @@
     </div>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
         if (window.location.protocol === 'file:') {
             console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
@@ -288,126 +313,107 @@
                     appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
                 };
                 const app = initializeApp(firebaseConfig);
-                const auth = getAuth();
                 const db = getFirestore();
+                const auth = getAuth();
                 const provider = new GoogleAuthProvider();
                 const loginContainer = document.getElementById('loginContainer');
                 const profileContainer = document.getElementById('profileContainer');
                 const loginButton = document.getElementById('loginButton');
-                const registerButton = document.getElementById('registerButton');
                 const googleButton = document.getElementById('googleButton');
                 const logoutButton = document.getElementById('logoutButton');
                 const editProfileButton = document.getElementById('editProfileButton');
                 const errorMessage = document.getElementById('errorMessage');
                 const profilePhoto = document.getElementById('profilePhoto');
                 const profileName = document.getElementById('profileName');
-                const profileEmail = document.getElementById('profileEmail');
                 const userVisits = document.getElementById('user-visits');
+                const profilePhotoInput = document.getElementById('profilePhotoInput');
+
+                const currentUser = JSON.parse(localStorage.getItem('dpccrea_user'));
+                if (currentUser) {
+                    loginContainer.style.display = 'none';
+                    profileContainer.classList.add('active');
+                    profileName.textContent = currentUser.username || 'Usuario';
+                    profilePhoto.src = currentUser.photoURL || 'https://via.placeholder.com/100';
+                    updateUserVisits(currentUser.username);
+                }
 
                 onAuthStateChanged(auth, async (user) => {
-                    if (user) {
+                    if (user && !currentUser) {
+                        const username = user.displayName || user.email.split('@')[0];
+                        const photoURL = user.photoURL || '';
+                        localStorage.setItem('dpccrea_user', JSON.stringify({ username, photoURL }));
                         loginContainer.style.display = 'none';
                         profileContainer.classList.add('active');
-                        profilePhoto.src = user.photoURL || 'https://via.placeholder.com/100';
-                        profileName.textContent = user.displayName || user.email.split('@')[0] || 'Usuario';
-                        profileEmail.textContent = user.email || 'correo@ejemplo.com';
-                        console.log('%c🟢 Usuario autenticado:', 'color: #FFD700', user.displayName || user.email, user.email);
-                        const userDocRef = doc(db, 'users', user.uid);
-                        const lastVisit = localStorage.getItem(`lastVisit_${user.uid}`);
-                        const now = Date.now();
-                        const twelveHours = 12 * 60 * 60 * 1000;
-                        try {
-                            const userDoc = await getDoc(userDocRef);
-                            if (!userDoc.exists()) {
-                                await setDoc(userDocRef, { visits: 0 });
-                            }
-                            if (!lastVisit || (now - parseInt(lastVisit)) > twelveHours) {
-                                await updateDoc(userDocRef, { visits: increment(1) });
-                                localStorage.setItem(`lastVisit_${user.uid}`, now.toString());
-                                console.log('%c📈 Contador de visitas incrementado', 'color: #FFD700');
-                            }
-                            const updatedDoc = await getDoc(userDocRef);
-                            userVisits.textContent = `Visitas: ${updatedDoc.data().visits || 0}`;
-                        } catch (error) {
-                            console.error('❌ Error al gestionar visitas:', error);
-                            userVisits.textContent = 'Visitas: [--]';
+                        profileName.textContent = username;
+                        profilePhoto.src = photoURL || 'https://via.placeholder.com/100';
+                        await setDoc(doc(db, 'users', username), { username, visits: 0, photoURL }, { merge: true });
+                        updateUserVisits(username);
+                        console.log('%c🟢 Usuario autenticado con Google:', 'color: #FFD700', username);
+                    }
+                });
+
+                async function updateUserVisits(username) {
+                    const userDocRef = doc(db, 'users', username);
+                    const lastVisit = localStorage.getItem(`lastVisit_${username}`);
+                    const now = Date.now();
+                    const twelveHours = 12 * 60 * 60 * 1000;
+                    try {
+                        const userDoc = await getDoc(userDocRef);
+                        if (!userDoc.exists()) {
+                            await setDoc(userDocRef, { username, visits: 0, photoURL: '' });
                         }
-                    } else {
-                        loginContainer.style.display = 'block';
-                        profileContainer.classList.remove('active');
-                        console.log('%c🔐 No hay usuario autenticado', 'color: #8A2BE2');
+                        if (!lastVisit || (now - parseInt(lastVisit)) > twelveHours) {
+                            await updateDoc(userDocRef, { visits: increment(1) });
+                            localStorage.setItem(`lastVisit_${username}`, now.toString());
+                            console.log('%c📈 Contador de visitas incrementado', 'color: #FFD700');
+                        }
+                        const updatedDoc = await getDoc(userDocRef);
+                        userVisits.textContent = `Visitas: ${updatedDoc.data().visits || 0}`;
+                    } catch (error) {
+                        console.error('❌ Error al gestionar visitas:', error);
+                        userVisits.textContent = 'Visitas: [--]';
                     }
-                });
+                }
 
-                loginButton.addEventListener('click', () => {
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
+                loginButton.addEventListener('click', async () => {
+                    const username = document.getElementById('username').value.trim();
                     errorMessage.style.display = 'none';
-                    if (!email || !password) {
-                        errorMessage.textContent = 'Por favor, completa todos los campos.';
+                    if (!username) {
+                        errorMessage.textContent = 'Por favor, ingresa un nombre de usuario.';
                         errorMessage.style.display = 'block';
                         return;
                     }
-                    signInWithEmailAndPassword(auth, email, password)
-                        .then((userCredential) => {
-                            console.log('%c🎉 Inicio de sesión exitoso:', 'color: #DAA520', userCredential.user.email);
-                        })
-                        .catch((error) => {
-                            console.error('❌ Error al iniciar sesión:', error.code, error.message);
-                            let userMessage = 'Error al iniciar sesión: ';
-                            if (error.code === 'auth/invalid-email') {
-                                userMessage += 'El correo electrónico no es válido.';
-                            } else if (error.code === 'auth/user-not-found') {
-                                userMessage += 'Usuario no encontrado. Regístrate primero.';
-                            } else if (error.code === 'auth/wrong-password') {
-                                userMessage += 'Contraseña incorrecta.';
-                            } else if (error.code === 'auth/too-many-requests') {
-                                userMessage += 'Demasiados intentos. Intenta de nuevo más tarde.';
-                            } else {
-                                userMessage += error.message;
-                            }
-                            errorMessage.textContent = userMessage;
-                            errorMessage.style.display = 'block';
-                        });
-                });
-
-                registerButton.addEventListener('click', () => {
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
-                    errorMessage.style.display = 'none';
-                    if (!email || !password) {
-                        errorMessage.textContent = 'Por favor, completa todos los campos.';
+                    if (username.length < 3) {
+                        errorMessage.textContent = 'El nombre de usuario debe tener al menos 3 caracteres.';
                         errorMessage.style.display = 'block';
                         return;
                     }
-                    createUserWithEmailAndPassword(auth, email, password)
-                        .then((userCredential) => {
-                            console.log('%c🎉 Registro exitoso:', 'color: #DAA520', userCredential.user.email);
-                        })
-                        .catch((error) => {
-                            console.error('❌ Error al registrarse:', error.code, error.message);
-                            let userMessage = 'Error al registrarse: ';
-                            if (error.code === 'auth/email-already-in-use') {
-                                userMessage += 'El correo ya está registrado. Inicia sesión.';
-                            } else if (error.code === 'auth/invalid-email') {
-                                userMessage += 'El correo electrónico no es válido.';
-                            } else if (error.code === 'auth/weak-password') {
-                                userMessage += 'La contraseña debe tener al menos 6 caracteres.';
-                            } else {
-                                userMessage += error.message;
-                            }
-                            errorMessage.textContent = userMessage;
-                            errorMessage.style.display = 'block';
-                        });
+                    try {
+                        const userDocRef = doc(db, 'users', username);
+                        const userDoc = await getDoc(userDocRef);
+                        const photoURL = userDoc.exists() ? userDoc.data().photoURL || '' : '';
+                        await setDoc(userDocRef, { username, visits: userDoc.exists() ? userDoc.data().visits : 0, photoURL }, { merge: true });
+                        localStorage.setItem('dpccrea_user', JSON.stringify({ username, photoURL }));
+                        loginContainer.style.display = 'none';
+                        profileContainer.classList.add('active');
+                        profileName.textContent = username;
+                        profilePhoto.src = photoURL || 'https://via.placeholder.com/100';
+                        updateUserVisits(username);
+                        console.log('%c🎉 Inicio de sesión con nombre:', 'color: #DAA520', username);
+                    } catch (error) {
+                        console.error('❌ Error al iniciar sesión:', error);
+                        errorMessage.textContent = 'Error al iniciar sesión: ' + error.message;
+                        errorMessage.style.display = 'block';
+                    }
                 });
 
                 googleButton.addEventListener('click', () => {
                     signInWithPopup(auth, provider)
                         .then((result) => {
-                            console.log('%c🎉 Bienvenido:', 'color: #DAA520', result.user.displayName);
+                            console.log('%c🎉 Inicio de sesión con Google:', 'color: #DAA520', result.user.displayName);
                         })
                         .catch((error) => {
-                            console.error('❌ Error de autenticación:', error.code, error.message);
+                            console.error('❌ Error de autenticación con Google:', error.code, error.message);
                             let userMessage = 'Error al iniciar sesión con Google: ';
                             if (error.code === 'auth/popup-blocked') {
                                 userMessage += 'El popup fue bloqueado. Permite los popups.';
@@ -425,9 +431,12 @@
 
                 logoutButton.addEventListener('click', () => {
                     signOut(auth).then(() => {
+                        localStorage.removeItem('dpccrea_user');
+                        loginContainer.style.display = 'block';
+                        profileContainer.classList.remove('active');
                         console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
                     }).catch((error) => {
-                        console.error('❌ Error al cerrar sesión:', error.code, error.message);
+                        console.error('❌ Error al cerrar sesión:', error);
                         errorMessage.textContent = 'Error al cerrar sesión: ' + error.message;
                         errorMessage.style.display = 'block';
                     });
@@ -436,6 +445,39 @@
                 editProfileButton.addEventListener('click', () => {
                     alert('Función de edición de perfil no implementada aún. ¡Próximamente!');
                     console.log('%c✏️ Intento de edición de perfil', 'color: #FFD700');
+                });
+
+                profilePhotoInput.addEventListener('change', async (event) => {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    if (!file.type.startsWith('image/')) {
+                        errorMessage.textContent = 'Por favor, selecciona una imagen.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
+                    if (file.size > 2 * 1024 * 1024) {
+                        errorMessage.textContent = 'La imagen debe ser menor a 2MB.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const photoURL = e.target.result;
+                        profilePhoto.src = photoURL;
+                        const currentUser = JSON.parse(localStorage.getItem('dpccrea_user'));
+                        if (currentUser) {
+                            try {
+                                await updateDoc(doc(db, 'users', currentUser.username), { photoURL });
+                                localStorage.setItem('dpccrea_user', JSON.stringify({ ...currentUser, photoURL }));
+                                console.log('%c📸 Foto de perfil actualizada', 'color: #DAA520');
+                            } catch (error) {
+                                console.error('❌ Error al subir foto:', error);
+                                errorMessage.textContent = 'Error al subir la foto: ' + error.message;
+                                errorMessage.style.display = 'block';
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(file);
                 });
             } catch (e) {
                 console.error('❌ Error al inicializar Firebase:', e.message);
