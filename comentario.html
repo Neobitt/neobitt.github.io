@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -64,7 +25,7 @@
             --inclusive-purple: #8A2BE2;
             --dark-color: #000;
             --neon-cyan: #00CED1;
-            --neon-pink: #FF69B4;
+            --neon-red: #FF0000;
         }
         * {
             margin: 0;
@@ -91,29 +52,26 @@
             opacity: 0.4;
         }
         .comment-container {
-            position: relative;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 400px;
+            max-width: 600px;
+            margin: 20px auto;
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid var(--golden-main);
             padding: 20px;
             box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
             border-radius: 10px;
-            text-align: center;
             animation: fadeIn 0.5s ease-in-out;
         }
         @keyframes fadeIn {
-            0% { opacity: 0; transform: translate(-50%, -60%); }
-            100% { opacity: 1; transform: translate(-50%, -50%); }
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         .comment-container h2 {
             color: var(--golden-main);
-            font-size: 1.8rem;
+            font-size: 2rem;
             text-shadow: 0 0 10px var(--golden-accent);
             margin-bottom: 20px;
+            text-align: center;
         }
         .form-group {
             margin-bottom: 15px;
@@ -124,7 +82,7 @@
             background: #111;
             border: 1px solid var(--golden-accent);
             color: var(--golden-main);
-            font-size: 1rem;
+            font-size: 1.2rem;
             border-radius: 5px;
             outline: none;
             transition: all 0.3s ease;
@@ -134,17 +92,17 @@
             box-shadow: 0 0 10px var(--golden-main);
         }
         textarea.form-control {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
         .btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             background: var(--golden-accent);
             border: 2px solid var(--golden-main);
             color: #000;
-            font-size: 1rem;
+            font-size: 1.2rem;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -157,10 +115,11 @@
             transform: scale(1.05);
         }
         .error-message {
-            color: #ff0000;
-            font-size: 0.9rem;
+            color: var(--neon-red);
+            font-size: 1rem;
             margin-top: 10px;
             display: none;
+            text-align: center;
         }
         .comments-list {
             margin-top: 20px;
@@ -170,19 +129,19 @@
             border: 1px solid var(--golden-accent);
             border-radius: 8px;
             padding: 15px;
-            margin: 10px 0;
+            margin: 15px 0;
             box-shadow: 0 0 10px var(--inclusive-purple);
             position: relative;
         }
         .comment-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 10px;
         }
         .comment-header img {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 2px solid var(--golden-main);
             box-shadow: 0 0 10px var(--inclusive-purple);
@@ -190,11 +149,12 @@
         .comment-header .name {
             color: var(--golden-main);
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
         }
         .comment-header .creator-badge {
-            color: var(--hacker-cyan);
-            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            font-size: 1.1rem;
+            font-weight: bold;
             animation: rgbGlow 3s infinite;
         }
         @keyframes rgbGlow {
@@ -205,28 +165,29 @@
         }
         .comment-body {
             color: var(--golden-accent);
-            font-size: 1rem;
+            font-size: 1.2rem;
             margin-bottom: 10px;
         }
         .comment-footer {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 0.9rem;
+            gap: 20px;
+            font-size: 1rem;
             color: var(--neon-cyan);
         }
         .comment-footer .date {
             flex-grow: 1;
         }
-        .comment-footer .like-btn, .comment-footer .react-btn, .comment-footer .reply-btn {
+        .comment-footer .like-btn, .comment-footer .react-btn, .comment-footer .reply-btn, .comment-footer .show-replies-btn {
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .comment-footer .like-btn:hover, .comment-footer .react-btn:hover, .comment-footer .reply-btn:hover {
+        .comment-footer .like-btn:hover, .comment-footer .react-btn:hover, .comment-footer .reply-btn:hover, .comment-footer .show-replies-btn:hover {
             transform: scale(1.1);
         }
         .comment-footer .like-btn.liked {
-            color: var(--neon-pink);
+            color: var(--neon-red);
+            text-shadow: 0 0 10px var(--neon-red);
         }
         .reaction-options {
             display: none;
@@ -236,42 +197,85 @@
             border-radius: 5px;
             padding: 5px;
             z-index: 10;
+            right: 10px;
         }
         .reaction-options span {
-            font-size: 1.2rem;
-            margin: 0 5px;
+            font-size: 1.4rem;
+            margin: 0 8px;
             cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .reaction-options span:hover {
+            transform: scale(1.2);
         }
         .reply-form {
             display: none;
-            margin-top: 10px;
+            margin-top: 15px;
         }
         .reply-form.active {
             display: block;
         }
         .replies {
-            margin-left: 20px;
+            margin-left: 30px;
             margin-top: 10px;
+            display: none;
+        }
+        .replies.active {
+            display: block;
         }
         .reply {
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--inclusive-purple);
             border-radius: 8px;
             padding: 10px;
-            margin: 5px 0;
+            margin: 10px 0;
+            position: relative;
+        }
+        .reply:before {
+            content: '➡️';
+            position: absolute;
+            left: -20px;
+            color: var(--golden-main);
+            font-size: 1.2rem;
+        }
+        .show-replies-btn {
+            color: var(--neon-cyan);
+            font-size: 1rem;
+            text-decoration: underline;
         }
         @media (max-width: 768px) {
             .comment-container {
                 width: 95%;
                 max-width: 320px;
+                margin: 15px auto;
                 padding: 15px;
             }
             .comment-container h2 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
             .comment-header img {
-                width: 30px;
-                height: 30px;
+                width: 40px;
+                height: 40px;
+            }
+            .comment-header .name {
+                font-size: 1.1rem;
+            }
+            .comment-header .creator-badge {
+                font-size: 0.9rem;
+            }
+            .comment-body {
+                font-size: 1rem;
+            }
+            .comment-footer {
+                gap: 15px;
+                font-size: 0.9rem;
+            }
+            .form-control {
+                font-size: 1rem;
+            }
+            .btn {
+                font-size: 1rem;
+                padding: 10px;
             }
         }
     </style>
@@ -280,7 +284,7 @@
     <canvas id="matrixCanvas" class="matrix-bg"></canvas>
     <div class="comment-container">
         <h2>// DEJA TU COMENTARIO //</h2>
-        <p style="color: var(--golden-accent); margin-bottom: 20px;">Comparte tus ideas con respeto. ¡Prohibidas las malas palabras!</p>
+        <p style="color: var(--golden-accent); margin-bottom: 20px; text-align: center;">Comparte tus ideas con respeto. ¡Prohibidas las malas palabras!</p>
         <form id="commentForm">
             <div class="form-group">
                 <input type="text" id="nameInput" placeholder="Tu nombre (opcional)" maxlength="30" class="form-control">
@@ -292,7 +296,7 @@
             <p class="error-message" id="errorMessage"></p>
         </form>
         <div id="commentsList" class="comments-list">
-            <p style="color: var(--golden-accent);">Cargando comentarios...</p>
+            <p style="color: var(--golden-accent); text-align: center;">Cargando comentarios...</p>
         </div>
     </div>
     <script type="module">
@@ -319,13 +323,13 @@
                 const messageInput = document.getElementById('messageInput');
                 const commentsList = document.getElementById('commentsList');
                 const errorMessage = document.getElementById('errorMessage');
-                const badWords = ['idiota', 'estúpido', 'tonto', 'maldito', 'imbécil', 'grosero']; // Lista básica de malas palabras
+                const badWords = ['idiota', 'estúpido', 'tonto', 'maldito', 'imbécil', 'grosero'];
 
-                // Obtener datos del usuario desde localStorage (de perfil.html)
+                // Obtener datos del usuario desde localStorage
                 const currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
                 if (currentUser.username) {
                     nameInput.value = currentUser.username;
-                    nameInput.disabled = true; // Bloquear campo de nombre si está logueado
+                    nameInput.disabled = true;
                 }
 
                 // Efecto de escritura letra por letra
@@ -359,6 +363,7 @@
                         if (querySnapshot.empty) {
                             const p = document.createElement('p');
                             p.style.color = 'var(--golden-accent)';
+                            p.style.textAlign = 'center';
                             p.textContent = 'No hay comentarios aún. ¡Sé el primero!';
                             commentsList.appendChild(p);
                             return;
@@ -371,8 +376,8 @@
                             const message = data.message || '';
                             const likes = data.likes || 0;
                             const reactions = data.reactions || [];
-                            const isCreator = name === '*L_Adriano*';
-                            const photoURL = data.photoURL || 'https://via.placeholder.com/40';
+                            const isCreator = name === 'L_Adriano';
+                            const photoURL = data.photoURL || 'https://via.placeholder.com/50';
 
                             const commentEl = document.createElement('div');
                             commentEl.className = 'comment';
@@ -388,6 +393,7 @@
                                     <span class="like-btn" data-id="${docSnapshot.id}"><i class="fas fa-heart"></i> ${likes}</span>
                                     <span class="react-btn" data-id="${docSnapshot.id}"><i class="fas fa-smile"></i> Reacciones</span>
                                     <span class="reply-btn" data-id="${docSnapshot.id}">Responder</span>
+                                    <span class="show-replies-btn" data-id="${docSnapshot.id}" style="display: none;">Ver respuestas</span>
                                 </div>
                                 <div class="reaction-options" data-id="${docSnapshot.id}">
                                     <span data-emoji="😊">😊</span>
@@ -409,7 +415,7 @@
                             // Mostrar reacciones
                             if (reactions.length > 0) {
                                 const reactionDisplay = document.createElement('div');
-                                reactionDisplay.style.color = 'var(--neon-pink)';
+                                reactionDisplay.style.color = 'var(--neon-cyan)';
                                 reactionDisplay.textContent = reactions.join(' ');
                                 commentEl.querySelector('.comment-footer').insertBefore(reactionDisplay, commentEl.querySelector('.reply-btn'));
                             }
@@ -419,14 +425,19 @@
                             const repliesQuery = query(repliesCollection, orderBy("timestamp", "desc"));
                             onSnapshot(repliesQuery, (replySnapshot) => {
                                 const repliesEl = commentEl.querySelector('.replies');
+                                const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
                                 repliesEl.innerHTML = '';
+                                if (!replySnapshot.empty) {
+                                    showRepliesBtn.style.display = 'inline';
+                                    showRepliesBtn.textContent = `Ver respuestas (${replySnapshot.size})`;
+                                }
                                 replySnapshot.forEach(async (replyDoc) => {
                                     const replyData = replyDoc.data();
                                     const replyDate = replyData.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
                                     const replyName = replyData.name || 'Anónimo';
                                     const replyMessage = replyData.message || '';
-                                    const replyPhotoURL = replyData.photoURL || 'https://via.placeholder.com/40';
-                                    const isReplyCreator = replyName === '*L_Adriano*';
+                                    const replyPhotoURL = replyData.photoURL || 'https://via.placeholder.com/50';
+                                    const isReplyCreator = replyName === 'L_Adriano';
 
                                     const replyEl = document.createElement('div');
                                     replyEl.className = 'reply';
@@ -468,7 +479,7 @@
                     }
 
                     try {
-                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/40';
+                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
                         await addDoc(commentsCollection, {
                             name: name,
                             message: message,
@@ -487,9 +498,9 @@
                     }
                 });
 
-                // Manejar likes y reacciones
+                // Manejar likes, reacciones, respuestas y mostrar respuestas
                 commentsList.addEventListener('click', async (e) => {
-                    const target = e.target.closest('.like-btn, .react-btn, .reply-btn, .reaction-options span');
+                    const target = e.target.closest('.like-btn, .react-btn, .reply-btn, .show-replies-btn, .reaction-options span');
                     if (!target) return;
 
                     const commentId = target.dataset.id;
@@ -497,14 +508,24 @@
 
                     if (target.classList.contains('like-btn')) {
                         target.classList.toggle('liked');
-                        await updateDoc(commentDoc, { likes: increment(target.classList.contains('liked') ? 1 : -1) });
-                        console.log('%c❤️ Like actualizado', 'color: #FF69B4');
+                        const isLiked = target.classList.contains('liked');
+                        await updateDoc(commentDoc, { likes: increment(isLiked ? 1 : -1) });
+                        target.querySelector('i').classList.toggle('fas', isLiked);
+                        target.querySelector('i').classList.toggle('far', !isLiked);
+                        console.log('%c❤️ Like actualizado', 'color: #FF0000');
                     } else if (target.classList.contains('react-btn')) {
                         const reactionOptions = document.querySelector(`.reaction-options[data-id="${commentId}"]`);
                         reactionOptions.style.display = reactionOptions.style.display === 'block' ? 'none' : 'block';
                     } else if (target.classList.contains('reply-btn')) {
                         const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
                         replyForm.classList.toggle('active');
+                        if (replyForm.classList.contains('active')) {
+                            replyForm.querySelector('textarea').focus();
+                        }
+                    } else if (target.classList.contains('show-replies-btn')) {
+                        const repliesEl = document.querySelector(`.replies[data-id="${commentId}"]`);
+                        repliesEl.classList.toggle('active');
+                        target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${repliesEl.children.length})`;
                     } else if (target.dataset.emoji) {
                         const emoji = target.dataset.emoji;
                         await updateDoc(commentDoc, { reactions: arrayUnion(emoji) });
@@ -534,7 +555,7 @@
 
                     try {
                         const repliesCollection = collection(db, `comentarios/${commentId}/replies`);
-                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/40';
+                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
                         await addDoc(repliesCollection, {
                             name: nameInput.value.trim() || 'Anónimo',
                             message: replyText,
