@@ -136,13 +136,13 @@
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
         }
-        .update-popup {
+        .update-popup, .campaign-popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
             max-height: 80vh;
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid var(--golden-main);
@@ -157,14 +157,21 @@
             animation: fadeIn 0.5s ease-in-out;
             overflow-y: auto;
         }
+        .campaign-popup {
+            width: 600px;
+            height: 400px;
+            background-image: url('assets/imagenes/campana-ambiental.jpg');
+            background-size: cover;
+            background-position: center;
+        }
         @keyframes fadeIn {
             0% { opacity: 0; transform: translate(-50%, -60%); }
             100% { opacity: 1; transform: translate(-50%, -50%); }
         }
-        .update-popup.active {
+        .update-popup.active, .campaign-popup.active {
             display: flex;
         }
-        .update-popup h2 {
+        .update-popup h2, .campaign-popup h2 {
             color: var(--golden-main);
             font-size: 1.8rem;
             text-shadow: 0 0 10px var(--golden-accent);
@@ -197,25 +204,24 @@
             left: 0;
             color: var(--inclusive-purple);
         }
-        .update-button {
+        .update-button, .campaign-button {
             background: var(--golden-accent);
             border: 2px solid var(--golden-main);
             color: #000;
             font-size: 1rem;
             padding: 8px 15px;
             border-radius: 5px;
-            cursor: not-allowed;
+            cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px var(--golden-accent);
             text-transform: uppercase;
-            opacity: 0.5;
             margin-top: 15px;
         }
-        .update-button.enabled {
+        .update-button.enabled, .campaign-button {
             cursor: pointer;
             opacity: 1;
         }
-        .update-button.enabled:hover {
+        .update-button.enabled:hover, .campaign-button:hover {
             background: var(--golden-main);
             box-shadow: 0 0 15px var(--golden-accent);
             transform: scale(1.05);
@@ -353,7 +359,8 @@
         .counter-container {
             margin: 20px 35px;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            font-weight: bold;
             animation: rgbGlow 3s infinite;
             transition: all 0.3s ease;
             pointer-events: none;
@@ -369,12 +376,14 @@
             animation: rgbGlow 3s infinite;
             pointer-events: none;
             transition: transform 0.3s ease;
+            font-weight: bold;
         }
         .counter-container:hover div {
             transform: scale(1.05);
         }
         .counter-fallback {
-            font-size: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
             animation: rgbGlow 3s infinite;
         }
         @keyframes rgbGlow {
@@ -512,12 +521,14 @@
         }
         @media (max-width: 768px) {
             .counter-container {
-                font-size: 1rem;
+                font-size: 1.2rem;
                 margin: 10px 20px;
+                font-weight: bold;
             }
             .counter-container div {
                 padding: 8px 15px;
                 min-width: 80px;
+                font-weight: bold;
             }
             .gallery {
                 display: none;
@@ -539,10 +550,15 @@
             }
             nav { width: 280px; }
             nav .logo { width: 80px; height: 80px; }
-            .update-popup {
+            .update-popup, .campaign-popup {
                 width: 95%;
                 max-width: 350px;
                 padding: 15px;
+            }
+            .campaign-popup {
+                height: 280px;
+                background-size: contain;
+                background-repeat: no-repeat;
             }
             .gif-container img {
                 width: 150px;
@@ -578,6 +594,10 @@
                 <li>GIF reubicado bajo el catálogo</li>
                 <li>Catálogo vertical en móviles como feed de noticias</li>
                 <li>Barra de carga con degradado celeste a rosa neón</li>
+                <li>Popup de campaña ambiental al presionar la tecla ñ</li>
+                <li>Contador de visitas con texto más grueso para mejor legibilidad</li>
+                <li>Eliminada bandera del contador de visitas</li>
+                <li>Popup de campaña ambiental redimensionado a 600px de ancho y 400px de alto</li>
             </ul>
         </div>
         <div class="update-section">
@@ -592,6 +612,11 @@
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
+    </div>
+    <div class="campaign-popup" id="campaignPopup">
+        <h2>¡Campaña Ambiental!</h2>
+        <p style="color: var(--golden-main); font-size: 1.2rem; text-shadow: 0 0 5px var(--golden-accent);">¿Quieres apoyar?</p>
+        <button class="campaign-button" id="campaignButton">Conoce más</button>
     </div>
     <canvas id="matrixCanvas" class="matrix-bg"></canvas>
     <canvas id="particlesCanvas" class="particles-bg"></canvas>
@@ -748,13 +773,13 @@
                 onSnapshot(counterRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const count = docSnap.data().count;
-                        counterEl.innerHTML = `<strong>Visitas: ${new Intl.NumberFormat().format(count)} 🏳️‍🌈</strong>`;
+                        counterEl.innerHTML = `<strong>Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
                     } else {
-                        counterEl.innerHTML = `<span class="counter-fallback">0 🏳️‍🌈</span>`;
+                        counterEl.innerHTML = `<span class="counter-fallback">0</span>`;
                     }
                 }, (error) => {
                     console.error('❌ Error al escuchar contador:', error);
-                    counterEl.innerHTML = `<span class="counter-fallback">[--] 🏳️‍🌈</span>`;
+                    counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
                 });
 
                 const lastVisit = localStorage.getItem('dpccrea_lastVisit');
@@ -783,6 +808,8 @@
         const statusText = document.querySelector('.loader-status');
         const updatePopup = document.getElementById('updatePopup');
         const updateButton = document.getElementById('updateButton');
+        const campaignPopup = document.getElementById('campaignPopup');
+        const campaignButton = document.getElementById('campaignButton');
         const mainContent = document.getElementById('mainContent');
         const systemMessages = [
             {text: "> Conectando con servidor DPCCREA...", type: ""},
@@ -798,10 +825,13 @@
         ];
         let progress = 0;
         let messageIndex = 0;
-        function centerPopup() {
+        function centerPopups() {
             updatePopup.style.top = '50%';
             updatePopup.style.left = '50%';
             updatePopup.style.transform = 'translate(-50%, -50%)';
+            campaignPopup.style.top = '50%';
+            campaignPopup.style.left = '50%';
+            campaignPopup.style.transform = 'translate(-50%, -50%)';
         }
         function updateProgress() {
             if (progress < 100) {
@@ -826,7 +856,7 @@
                         loader.style.display = 'none';
                         mainContent.classList.add('blur');
                         updatePopup.classList.add('active');
-                        centerPopup();
+                        centerPopups();
                         setTimeout(() => {
                             updateButton.disabled = false;
                             updateButton.classList.add('enabled');
@@ -847,8 +877,20 @@
                 mainContent.classList.remove('blur');
             }
         });
+        campaignButton.addEventListener('click', () => {
+            campaignPopup.classList.remove('active');
+            mainContent.classList.remove('blur');
+            window.location.href = 'campaña.html';
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ñ' || event.key === 'Ñ') {
+                campaignPopup.classList.toggle('active');
+                mainContent.classList.toggle('blur');
+                centerPopups();
+            }
+        });
         window.addEventListener('resize', () => {
-            centerPopup();
+            centerPopups();
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
             particlesCanvas.width = window.innerWidth;
@@ -948,5 +990,3 @@
     </script>
 </body>
 </html>
-
-
