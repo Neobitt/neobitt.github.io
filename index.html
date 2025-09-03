@@ -392,9 +392,6 @@
             66% { color: #0000ff; text-shadow: 0 0 10px #0000ff; }
             100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
         }
-        .auth-link {
-            cursor: pointer;
-        }
         .gif-container {
             margin: 2rem auto;
             display: flex;
@@ -593,6 +590,7 @@
                 <li>Términos y Condiciones en el pie de página</li>
                 <li>GIF reubicado bajo el catálogo</li>
                 <li>Catálogo vertical en móviles como feed de noticias</li>
+                <li>Sección de Creadores añadida al menú</li>
             </ul>
         </div>
         <div class="update-section">
@@ -601,6 +599,7 @@
                 <li>Contador ahora sube cada 12 horas</li>
                 <li>Catálogo horizontal reemplazado por vertical en móviles</li>
                 <li>Eliminadas secciones de películas, libros y documentales</li>
+                <li>Eliminado enlace de Iniciar Sesión del menú</li>
             </ul>
         </div>
         <button class="update-button" id="updateButton" disabled>Aceptar</button>
@@ -621,15 +620,15 @@
         <img src="assets/imagenes/logo.png" alt="DPCCrea Logo" class="logo">
         <ul>
             <li><a href="index.html">INICIO</a></li>
-            <li><a href="perfil.html"></a>PERFIL</li>
-            <li><a href="comentario.htmL">COMENTARIO</a></li>
+            <li><a href="perfil.html">PERFIL</a></li>
+            <li><a href="comentario.html">COMENTARIO</a></li>
+            <li><a href="creadores.html">CREADORES</a></li>
             <li><a href="campaña.html">CAMPAÑA</a></li>
             <li class="counter-container">
                 <div id="visitor-counter">
                     <span class="counter-fallback">Cargando contador...</span>
                 </div>
             </li>
-            <li id="authLink"><a href="#" class="auth-link">🔐 INICIAR SESIÓN</a></li>
         </ul>
     </nav>
     <div class="content" id="mainContent">
@@ -700,7 +699,6 @@
     </footer>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
         import { getFirestore, doc, getDoc, updateDoc, increment, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         if (window.location.protocol === 'file:') {
@@ -715,51 +713,8 @@
                     appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
                 };
                 const app = initializeApp(firebaseConfig);
-                const auth = getAuth();
-                const provider = new GoogleAuthProvider();
                 const db = getFirestore();
                 const counterRef = doc(db, "visitas", "contador");
-
-                const authLink = document.getElementById('authLink');
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        authLink.innerHTML = '<a href="#" class="auth-link">🚪 CERRAR SESIÓN</a>';
-                        console.log('%c🟢 Usuario autenticado:', 'color: #FFD700', user.displayName, user.email);
-                    } else {
-                        authLink.innerHTML = '<a href="#" class="auth-link">🔐 INICIAR SESIÓN</a>';
-                    }
-                    authLink.querySelector('a').addEventListener('click', (e) => {
-                        e.preventDefault();
-                        if (user) {
-                            signOut(auth).then(() => {
-                                console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
-                            }).catch((error) => {
-                                console.error('❌ Error al cerrar sesión:', error.code, error.message);
-                                alert('Error al cerrar sesión: ' + error.message);
-                            });
-                        } else {
-                            signInWithPopup(auth, provider)
-                                .then((result) => {
-                                    const user = result.user;
-                                    console.log('%c🎉 Bienvenido:', 'color: #DAA520', user.displayName);
-                                })
-                                .catch((error) => {
-                                    const errorCode = error.code;
-                                    const errorMessage = error.message;
-                                    console.error('❌ Error de autenticación:', errorCode, errorMessage);
-                                    let userMessage = 'Error al iniciar sesión: ' + errorMessage;
-                                    if (errorCode === 'auth/popup-blocked') {
-                                        userMessage = 'El popup de inicio de sesión fue bloqueado. Por favor, permite los popups en tu navegador.';
-                                    } else if (errorCode === 'auth/invalid-api-key') {
-                                        userMessage = 'Clave de API de Firebase inválida. Revisa la configuración en Firebase Console.';
-                                    } else if (errorCode === 'auth/network-request-failed') {
-                                        userMessage = 'Error de red. Verifica tu conexión a internet.';
-                                    }
-                                    alert(userMessage);
-                                });
-                        }
-                    });
-                });
 
                 const counterEl = document.getElementById('visitor-counter');
                 onSnapshot(counterRef, (docSnap) => {
@@ -982,7 +937,3 @@
     </script>
 </body>
 </html>
-
-
-
-
