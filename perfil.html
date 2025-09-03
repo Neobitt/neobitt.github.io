@@ -1,0 +1,420 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - DPCCrea</title>
+    <meta name="description" content="Inicia sesión o regístrate en DPCCrea para acceder a tu perfil y recursos personalizados sobre sexualidad, identidad y diversidad.">
+    <meta name="keywords" content="inicio de sesión, registro, perfil, autenticación, sexualidad, identidad, diversidad">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Perfil - DPCCrea">
+    <meta property="og:description" content="Inicia sesión o regístrate con tu email o Google para acceder a tu perfil en DPCCrea.">
+    <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
+    <meta property="og:url" content="https://dpccrea.com/perfil.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imagenes/favicon.ico">
+    <link rel="icon" type="image/png" sizes="128x128" href="/assets/imagenes/favicon-128x128.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="/assets/imagenes/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/imagenes/favicon-192x192.png">
+    <style>
+        :root {
+            --golden-main: #FFD700;
+            --golden-accent: #DAA520;
+            --inclusive-purple: #8A2BE2;
+            --dark-color: #000;
+            --neon-cyan: #00CED1;
+            --neon-pink: #FF69B4;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-color);
+            color: white;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--golden-main);
+            padding: 20px;
+            box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translate(-50%, -60%); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        .login-container h2 {
+            color: var(--golden-main);
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #111;
+            border: 1px solid var(--golden-accent);
+            color: var(--golden-main);
+            font-size: 1rem;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .login-container input:focus {
+            border-color: var(--golden-main);
+            box-shadow: 0 0 10px var(--golden-main);
+        }
+        .login-button, .register-button, .google-button, .logout-button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--golden-accent);
+            text-transform: uppercase;
+        }
+        .google-button {
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .google-button img {
+            width: 24px;
+            height: 24px;
+        }
+        .login-button:hover, .register-button:hover, .google-button:hover, .logout-button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+            transform: scale(1.05);
+        }
+        .profile-container {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--golden-main);
+            padding: 20px;
+            box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .profile-container.active {
+            display: block;
+        }
+        .profile-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--golden-main);
+            box-shadow: 0 0 15px var(--inclusive-purple);
+            margin-bottom: 20px;
+        }
+        .profile-container h3 {
+            color: var(--golden-main);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-bottom: 10px;
+        }
+        .profile-container p {
+            color: var(--golden-accent);
+            font-size: 1rem;
+            text-shadow: 0 0 5px var(--golden-accent);
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: #ff0000;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .login-container, .profile-container {
+                width: 95%;
+                max-width: 320px;
+                padding: 15px;
+            }
+            .login-container h2, .profile-container h3 {
+                font-size: 1.5rem;
+            }
+            .profile-container img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas" class="matrix-bg"></canvas>
+    <div class="login-container" id="loginContainer">
+        <h2>Iniciar Sesión</h2>
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button class="login-button" id="loginButton">Iniciar Sesión</button>
+        <button class="register-button" id="registerButton">Registrarse</button>
+        <button class="google-button" id="googleButton">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+            Iniciar con Google
+        </button>
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+    <div class="profile-container" id="profileContainer">
+        <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Foto de Perfil">
+        <h3 id="profileName">Usuario</h3>
+        <p id="profileEmail">correo@ejemplo.com</p>
+        <button class="logout-button" id="logoutButton">Cerrar Sesión</button>
+    </div>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+        if (window.location.protocol === 'file:') {
+            console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
+            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.');
+        } else {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
+                    authDomain: "dpccrea-login.firebaseapp.com",
+                    projectId: "dpccrea-login",
+                    appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
+                };
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth();
+                const provider = new GoogleAuthProvider();
+                const loginContainer = document.getElementById('loginContainer');
+                const profileContainer = document.getElementById('profileContainer');
+                const loginButton = document.getElementById('loginButton');
+                const registerButton = document.getElementById('registerButton');
+                const googleButton = document.getElementById('googleButton');
+                const logoutButton = document.getElementById('logoutButton');
+                const errorMessage = document.getElementById('errorMessage');
+                const profilePhoto = document.getElementById('profilePhoto');
+                const profileName = document.getElementById('profileName');
+                const profileEmail = document.getElementById('profileEmail');
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        loginContainer.style.display = 'none';
+                        profileContainer.classList.add('active');
+                        profilePhoto.src = user.photoURL || 'https://via.placeholder.com/100';
+                        profileName.textContent = user.displayName || user.email.split('@')[0] || 'Usuario';
+                        profileEmail.textContent = user.email || 'correo@ejemplo.com';
+                        console.log('%c🟢 Usuario autenticado:', 'color: #FFD700', user.displayName || user.email, user.email);
+                    } else {
+                        loginContainer.style.display = 'block';
+                        profileContainer.classList.remove('active');
+                        console.log('%c🔐 No hay usuario autenticado', 'color: #8A2BE2');
+                    }
+                });
+
+                loginButton.addEventListener('click', () => {
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    errorMessage.style.display = 'none';
+                    if (!email || !password) {
+                        errorMessage.textContent = 'Por favor, completa todos los campos.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
+                    signInWithEmailAndPassword(auth, email, password)
+                        .then((userCredential) => {
+                            console.log('%c🎉 Inicio de sesión exitoso:', 'color: #DAA520', userCredential.user.email);
+                        })
+                        .catch((error) => {
+                            console.error('❌ Error al iniciar sesión:', error.code, error.message);
+                            let userMessage = 'Error al iniciar sesión: ';
+                            if (error.code === 'auth/invalid-email') {
+                                userMessage += 'El correo electrónico no es válido.';
+                            } else if (error.code === 'auth/user-not-found') {
+                                userMessage += 'Usuario no encontrado. Regístrate primero.';
+                            } else if (error.code === 'auth/wrong-password') {
+                                userMessage += 'Contraseña incorrecta.';
+                            } else if (error.code === 'auth/too-many-requests') {
+                                userMessage += 'Demasiados intentos. Intenta de nuevo más tarde.';
+                            } else {
+                                userMessage += error.message;
+                            }
+                            errorMessage.textContent = userMessage;
+                            errorMessage.style.display = 'block';
+                        });
+                });
+
+                registerButton.addEventListener('click', () => {
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    errorMessage.style.display = 'none';
+                    if (!email || !password) {
+                        errorMessage.textContent = 'Por favor, completa todos los campos.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then((userCredential) => {
+                            console.log('%c🎉 Registro exitoso:', 'color: #DAA520', userCredential.user.email);
+                        })
+                        .catch((error) => {
+                            console.error('❌ Error al registrarse:', error.code, error.message);
+                            let userMessage = 'Error al registrarse: ';
+                            if (error.code === 'auth/email-already-in-use') {
+                                userMessage += 'El correo ya está registrado. Inicia sesión.';
+                            } else if (error.code === 'auth/invalid-email') {
+                                userMessage += 'El correo electrónico no es válido.';
+                            } else if (error.code === 'auth/weak-password') {
+                                userMessage += 'La contraseña debe tener al menos 6 caracteres.';
+                            } else {
+                                userMessage += error.message;
+                            }
+                            errorMessage.textContent = userMessage;
+                            errorMessage.style.display = 'block';
+                        });
+                });
+
+                googleButton.addEventListener('click', () => {
+                    signInWithPopup(auth, provider)
+                        .then((result) => {
+                            console.log('%c🎉 Bienvenido:', 'color: #DAA520', result.user.displayName);
+                        })
+                        .catch((error) => {
+                            console.error('❌ Error de autenticación:', error.code, error.message);
+                            let userMessage = 'Error al iniciar sesión con Google: ';
+                            if (error.code === 'auth/popup-blocked') {
+                                userMessage += 'El popup fue bloqueado. Permite los popups.';
+                            } else if (error.code === 'auth/invalid-api-key') {
+                                userMessage += 'Clave de API de Firebase inválida.';
+                            } else if (error.code === 'auth/network-request-failed') {
+                                userMessage += 'Error de red. Verifica tu conexión.';
+                            } else {
+                                userMessage += error.message;
+                            }
+                            errorMessage.textContent = userMessage;
+                            errorMessage.style.display = 'block';
+                        });
+                });
+
+                logoutButton.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
+                    }).catch((error) => {
+                        console.error('❌ Error al cerrar sesión:', error.code, error.message);
+                        errorMessage.textContent = 'Error al cerrar sesión: ' + error.message;
+                        errorMessage.style.display = 'block';
+                    });
+                });
+            } catch (e) {
+                console.error('❌ Error al inicializar Firebase:', e.message);
+                alert('No se pudo inicializar Firebase. Verifica la configuración o la conexión.');
+            }
+        }
+    </script>
+    <script>
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const matrixCtx = matrixCanvas.getContext('2d');
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+        const chars = "日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾁﾔﾖﾌﾝ★☆◆◇♠♣♥♦";
+        const fontSize = 20;
+        const columns = matrixCanvas.width / fontSize;
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * matrixCanvas.height);
+        }
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            matrixCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--golden-accent').trim();
+            matrixCtx.font = `bold ${fontSize}px monospace`;
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > matrixCanvas.height || Math.random() > 0.97) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 40);
+        window.addEventListener('resize', () => {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
