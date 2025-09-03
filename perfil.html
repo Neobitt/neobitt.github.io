@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - DPCCrea</title>
-    <meta name="description" content="Crea tu perfil en DPCCrea con un nombre de usuario o Google y personaliza tu foto para acceder a recursos sobre sexualidad, identidad y diversidad.">
-    <meta name="keywords" content="perfil, nombre de usuario, google, autenticación, sexualidad, identidad, diversidad">
+    <meta name="description" content="Crea tu perfil en DPCCrea con un nombre de usuario o Google y personaliza tu foto (incluye GIFs) para acceder a recursos sobre sexualidad, identidad y diversidad.">
+    <meta name="keywords" content="perfil, nombre de usuario, google, autenticación, sexualidad, identidad, diversidad, gif">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Perfil - DPCCrea">
-    <meta property="og:description" content="Crea o accede a tu perfil en DPCCrea con un nombre de usuario o Google y sube tu foto de perfil.">
+    <meta property="og:description" content="Crea o accede a tu perfil en DPCCrea con un nombre de usuario o Google y sube tu foto de perfil, incluyendo GIFs.">
     <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
     <meta property="og:url" content="https://dpccrea.com/perfil.html">
     <meta property="og:type" content="website">
@@ -140,17 +140,29 @@
         .profile-container.active {
             display: block;
         }
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
         .profile-container img {
             width: 100px;
             height: 100px;
             border-radius: 50%;
             border: 2px solid var(--golden-main);
             box-shadow: 0 0 15px var(--inclusive-purple);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             cursor: pointer;
+            animation: pulseGlow 2s infinite;
         }
         .profile-container img:hover {
             transform: scale(1.05);
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px var(--inclusive-purple); }
+            50% { box-shadow: 0 0 25px var(--neon-pink); }
+            100% { box-shadow: 0 0 15px var(--inclusive-purple); }
         }
         .profile-container h3 {
             color: var(--golden-main);
@@ -279,9 +291,11 @@
         <p class="error-message" id="errorMessage"></p>
     </div>
     <div class="profile-container" id="profileContainer">
-        <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Foto de Perfil">
-        <label for="profilePhotoInput" class="upload-label">Subir Foto</label>
-        <input type="file" id="profilePhotoInput" accept="image/*">
+        <div class="profile-header">
+            <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Foto de Perfil">
+            <label for="profilePhotoInput" class="upload-label">Subir Foto o GIF</label>
+            <input type="file" id="profilePhotoInput" accept="image/*,image/gif">
+        </div>
         <h3 id="profileName">Usuario</h3>
         <div class="counter-container">
             <div id="user-visits">Visitas: 0</div>
@@ -451,12 +465,12 @@
                     const file = event.target.files[0];
                     if (!file) return;
                     if (!file.type.startsWith('image/')) {
-                        errorMessage.textContent = 'Por favor, selecciona una imagen.';
+                        errorMessage.textContent = 'Por favor, selecciona una imagen o GIF.';
                         errorMessage.style.display = 'block';
                         return;
                     }
                     if (file.size > 2 * 1024 * 1024) {
-                        errorMessage.textContent = 'La imagen debe ser menor a 2MB.';
+                        errorMessage.textContent = 'La imagen o GIF debe ser menor a 2MB.';
                         errorMessage.style.display = 'block';
                         return;
                     }
@@ -469,10 +483,10 @@
                             try {
                                 await updateDoc(doc(db, 'users', currentUser.username), { photoURL });
                                 localStorage.setItem('dpccrea_user', JSON.stringify({ ...currentUser, photoURL }));
-                                console.log('%c📸 Foto de perfil actualizada', 'color: #DAA520');
+                                console.log('%c📸 Foto o GIF actualizada', 'color: #DAA520');
                             } catch (error) {
-                                console.error('❌ Error al subir foto:', error);
-                                errorMessage.textContent = 'Error al subir la foto: ' + error.message;
+                                console.error('❌ Error al subir foto o GIF:', error);
+                                errorMessage.textContent = 'Error al subir la foto o GIF: ' + error.message;
                                 errorMessage.style.display = 'block';
                             }
                         }
