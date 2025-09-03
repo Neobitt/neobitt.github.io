@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" sizes="128x128" href="/assets/imagenes/favicon-128x128.png">
     <link rel="apple-touch-icon" sizes="128x128" href="/assets/imagenes/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/imagenes/favicon-192x192.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         :root {
             --golden-main: #FFD700;
@@ -133,6 +133,16 @@
             box-shadow: 0 0 10px var(--inclusive-purple);
             position: relative;
         }
+        .comment.reply {
+            margin-left: 30px;
+        }
+        .comment.reply:before {
+            content: '➡️';
+            position: absolute;
+            left: -20px;
+            color: var(--golden-main);
+            font-size: 1.2rem;
+        }
         .comment-header {
             display: flex;
             align-items: center;
@@ -223,21 +233,6 @@
         .replies.active {
             display: block;
         }
-        .reply {
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--inclusive-purple);
-            border-radius: 8px;
-            padding: 10px;
-            margin: 10px 0;
-            position: relative;
-        }
-        .reply:before {
-            content: '➡️';
-            position: absolute;
-            left: -20px;
-            color: var(--golden-main);
-            font-size: 1.2rem;
-        }
         .show-replies-btn {
             color: var(--neon-cyan);
             font-size: 1rem;
@@ -277,6 +272,12 @@
                 font-size: 1rem;
                 padding: 10px;
             }
+            .comment.reply {
+                margin-left: 20px;
+            }
+            .comment.reply:before {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -301,7 +302,7 @@
     </div>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, orderBy, query, onSnapshot, doc, updateDoc, increment, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, orderBy, query, onSnapshot, doc, updateDoc, increment, arrayUnion, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         if (window.location.protocol === 'file:') {
             console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
@@ -369,15 +370,30 @@
                             return;
                         }
 
-                        querySnapshot.forEach(async (docSnapshot) => {
-                            const data = docSnapshot.data();
-                            const date = data.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                            const name = data.name || 'Anónimo';
-                            const message = data.message || '';
-                            const likes = data.likes || 0;
-                            const reactions = data.reactions || [];
+                        // Separar comentarios principales (sin parentId) y respuestas (con parentId)
+                        const comments = [];
+                        const repliesByParent = {};
+                        querySnapshot.forEach(doc => {
+                            const data = doc.data();
+                            if (!data.parentId) {
+                                comments.push({ id: doc.id, ...data });
+                            } else {
+                                if (!repliesByParent[data.parentId]) {
+                                    repliesByParent[data.parentId] = [];
+                                }
+                                repliesByParent[data.parentId].push({ id: doc.id, ...data });
+                            }
+                        });
+
+                        // Renderizar comentarios principales
+                        comments.forEach(async (comment) => {
+                            const date = comment.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
+                            const name = comment.name || 'Anónimo';
+                            const message = comment.message || '';
+                            const likes = comment.likes || 0;
+                            const reactions = comment.reactions || [];
                             const isCreator = name === 'L_Adriano';
-                            const photoURL = data.photoURL || 'https://via.placeholder.com/50';
+                            const photoURL = comment.photoURL || 'https://via.placeholder.com/50';
 
                             const commentEl = document.createElement('div');
                             commentEl.className = 'comment';
@@ -390,21 +406,21 @@
                                 <div class="comment-body"></div>
                                 <div class="comment-footer">
                                     <span class="date">${date}</span>
-                                    <span class="like-btn" data-id="${docSnapshot.id}"><i class="fas fa-heart"></i> ${likes}</span>
-                                    <span class="react-btn" data-id="${docSnapshot.id}"><i class="fas fa-smile"></i> Reacciones</span>
-                                    <span class="reply-btn" data-id="${docSnapshot.id}">Responder</span>
-                                    <span class="show-replies-btn" data-id="${docSnapshot.id}" style="display: none;">Ver respuestas</span>
+                                    <span class="like-btn" data-id="${comment.id}"><i class="far fa-heart"></i> ${likes}</span>
+                                    <span class="react-btn" data-id="${comment.id}"><i class="fas fa-smile"></i> Reacciones</span>
+                                    <span class="reply-btn" data-id="${comment.id}">Responder</span>
+                                    <span class="show-replies-btn" data-id="${comment.id}" style="display: none;">Ver respuestas</span>
                                 </div>
-                                <div class="reaction-options" data-id="${docSnapshot.id}">
+                                <div class="reaction-options" data-id="${comment.id}">
                                     <span data-emoji="😊">😊</span>
                                     <span data-emoji="👍">👍</span>
                                     <span data-emoji="🔥">🔥</span>
                                 </div>
-                                <div class="reply-form" data-id="${docSnapshot.id}">
+                                <div class="reply-form" data-id="${comment.id}">
                                     <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
                                     <button class="btn">Enviar Respuesta</button>
                                 </div>
-                                <div class="replies" data-id="${docSnapshot.id}"></div>
+                                <div class="replies" data-id="${comment.id}"></div>
                             `;
                             commentsList.appendChild(commentEl);
 
@@ -420,27 +436,24 @@
                                 commentEl.querySelector('.comment-footer').insertBefore(reactionDisplay, commentEl.querySelector('.reply-btn'));
                             }
 
-                            // Cargar respuestas
-                            const repliesCollection = collection(db, `comentarios/${docSnapshot.id}/replies`);
-                            const repliesQuery = query(repliesCollection, orderBy("timestamp", "desc"));
-                            onSnapshot(repliesQuery, (replySnapshot) => {
-                                const repliesEl = commentEl.querySelector('.replies');
-                                const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
-                                repliesEl.innerHTML = '';
-                                if (!replySnapshot.empty) {
-                                    showRepliesBtn.style.display = 'inline';
-                                    showRepliesBtn.textContent = `Ver respuestas (${replySnapshot.size})`;
-                                }
-                                replySnapshot.forEach(async (replyDoc) => {
-                                    const replyData = replyDoc.data();
-                                    const replyDate = replyData.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                                    const replyName = replyData.name || 'Anónimo';
-                                    const replyMessage = replyData.message || '';
-                                    const replyPhotoURL = replyData.photoURL || 'https://via.placeholder.com/50';
+                            // Renderizar respuestas
+                            const replies = repliesByParent[comment.id] || [];
+                            const repliesEl = commentEl.querySelector('.replies');
+                            const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
+                            if (replies.length > 0) {
+                                showRepliesBtn.style.display = 'inline';
+                                showRepliesBtn.textContent = `Ver respuestas (${replies.length})`;
+                                replies.forEach(async (reply) => {
+                                    const replyDate = reply.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
+                                    const replyName = reply.name || 'Anónimo';
+                                    const replyMessage = reply.message || '';
+                                    const replyLikes = reply.likes || 0;
+                                    const replyReactions = reply.reactions || [];
                                     const isReplyCreator = replyName === 'L_Adriano';
+                                    const replyPhotoURL = reply.photoURL || 'https://via.placeholder.com/50';
 
                                     const replyEl = document.createElement('div');
-                                    replyEl.className = 'reply';
+                                    replyEl.className = 'comment reply';
                                     replyEl.innerHTML = `
                                         <div class="comment-header">
                                             <img src="${replyPhotoURL}" alt="Foto de Perfil">
@@ -450,12 +463,26 @@
                                         <div class="comment-body"></div>
                                         <div class="comment-footer">
                                             <span class="date">${replyDate}</span>
+                                            <span class="like-btn" data-id="${reply.id}"><i class="far fa-heart"></i> ${replyLikes}</span>
+                                            <span class="react-btn" data-id="${reply.id}"><i class="fas fa-smile"></i> Reacciones</span>
+                                        </div>
+                                        <div class="reaction-options" data-id="${reply.id}">
+                                            <span data-emoji="😊">😊</span>
+                                            <span data-emoji="👍">👍</span>
+                                            <span data-emoji="🔥">🔥</span>
                                         </div>
                                     `;
                                     repliesEl.appendChild(replyEl);
                                     await typeText(replyEl.querySelector('.comment-body'), replyMessage, 10);
+
+                                    if (replyReactions.length > 0) {
+                                        const replyReactionDisplay = document.createElement('div');
+                                        replyReactionDisplay.style.color = 'var(--neon-cyan)';
+                                        replyReactionDisplay.textContent = replyReactions.join(' ');
+                                        replyEl.querySelector('.comment-footer').insertBefore(replyReactionDisplay, replyEl.querySelector('.react-btn'));
+                                    }
                                 });
-                            });
+                            }
                         });
                     });
                 };
@@ -554,13 +581,15 @@
                     }
 
                     try {
-                        const repliesCollection = collection(db, `comentarios/${commentId}/replies`);
                         const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                        await addDoc(repliesCollection, {
+                        await addDoc(commentsCollection, {
                             name: nameInput.value.trim() || 'Anónimo',
                             message: replyText,
                             timestamp: new Date(),
-                            photoURL: photoURL
+                            likes: 0,
+                            reactions: [],
+                            photoURL: photoURL,
+                            parentId: commentId
                         });
                         replyForm.querySelector('textarea').value = '';
                         replyForm.classList.remove('active');
