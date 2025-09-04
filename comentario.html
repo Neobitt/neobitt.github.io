@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comentarios - EcoCiberPerú</title>
-    <meta name="description" content="Comparte tus ideas y reacciona a comentarios en EcoCiberPerú. Usa tu foto de perfil, da corazones, emojis y respuestas al estilo YouTube.">
+    <meta name="description" content="Comparte tus ideas en EcoCiberPerú. Usa tu perfil para comentar, dar corazones y responder al estilo YouTube.">
     <meta name="keywords" content="comentarios, EcoCiberPerú, reciclaje, sostenibilidad, IA ética, comunidad">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Comentarios - EcoCiberPerú">
-    <meta property="og:description" content="Únete a la comunidad de EcoCiberPerú, comenta, da corazones y usa emojis para reaccionar.">
+    <meta property="og:description" content="Únete a la comunidad de EcoCiberPerú, comenta y da corazones.">
     <meta property="og:image" content="https://ecociberperu.com/assets/imagenes/og-image.jpg">
     <meta property="og:url" content="https://ecociberperu.com/comentario.html">
     <meta property="og:type" content="website">
@@ -57,7 +57,7 @@
             margin: 20px auto;
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid var(--golden-main);
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
             border-radius: 10px;
             animation: fadeIn 0.5s ease-in-out;
@@ -90,6 +90,10 @@
         .form-control:focus {
             border-color: var(--golden-main);
             box-shadow: 0 0 10px var(--golden-main);
+        }
+        .form-control:disabled {
+            background: #222;
+            cursor: not-allowed;
         }
         textarea.form-control {
             min-height: 120px;
@@ -128,13 +132,14 @@
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid var(--golden-accent);
             border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
+            padding: 12px;
+            margin: 12px 0;
             box-shadow: 0 0 10px var(--inclusive-purple);
             position: relative;
+            overflow: hidden;
         }
         .comment.reply {
-            margin-left: 30px;
+            margin-left: 25px;
         }
         .comment.reply:before {
             content: '➡️';
@@ -146,8 +151,8 @@
         .comment-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 8px;
         }
         .comment-header img {
             width: 50px;
@@ -176,57 +181,39 @@
         .comment-body {
             color: var(--golden-accent);
             font-size: 1.2rem;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .comment-footer {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             font-size: 1rem;
             color: var(--neon-cyan);
+            padding-right: 10px;
         }
         .comment-footer .date {
             flex-grow: 1;
         }
-        .comment-footer .like-btn, .comment-footer .react-btn, .comment-footer .reply-btn, .comment-footer .show-replies-btn {
+        .comment-footer .like-btn, .comment-footer .reply-btn, .comment-footer .show-replies-btn {
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .comment-footer .like-btn:hover, .comment-footer .react-btn:hover, .comment-footer .reply-btn:hover, .comment-footer .show-replies-btn:hover {
+        .comment-footer .like-btn:hover, .comment-footer .reply-btn:hover, .comment-footer .show-replies-btn:hover {
             transform: scale(1.1);
         }
         .comment-footer .like-btn.liked {
             color: var(--neon-red);
             text-shadow: 0 0 10px var(--neon-red);
         }
-        .reaction-options {
-            display: none;
-            position: absolute;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--golden-main);
-            border-radius: 5px;
-            padding: 5px;
-            z-index: 10;
-            right: 10px;
-        }
-        .reaction-options span {
-            font-size: 1.4rem;
-            margin: 0 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .reaction-options span:hover {
-            transform: scale(1.2);
-        }
         .reply-form {
             display: none;
-            margin-top: 15px;
+            margin-top: 12px;
         }
         .reply-form.active {
             display: block;
         }
         .replies {
-            margin-left: 30px;
+            margin-left: 25px;
             margin-top: 10px;
             display: none;
         }
@@ -243,7 +230,7 @@
                 width: 95%;
                 max-width: 320px;
                 margin: 15px auto;
-                padding: 15px;
+                padding: 12px;
             }
             .comment-container h2 {
                 font-size: 1.6rem;
@@ -262,7 +249,7 @@
                 font-size: 1rem;
             }
             .comment-footer {
-                gap: 15px;
+                gap: 10px;
                 font-size: 0.9rem;
             }
             .form-control {
@@ -270,7 +257,7 @@
             }
             .btn {
                 font-size: 1rem;
-                padding: 10px;
+                padding: 8px;
             }
             .comment.reply {
                 margin-left: 20px;
@@ -288,7 +275,7 @@
         <p style="color: var(--golden-accent); margin-bottom: 20px; text-align: center;">Comparte tus ideas con respeto. ¡Prohibidas las malas palabras!</p>
         <form id="commentForm">
             <div class="form-group">
-                <input type="text" id="nameInput" placeholder="Tu nombre (opcional)" maxlength="30" class="form-control">
+                <input type="text" id="nameInput" placeholder="Debes configurar tu nombre en el perfil" maxlength="30" class="form-control" disabled>
             </div>
             <div class="form-group">
                 <textarea id="messageInput" placeholder="Escribe tu mensaje aquí..." maxlength="500" rows="4" class="form-control"></textarea>
@@ -302,7 +289,7 @@
     </div>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, orderBy, query, onSnapshot, doc, updateDoc, increment, arrayUnion, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, orderBy, query, onSnapshot, doc, updateDoc, increment, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         if (window.location.protocol === 'file:') {
             console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
@@ -331,6 +318,12 @@
                 if (currentUser.username) {
                     nameInput.value = currentUser.username;
                     nameInput.disabled = true;
+                } else {
+                    nameInput.value = '';
+                    nameInput.disabled = true;
+                    commentForm.querySelector('button').disabled = true;
+                    errorMessage.textContent = 'Debes configurar tu nombre en el perfil para comentar.';
+                    errorMessage.style.display = 'block';
                 }
 
                 // Efecto de escritura letra por letra
@@ -379,10 +372,9 @@
                         // Renderizar comentarios principales (sin parentId)
                         comments.filter(c => !c.parentId).forEach(async (comment) => {
                             const date = comment.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                            const name = comment.name || 'Anónimo';
+                            const name = comment.name || 'Usuario';
                             const message = comment.message || '';
                             const likes = comment.likes || 0;
-                            const reactions = comment.reactions || [];
                             const isCreator = ['L_Adriano', 'SalchiHot'].includes(name);
                             const photoURL = comment.photoURL || 'https://via.placeholder.com/50';
 
@@ -398,14 +390,8 @@
                                 <div class="comment-footer">
                                     <span class="date">${date}</span>
                                     <span class="like-btn" data-id="${comment.id}"><i class="far fa-heart"></i> ${likes}</span>
-                                    <span class="react-btn" data-id="${comment.id}"><i class="fas fa-smile"></i> Reacciones</span>
                                     <span class="reply-btn" data-id="${comment.id}">Responder</span>
                                     <span class="show-replies-btn" data-id="${comment.id}" style="display: none;">Ver respuestas</span>
-                                </div>
-                                <div class="reaction-options" data-id="${comment.id}">
-                                    <span data-emoji="😊">😊</span>
-                                    <span data-emoji="👍">👍</span>
-                                    <span data-emoji="🔥">🔥</span>
                                 </div>
                                 <div class="reply-form" data-id="${comment.id}">
                                     <form>
@@ -421,14 +407,6 @@
                             const msgEl = commentEl.querySelector('.comment-body');
                             await typeText(msgEl, message, 10);
 
-                            // Mostrar reacciones
-                            if (reactions.length > 0) {
-                                const reactionDisplay = document.createElement('div');
-                                reactionDisplay.style.color = 'var(--neon-cyan)';
-                                reactionDisplay.textContent = reactions.join(' ');
-                                commentEl.querySelector('.comment-footer').insertBefore(reactionDisplay, commentEl.querySelector('.reply-btn'));
-                            }
-
                             // Cargar respuestas
                             const repliesQuery = query(commentsCollection, where("parentId", "==", comment.id), orderBy("timestamp", "desc"));
                             onSnapshot(repliesQuery, (replySnapshot) => {
@@ -441,10 +419,9 @@
                                     replySnapshot.forEach(async (replyDoc) => {
                                         const reply = replyDoc.data();
                                         const replyDate = reply.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                                        const replyName = reply.name || 'Anónimo';
+                                        const replyName = reply.name || 'Usuario';
                                         const replyMessage = reply.message || '';
                                         const replyLikes = reply.likes || 0;
-                                        const replyReactions = reply.reactions || [];
                                         const isReplyCreator = ['L_Adriano', 'SalchiHot'].includes(replyName);
                                         const replyPhotoURL = reply.photoURL || 'https://via.placeholder.com/50';
 
@@ -460,23 +437,10 @@
                                             <div class="comment-footer">
                                                 <span class="date">${replyDate}</span>
                                                 <span class="like-btn" data-id="${replyDoc.id}"><i class="far fa-heart"></i> ${replyLikes}</span>
-                                                <span class="react-btn" data-id="${replyDoc.id}"><i class="fas fa-smile"></i> Reacciones</span>
-                                            </div>
-                                            <div class="reaction-options" data-id="${replyDoc.id}">
-                                                <span data-emoji="😊">😊</span>
-                                                <span data-emoji="👍">👍</span>
-                                                <span data-emoji="🔥">🔥</span>
                                             </div>
                                         `;
                                         repliesEl.appendChild(replyEl);
                                         await typeText(replyEl.querySelector('.comment-body'), replyMessage, 10);
-
-                                        if (replyReactions.length > 0) {
-                                            const replyReactionDisplay = document.createElement('div');
-                                            replyReactionDisplay.style.color = 'var(--neon-cyan)';
-                                            replyReactionDisplay.textContent = replyReactions.join(' ');
-                                            replyEl.querySelector('.comment-footer').insertBefore(replyReactionDisplay, replyEl.querySelector('.react-btn'));
-                                        }
                                     });
                                 } else {
                                     showRepliesBtn.style.display = 'none';
@@ -498,9 +462,14 @@
                 commentForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     errorMessage.style.display = 'none';
-                    const name = nameInput.value.trim() || 'Anónimo';
+                    const name = currentUser.username;
                     const message = messageInput.value.trim();
 
+                    if (!name) {
+                        errorMessage.textContent = 'Debes configurar tu nombre en el perfil para comentar.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
                     if (message.length < 3) {
                         errorMessage.textContent = 'El mensaje debe tener al menos 3 caracteres.';
                         errorMessage.style.display = 'block';
@@ -519,10 +488,8 @@
                             message: message,
                             timestamp: new Date(),
                             likes: 0,
-                            reactions: [],
                             photoURL: photoURL
                         });
-                        nameInput.value = currentUser.username || '';
                         messageInput.value = '';
                         console.log('%c💬 Comentario enviado:', 'color: #DAA520', name);
                     } catch (error) {
@@ -532,17 +499,18 @@
                     }
                 });
 
-                // Manejar likes, reacciones, respuestas y mostrar respuestas
+                // Manejar clics en likes, responder y ver respuestas
                 commentsList.addEventListener('click', async (e) => {
-                    const target = e.target.closest('.like-btn, .react-btn, .reply-btn, .show-replies-btn, .reaction-options span');
+                    const target = e.target.closest('.like-btn, .reply-btn, .show-replies-btn');
                     if (!target) return;
 
                     const commentId = target.dataset.id;
-                    const commentDoc = doc(db, 'comentarios', commentId);
+                    const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
 
-                    if (target.classList.contains('like-btn')) {
+                    if (target.classList.contains('like-btn') && (!replyForm || !replyForm.classList.contains('active'))) {
                         target.classList.toggle('liked');
                         const isLiked = target.classList.contains('liked');
+                        const commentDoc = doc(db, 'comentarios', commentId);
                         await updateDoc(commentDoc, { likes: increment(isLiked ? 1 : -1) }).catch(error => {
                             console.error('❌ Error al actualizar like:', error);
                             errorMessage.textContent = 'Error al dar like: ' + error.message;
@@ -551,11 +519,7 @@
                         target.querySelector('i').classList.toggle('fas', isLiked);
                         target.querySelector('i').classList.toggle('far', !isLiked);
                         console.log('%c❤️ Like actualizado', 'color: #FF0000');
-                    } else if (target.classList.contains('react-btn')) {
-                        const reactionOptions = document.querySelector(`.reaction-options[data-id="${commentId}"]`);
-                        reactionOptions.style.display = reactionOptions.style.display === 'block' ? 'none' : 'block';
                     } else if (target.classList.contains('reply-btn')) {
-                        const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
                         replyForm.classList.toggle('active');
                         if (replyForm.classList.contains('active')) {
                             replyForm.querySelector('textarea').focus();
@@ -565,15 +529,6 @@
                         repliesEl.classList.toggle('active');
                         const replyCount = repliesEl.children.length;
                         target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${replyCount})`;
-                    } else if (target.dataset.emoji) {
-                        const emoji = target.dataset.emoji;
-                        await updateDoc(commentDoc, { reactions: arrayUnion(emoji) }).catch(error => {
-                            console.error('❌ Error al añadir reacción:', error);
-                            errorMessage.textContent = 'Error al añadir reacción: ' + error.message;
-                            errorMessage.style.display = 'block';
-                        });
-                        document.querySelector(`.reaction-options[data-id="${commentId}"]`).style.display = 'none';
-                        console.log('%c😊 Reacción añadida:', 'color: #00CED1', emoji);
                     }
                 });
 
@@ -585,6 +540,11 @@
                     const commentId = replyForm.parentElement.dataset.id;
                     const replyText = replyForm.querySelector('textarea').value.trim();
 
+                    if (!currentUser.username) {
+                        errorMessage.textContent = 'Debes configurar tu nombre en el perfil para responder.';
+                        errorMessage.style.display = 'block';
+                        return;
+                    }
                     if (replyText.length < 3) {
                         errorMessage.textContent = 'La respuesta debe tener al menos 3 caracteres.';
                         errorMessage.style.display = 'block';
@@ -599,11 +559,10 @@
                     try {
                         const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
                         await addDoc(commentsCollection, {
-                            name: nameInput.value.trim() || 'Anónimo',
+                            name: currentUser.username,
                             message: replyText,
                             timestamp: new Date(),
                             likes: 0,
-                            reactions: [],
                             photoURL: photoURL,
                             parentId: commentId
                         });
