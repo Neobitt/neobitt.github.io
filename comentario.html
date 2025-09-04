@@ -141,7 +141,7 @@
             position: absolute;
             left: -20px;
             color: var(--golden-main);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         .comment-header {
             display: flex;
@@ -163,7 +163,7 @@
         }
         .comment-header .creator-badge {
             color: var(--neon-cyan);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             animation: rgbGlow 3s infinite;
         }
@@ -256,7 +256,7 @@
                 font-size: 1.1rem;
             }
             .comment-header .creator-badge {
-                font-size: 0.9rem;
+                font-size: 1rem;
             }
             .comment-body {
                 font-size: 1rem;
@@ -370,29 +370,20 @@
                             return;
                         }
 
-                        // Separar comentarios principales (sin parentId) y respuestas (con parentId)
+                        // Obtener todos los comentarios
                         const comments = [];
-                        const repliesByParent = {};
                         querySnapshot.forEach(doc => {
-                            const data = doc.data();
-                            if (!data.parentId) {
-                                comments.push({ id: doc.id, ...data });
-                            } else {
-                                if (!repliesByParent[data.parentId]) {
-                                    repliesByParent[data.parentId] = [];
-                                }
-                                repliesByParent[data.parentId].push({ id: doc.id, ...data });
-                            }
+                            comments.push({ id: doc.id, ...doc.data() });
                         });
 
-                        // Renderizar comentarios principales
-                        comments.forEach(async (comment) => {
+                        // Renderizar comentarios principales (sin parentId)
+                        comments.filter(c => !c.parentId).forEach(async (comment) => {
                             const date = comment.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
                             const name = comment.name || 'Anónimo';
                             const message = comment.message || '';
                             const likes = comment.likes || 0;
                             const reactions = comment.reactions || [];
-                            const isCreator = name === 'L_Adriano';
+                            const isCreator = ['L_Adriano', 'SalchiHot'].includes(name);
                             const photoURL = comment.photoURL || 'https://via.placeholder.com/50';
 
                             const commentEl = document.createElement('div');
@@ -417,8 +408,10 @@
                                     <span data-emoji="🔥">🔥</span>
                                 </div>
                                 <div class="reply-form" data-id="${comment.id}">
-                                    <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
-                                    <button class="btn">Enviar Respuesta</button>
+                                    <form>
+                                        <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
+                                        <button type="submit" class="btn">Enviar Respuesta</button>
+                                    </form>
                                 </div>
                                 <div class="replies" data-id="${comment.id}"></div>
                             `;
@@ -436,54 +429,68 @@
                                 commentEl.querySelector('.comment-footer').insertBefore(reactionDisplay, commentEl.querySelector('.reply-btn'));
                             }
 
-                            // Renderizar respuestas
-                            const replies = repliesByParent[comment.id] || [];
-                            const repliesEl = commentEl.querySelector('.replies');
-                            const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
-                            if (replies.length > 0) {
-                                showRepliesBtn.style.display = 'inline';
-                                showRepliesBtn.textContent = `Ver respuestas (${replies.length})`;
-                                replies.forEach(async (reply) => {
-                                    const replyDate = reply.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                                    const replyName = reply.name || 'Anónimo';
-                                    const replyMessage = reply.message || '';
-                                    const replyLikes = reply.likes || 0;
-                                    const replyReactions = reply.reactions || [];
-                                    const isReplyCreator = replyName === 'L_Adriano';
-                                    const replyPhotoURL = reply.photoURL || 'https://via.placeholder.com/50';
+                            // Cargar respuestas
+                            const repliesQuery = query(commentsCollection, where("parentId", "==", comment.id), orderBy("timestamp", "desc"));
+                            onSnapshot(repliesQuery, (replySnapshot) => {
+                                const repliesEl = commentEl.querySelector('.replies');
+                                const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
+                                repliesEl.innerHTML = '';
+                                if (!replySnapshot.empty) {
+                                    showRepliesBtn.style.display = 'inline';
+                                    showRepliesBtn.textContent = `Ver respuestas (${replySnapshot.size})`;
+                                    replySnapshot.forEach(async (replyDoc) => {
+                                        const reply = replyDoc.data();
+                                        const replyDate = reply.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
+                                        const replyName = reply.name || 'Anónimo';
+                                        const replyMessage = reply.message || '';
+                                        const replyLikes = reply.likes || 0;
+                                        const replyReactions = reply.reactions || [];
+                                        const isReplyCreator = ['L_Adriano', 'SalchiHot'].includes(replyName);
+                                        const replyPhotoURL = reply.photoURL || 'https://via.placeholder.com/50';
 
-                                    const replyEl = document.createElement('div');
-                                    replyEl.className = 'comment reply';
-                                    replyEl.innerHTML = `
-                                        <div class="comment-header">
-                                            <img src="${replyPhotoURL}" alt="Foto de Perfil">
-                                            <span class="name">${replyName}</span>
-                                            ${isReplyCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                                        </div>
-                                        <div class="comment-body"></div>
-                                        <div class="comment-footer">
-                                            <span class="date">${replyDate}</span>
-                                            <span class="like-btn" data-id="${reply.id}"><i class="far fa-heart"></i> ${replyLikes}</span>
-                                            <span class="react-btn" data-id="${reply.id}"><i class="fas fa-smile"></i> Reacciones</span>
-                                        </div>
-                                        <div class="reaction-options" data-id="${reply.id}">
-                                            <span data-emoji="😊">😊</span>
-                                            <span data-emoji="👍">👍</span>
-                                            <span data-emoji="🔥">🔥</span>
-                                        </div>
-                                    `;
-                                    repliesEl.appendChild(replyEl);
-                                    await typeText(replyEl.querySelector('.comment-body'), replyMessage, 10);
+                                        const replyEl = document.createElement('div');
+                                        replyEl.className = 'comment reply';
+                                        replyEl.innerHTML = `
+                                            <div class="comment-header">
+                                                <img src="${replyPhotoURL}" alt="Foto de Perfil">
+                                                <span class="name">${replyName}</span>
+                                                ${isReplyCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
+                                            </div>
+                                            <div class="comment-body"></div>
+                                            <div class="comment-footer">
+                                                <span class="date">${replyDate}</span>
+                                                <span class="like-btn" data-id="${replyDoc.id}"><i class="far fa-heart"></i> ${replyLikes}</span>
+                                                <span class="react-btn" data-id="${replyDoc.id}"><i class="fas fa-smile"></i> Reacciones</span>
+                                            </div>
+                                            <div class="reaction-options" data-id="${replyDoc.id}">
+                                                <span data-emoji="😊">😊</span>
+                                                <span data-emoji="👍">👍</span>
+                                                <span data-emoji="🔥">🔥</span>
+                                            </div>
+                                        `;
+                                        repliesEl.appendChild(replyEl);
+                                        await typeText(replyEl.querySelector('.comment-body'), replyMessage, 10);
 
-                                    if (replyReactions.length > 0) {
-                                        const replyReactionDisplay = document.createElement('div');
-                                        replyReactionDisplay.style.color = 'var(--neon-cyan)';
-                                        replyReactionDisplay.textContent = replyReactions.join(' ');
-                                        replyEl.querySelector('.comment-footer').insertBefore(replyReactionDisplay, replyEl.querySelector('.react-btn'));
-                                    }
-                                });
-                            }
+                                        if (replyReactions.length > 0) {
+                                            const replyReactionDisplay = document.createElement('div');
+                                            replyReactionDisplay.style.color = 'var(--neon-cyan)';
+                                            replyReactionDisplay.textContent = replyReactions.join(' ');
+                                            replyEl.querySelector('.comment-footer').insertBefore(replyReactionDisplay, replyEl.querySelector('.react-btn'));
+                                        }
+                                    });
+                                } else {
+                                    showRepliesBtn.style.display = 'none';
+                                }
+                            }, (error) => {
+                                console.error('❌ Error al cargar respuestas:', error);
+                                errorMessage.textContent = 'Error al cargar respuestas: ' + error.message;
+                                errorMessage.style.display = 'block';
+                            });
                         });
+                    }, (error) => {
+                        console.error('❌ Error al cargar comentarios:', error);
+                        errorMessage.textContent = 'Error al cargar comentarios: ' + error.message;
+                        errorMessage.style.display = 'block';
                     });
                 };
 
@@ -536,7 +543,11 @@
                     if (target.classList.contains('like-btn')) {
                         target.classList.toggle('liked');
                         const isLiked = target.classList.contains('liked');
-                        await updateDoc(commentDoc, { likes: increment(isLiked ? 1 : -1) });
+                        await updateDoc(commentDoc, { likes: increment(isLiked ? 1 : -1) }).catch(error => {
+                            console.error('❌ Error al actualizar like:', error);
+                            errorMessage.textContent = 'Error al dar like: ' + error.message;
+                            errorMessage.style.display = 'block';
+                        });
                         target.querySelector('i').classList.toggle('fas', isLiked);
                         target.querySelector('i').classList.toggle('far', !isLiked);
                         console.log('%c❤️ Like actualizado', 'color: #FF0000');
@@ -552,10 +563,15 @@
                     } else if (target.classList.contains('show-replies-btn')) {
                         const repliesEl = document.querySelector(`.replies[data-id="${commentId}"]`);
                         repliesEl.classList.toggle('active');
-                        target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${repliesEl.children.length})`;
+                        const replyCount = repliesEl.children.length;
+                        target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${replyCount})`;
                     } else if (target.dataset.emoji) {
                         const emoji = target.dataset.emoji;
-                        await updateDoc(commentDoc, { reactions: arrayUnion(emoji) });
+                        await updateDoc(commentDoc, { reactions: arrayUnion(emoji) }).catch(error => {
+                            console.error('❌ Error al añadir reacción:', error);
+                            errorMessage.textContent = 'Error al añadir reacción: ' + error.message;
+                            errorMessage.style.display = 'block';
+                        });
                         document.querySelector(`.reaction-options[data-id="${commentId}"]`).style.display = 'none';
                         console.log('%c😊 Reacción añadida:', 'color: #00CED1', emoji);
                     }
@@ -564,9 +580,9 @@
                 // Enviar respuesta
                 commentsList.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    const replyForm = e.target.closest('.reply-form');
+                    const replyForm = e.target.closest('.reply-form form');
                     if (!replyForm) return;
-                    const commentId = replyForm.dataset.id;
+                    const commentId = replyForm.parentElement.dataset.id;
                     const replyText = replyForm.querySelector('textarea').value.trim();
 
                     if (replyText.length < 3) {
@@ -592,7 +608,7 @@
                             parentId: commentId
                         });
                         replyForm.querySelector('textarea').value = '';
-                        replyForm.classList.remove('active');
+                        replyForm.parentElement.classList.remove('active');
                         console.log('%c💬 Respuesta enviada:', 'color: #DAA520');
                     } catch (error) {
                         console.error('❌ Error al enviar respuesta:', error);
@@ -604,8 +620,8 @@
                 // Cargar comentarios al inicio
                 loadComments();
             } catch (e) {
-                console.error('❌ Error al inicializar Firebase:', e.message);
-                alert('No se pudo inicializar Firebase. Verifica la configuración o la conexión.');
+                console.error('❌ Error al inicializar Firebase:', e);
+                alert('No se pudo inicializar Firebase: ' + e.message + '. Verifica la configuración o la conexión.');
             }
         }
     </script>
