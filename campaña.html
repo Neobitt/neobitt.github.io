@@ -420,7 +420,7 @@
             background-color: var(--background-alt);
         }
 
-        /* Organization Cards */
+        /* Organization Cards - ESTILOS MEJORADOS */
         .org-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -436,6 +436,8 @@
             transition: var(--transition);
             height: 100%;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
         }
 
         .org-card:hover {
@@ -444,16 +446,29 @@
             border-color: var(--primary);
         }
 
+        .org-img-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
         .org-img {
             width: 100%;
-            height: auto;
-            max-height: 300px;
+            height: 100%;
             object-fit: cover;
-            aspect-ratio: 16/9;
+            transition: transform 0.5s ease;
+        }
+
+        .org-card:hover .org-img {
+            transform: scale(1.05);
         }
 
         .org-content {
             padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .org-card h3 {
@@ -506,21 +521,6 @@
         textarea.form-control {
             min-height: 180px;
             resize: vertical;
-        }
-
-        /* Comments Section */
-        .comments-list {
-            max-width: 800px;
-            margin: 2rem auto;
-        }
-
-        .comment {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            box-shadow: var(--card-shadow);
         }
 
         /* Video Embed */
@@ -739,7 +739,7 @@
         @media (max-width: 992px) {
             h1 { font-size: 2.8rem; }
             h2 { font-size: 2.2rem; }
-            .org-img { max-height: 250px; }
+            .org-img-container { height: 220px; }
         }
 
         @media (max-width: 768px) {
@@ -747,7 +747,7 @@
             header { padding: 6rem 0 4rem; }
             header h1 { font-size: 2.5rem; }
             .org-grid, .skills-grid, .ethics-grid { grid-template-columns: 1fr; }
-            .org-img { max-height: 220px; }
+            .org-img-container { height: 200px; }
         }
 
         @media (max-width: 576px) {
@@ -757,7 +757,7 @@
             .form-container { padding: 2rem; }
             .footer-content { grid-template-columns: 1fr; }
             .nav-menu { width: 100%; padding: 100px 20px 50px; }
-            .org-img { max-height: 200px; }
+            .org-img-container { height: 180px; }
         }
 
         /* Utilities */
@@ -861,7 +861,9 @@
             </div>
             <div class="org-grid">
                 <div class="org-card fade-in delay-1">
-                    <img src="assets/imagenes/redaves.jpg" alt="Asociación de Redes Ambientales de Villa El Salvador (REDAVES)" class="org-img">
+                    <div class="org-img-container">
+                        <img src="https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Asociación de Redes Ambientales de Villa El Salvador (REDAVES)" class="org-img">
+                    </div>
                     <div class="org-content">
                         <h3>REDAVES - Asociación de Redes Ambientales de Villa El Salvador</h3>
                         <p>Alrededor del mundo miles de personas luchan por el cuidado al medio ambiente y es gracias a esto que se crean diversas organizaciones. REDAVES capacita líderes ambientales en Villa El Salvador mediante 8 talleres anuales. Promueve que los participantes repliquen lo aprendido en sus comunidades con talleres, pasacalles y ferias ambientales. Aportan materiales y equipos para la difusión de concientización ambiental.</p>
@@ -870,17 +872,23 @@
                             <li>Colaborar con talleres ofrecidos a hacer videos o afiches que promuevan el cuidado al ambiente.</li>
                             <li>Gestionar o proponer proyectos como campañas de reciclaje.</li>
                         </ul>
-                        <a href="https://www.facebook.com/REDVES.VES/" class="btn btn-outline" target="_blank">Apóyalos</a>
-                        <div class="source">Fuente: ASOCIACION UNACEM, PUCP</div>
+                        <div style="margin-top: auto; padding-top: 1.5rem;">
+                            <a href="https://www.facebook.com/REDVES.VES/" class="btn btn-outline" target="_blank">Apóyalos</a>
+                            <div class="source">Fuente: ASOCIACION UNACEM, PUCP</div>
+                        </div>
                     </div>
                 </div>
                 <div class="org-card fade-in delay-2">
-                    <img src="assets/imagenes/wwf_peru.jpg" alt="WWF Perú trabajando por la conservación ambiental" class="org-img">
+                    <div class="org-img-container">
+                        <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="WWF Perú trabajando por la conservación ambiental" class="org-img">
+                    </div>
                     <div class="org-content">
                         <h3>WWF Perú</h3>
                         <p>Protege especies en peligro como tigres, elefantes, tortugas marinas y osos polares. Conserva hábitats como bosques, ríos, mares y selvas. Lucha contra el cambio climático, promoviendo energías renovables. Impulsa un consumo responsable, apoyando prácticas agrícolas y pesqueras sostenibles. Una de sus iniciativas más famosas es la Hora del Planeta, donde todo el mundo apaga sus luces durante una hora para demostrar que juntos podemos actuar contra el cambio climático. La WWF nos recuerda que cuidar el medio ambiente no es solo salvar animales, es proteger nuestro propio futuro.</p>
-                        <a href="https://www.wwf.org.pe" class="btn btn-outline">Apóyalos</a>
-                        <div class="source">Fuente: WWF Perú</div>
+                        <div style="margin-top: auto; padding-top: 1.5rem;">
+                            <a href="https://www.wwf.org.pe" class="btn btn-outline">Apóyalos</a>
+                            <div class="source">Fuente: WWF Perú</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -895,7 +903,7 @@
                 <p>Explora los principios que guían nuestro comportamiento hacia el medio ambiente y la sociedad</p>
             </div>
             <div class="image-container fade-in delay-1">
-                <img src="assets/imagenes/etica_social1.jpg" alt="Responsabilidad social en acción">
+                <img src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Responsabilidad social en acción">
             </div>
             <div class="ethics-grid">
                 <div class="ethics-card fade-in delay-2">
@@ -960,7 +968,7 @@
             </div>
             <div class="fade-in delay-1">
                 <div class="image-container">
-                    <img src="assets/imagenes/etica_ia_1.jpg" alt="Ética en IA - Principios">
+                    <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ética en IA - Principios">
                 </div>
                 <div class="ethics-grid">
                     <div class="ethics-card">
@@ -992,7 +1000,7 @@
                     </div>
                 </div>
                 <div class="image-container">
-                    <img src="assets/imagenes/etica_ia_2.jpg" alt="Ética en IA - Desafíos">
+                    <img src="https://images.unsplash.com/photo-1677442135135-416f8aa26a5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ética en IA - Desafíos">
                 </div>
                 <div class="text-center">
                     <h3>Video Educativo sobre Ética en IA</h3>
@@ -1015,7 +1023,7 @@
                 <p>Desarrolla competencias que te prepararán para los desafíos del mañana, enfocándote en tecnología sostenible</p>
             </div>
             <div class="image-container fade-in delay-1">
-                <img src="assets/imagenes/habilidades_digitales1.jpg" alt="Habilidades digitales para la sostenibilidad">
+                <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Habilidades digitales para la sostenibilidad">
             </div>
             <div class="skills-grid">
                 <div class="skill-card fade-in delay-2">
