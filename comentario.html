@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comentarios - DPCCrea</title>
-    <meta name="description" content="Comparte tus ideas en DPCCrea. Usa tu perfil para comentar, dar corazones y responder al estilo YouTube.">
-    <meta name="keywords" content="comentarios, DPCCrea, sexualidad, identidad, diversidad, comunidad">
+    <title>DPCCrea - Comentarios</title>
+    <meta name="description" content="Deja tus comentarios y comparte tus pensamientos sobre sexualidad, identidad y diversidad en un espacio seguro y respetuoso.">
+    <meta name="keywords" content="sexualidad, identidad, diversidad, comentarios, comunidad, educación sexual">
     <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Comentarios - DPCCrea">
+    <meta property="og:description" content="Comparte tus opiniones y experiencias sobre sexualidad, identidad y diversidad en nuestra comunidad inclusiva.">
+    <meta property="og:image" content="https://dpccrea.com/assets/imagenes/og-image.jpg">
+    <meta property="og:url" content="https://dpccrea.com/comentario.html">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         :root {
@@ -15,7 +21,7 @@
             --inclusive-purple: #8A2BE2;
             --dark-color: #000;
             --neon-cyan: #00CED1;
-            --neon-red: #FF0000;
+            --neon-pink: #FF69B4;
             --hacker-cyan: #00ffcc;
             --diversity-pink: #ff66c4;
         }
@@ -34,672 +40,450 @@
             overflow-y: auto;
             position: relative;
         }
-        .matrix-bg {
+        .content {
+            transition: filter 0.5s ease;
+        }
+        .content.blur {
+            filter: blur(5px);
+        }
+        .matrix-bg, .particles-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+        }
+        .matrix-bg {
             opacity: 0.4;
         }
-        .comment-container {
-            width: 90%;
-            max-width: 600px;
-            margin: 20px auto;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid var(--golden-main);
-            padding: 15px;
-            box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
-            border-radius: 10px;
-            animation: fadeIn 0.5s ease-in-out;
+        .particles-bg {
+            opacity: 0.5;
         }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .comment-container h2 {
-            color: var(--golden-main);
-            font-size: 2rem;
-            text-shadow: 0 0 10px var(--golden-accent);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px;
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
             background: #111;
-            border: 1px solid var(--golden-accent);
-            color: var(--golden-main);
-            font-size: 1.2rem;
-            border-radius: 5px;
-            outline: none;
+            border: 3px double var(--golden-main);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 0 20px var(--golden-accent);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px var(--golden-accent), 0 0 10px var(--golden-main); }
+            50% { box-shadow: 0 0 40px var(--golden-accent), 0 0 20px var(--golden-main); }
+            100% { box-shadow: 0 0 20px var(--golden-accent), 0 0 10px var(--golden-main); }
+        }
+        .hamburger:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--golden-accent), 0 0 20px var(--golden-main);
+        }
+        .hamburger div {
+            width: 30px;
+            height: 4px;
+            background: var(--golden-accent);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--golden-accent);
+        }
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 999;
+            transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border-left: 4px double var(--golden-accent);
+            padding-top: 120px;
+            animation: scan-nav 3s linear infinite;
+            overflow-x: hidden;
+        }
+        @keyframes scan-nav {
+            0% { border-left-color: var(--golden-accent); }
+            50% { border-left-color: var(--golden-main); }
+            100% { border-left-color: var(--golden-accent); }
+        }
+        nav.active {
+            right: 0;
+            box-shadow: -10px 0 20px var(--golden-accent);
+        }
+        nav .logo {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: 0 auto 20px;
+            border: 3px solid var(--golden-main);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--golden-accent);
+            transition: transform 0.3s ease;
+        }
+        nav .logo:hover {
+            transform: scale(1.05);
+        }
+        nav ul {
+            list-style: none;
+            width: 100%;
+        }
+        nav ul li {
+            opacity: 0;
+            transform: translateX(50px);
             transition: all 0.3s ease;
         }
-        .form-control:focus {
-            border-color: var(--golden-main);
-            box-shadow: 0 0 10px var(--golden-main);
+        nav.active ul li {
+            opacity: 1;
+            transform: translateX(0);
         }
-        .form-control:disabled {
-            background: #222;
-            cursor: not-allowed;
+        nav ul li:nth-child(1) { transition-delay: 0.1s; }
+        nav ul li:nth-child(2) { transition-delay: 0.2s; }
+        nav ul li:nth-child(3) { transition-delay: 0.3s; }
+        nav ul li:nth-child(4) { transition-delay: 0.4s; }
+        nav ul li:nth-child(5) { transition-delay: 0.5s; }
+        nav ul li a {
+            color: var(--golden-main);
+            text-decoration: none;
+            display: block;
+            padding: 18px 35px;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #333;
+            background: rgba(218, 165, 32, 0.05);
+            transition: all 0.3s ease;
         }
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
+        nav ul li a:hover {
+            background: rgba(218, 165, 32, 0.15);
+            padding-left: 45px;
+            text-shadow: 0 0 15px var(--golden-accent);
+            box-shadow: inset 0 0 10px var(--golden-accent);
         }
-        .btn {
+        header {
+            background: #000;
+            padding: 6rem 0;
+            text-align: center;
+            border-bottom: 4px solid var(--golden-accent);
+        }
+        h1 {
+            font-size: 4.5rem;
+            color: var(--golden-main);
+            text-shadow: 0 0 25px var(--golden-accent);
+            letter-spacing: 5px;
+            animation: glitch 1.5s linear infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            25% { transform: translate(-2px, 2px); }
+            50% { transform: translate(2px, -2px); }
+        }
+        .comment-section {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        .comment-form {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--golden-main);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--golden-accent);
+        }
+        .comment-form h2 {
+            color: var(--golden-main);
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-bottom: 20px;
+        }
+        .comment-form input, .comment-form textarea {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #111;
+            border: 1px solid var(--golden-accent);
+            color: white;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        .comment-form textarea {
+            height: 100px;
+            resize: none;
+        }
+        .comment-form button {
             background: var(--golden-accent);
             border: 2px solid var(--golden-main);
             color: #000;
-            font-size: 1.2rem;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px var(--golden-accent);
             text-transform: uppercase;
         }
-        .btn:hover {
+        .comment-form button:hover {
             background: var(--golden-main);
             box-shadow: 0 0 15px var(--golden-accent);
             transform: scale(1.05);
         }
-        .error-message {
-            color: var(--neon-red);
-            font-size: 1rem;
-            margin-top: 10px;
-            display: none;
-            text-align: center;
-        }
-        .comments-list {
-            margin-top: 20px;
+        .comment-list {
+            margin-top: 2rem;
         }
         .comment {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--golden-accent);
-            border-radius: 8px;
-            padding: 12px;
-            margin: 12px 0;
-            box-shadow: 0 0 10px var(--inclusive-purple);
-            position: relative;
-            overflow: hidden;
-        }
-        .comment.reply {
-            margin-left: 25px;
-        }
-        .comment.reply:before {
-            content: '➡️';
-            position: absolute;
-            left: -20px;
-            color: var(--golden-main);
-            font-size: 1.3rem;
-        }
-        .comment-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        .comment-header img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.9);
             border: 2px solid var(--golden-main);
-            box-shadow: 0 0 10px var(--inclusive-purple);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--inclusive-purple);
+            position: relative;
         }
-        .comment-header .name {
+        .comment img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--hacker-cyan);
+            box-shadow: 0 0 10px var(--diversity-pink);
+            margin-right: 10px;
+            float: left;
+        }
+        .comment strong {
             color: var(--golden-main);
-            font-weight: bold;
-            font-size: 1.3rem;
+            text-shadow: 0 0 5px var(--golden-accent);
         }
-        .comment-header .creator-badge {
+        .comment p {
+            margin: 8px 0;
+            color: #ddd;
+        }
+        .comment .timestamp {
+            font-size: 0.8rem;
             color: var(--neon-cyan);
-            font-size: 1.2rem;
-            font-weight: bold;
-            animation: rgbGlow 3s infinite;
         }
-        @keyframes rgbGlow {
-            0% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
-            33% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
-            66% { color: #0000ff; text-shadow: 0 0 10px #0000ff; }
-            100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
-        }
-        .comment-body {
-            color: var(--golden-accent);
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-        .comment-footer {
+        .comment-actions {
+            margin-top: 10px;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1rem;
-            color: var(--neon-cyan);
-            padding-right: 10px;
+            gap: 10px;
         }
-        .comment-footer .date {
-            flex-grow: 1;
-        }
-        .comment-footer .like-btn, .comment-footer .reply-btn, .comment-footer .show-replies-btn {
+        .comment-actions button {
+            background: transparent;
+            border: 1px solid var(--hacker-cyan);
+            color: var(--hacker-cyan);
+            padding: 5px 10px;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .comment-footer .like-btn:hover, .comment-footer .reply-btn:hover, .comment-footer .show-replies-btn:hover {
-            transform: scale(1.1);
+        .comment-actions button:hover {
+            background: var(--hacker-cyan);
+            color: #000;
+            box-shadow: 0 0 10px var(--diversity-pink);
         }
-        .comment-footer .like-btn.liked {
-            color: var(--neon-red);
-            text-shadow: 0 0 10px var(--neon-red);
+        .comment-actions .like-button.liked {
+            color: var(--diversity-pink);
+            border-color: var(--diversity-pink);
+        }
+        .comment-actions .like-button.liked:hover {
+            background: var(--diversity-pink);
+            color: #000;
         }
         .reply-form {
+            margin-top: 10px;
             display: none;
-            margin-top: 12px;
         }
         .reply-form.active {
             display: block;
         }
-        .replies {
-            margin-left: 25px;
+        .reply-form textarea {
+            width: 100%;
+            padding: 10px;
+            background: #111;
+            border: 1px solid var(--golden-accent);
+            color: white;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            height: 60px;
+            resize: none;
+        }
+        .reply-form button {
             margin-top: 10px;
-            display: none;
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .replies.active {
-            display: block;
+        .reply-form button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
         }
-        .show-replies-btn {
-            color: var(--neon-cyan);
+        .replies {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .reply {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--golden-accent);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--inclusive-purple);
+        }
+        .reply img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid var(--hacker-cyan);
+            margin-right: 8px;
+            float: left;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--hacker-cyan);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 10000;
+            max-width: 300px;
+            box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--diversity-pink);
+            font-family: 'Courier New', monospace;
+            animation: notifIn 0.5s ease-out;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--hacker-cyan);
+            box-shadow: 0 0 10px var(--diversity-pink);
+        }
+        .notification strong {
+            color: var(--hacker-cyan);
+        }
+        .notification p {
+            margin: 8px 0;
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+        @keyframes notifIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes notifOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            text-align: center;
+            border-top: 4px solid var(--golden-accent);
+            margin-top: 2rem;
+        }
+        footer a {
+            color: var(--golden-main);
+            text-decoration: none;
             font-size: 1rem;
-            text-decoration: underline;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin: 0 15px;
+        }
+        footer a:hover {
+            text-shadow: 0 0 15px var(--golden-main);
+        }
+        footer .version {
+            color: var(--golden-main);
+            font-size: 0.9rem;
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-top: 10px;
         }
         @media (max-width: 768px) {
-            .comment-container {
-                width: 95%;
-                max-width: 320px;
-                margin: 15px auto;
-                padding: 12px;
+            h1 { font-size: 3rem; }
+            .hamburger {
+                width: 50px;
+                height: 50px;
+                top: 15px;
+                right: 15px;
             }
-            .comment-container h2 {
-                font-size: 1.6rem;
+            .hamburger div {
+                width: 25px;
+                height: 3px;
+                margin: 4px 0;
             }
-            .comment-header img {
-                width: 40px;
-                height: 40px;
-            }
-            .comment-header .name {
-                font-size: 1.1rem;
-            }
-            .comment-header .creator-badge {
-                font-size: 1rem;
-            }
-            .comment-body {
-                font-size: 1rem;
-            }
-            .comment-footer {
-                gap: 10px;
-                font-size: 0.9rem;
-            }
-            .form-control {
-                font-size: 1rem;
-            }
-            .btn {
-                font-size: 1rem;
-                padding: 8px;
-            }
-            .comment.reply {
-                margin-left: 20px;
-            }
-            .comment.reply:before {
-                font-size: 1rem;
-            }
+            nav { width: 280px; }
+            nav .logo { width: 80px; height: 80px; }
+            .comment-section { padding: 0 10px; }
+            .notification { max-width: 250px; padding: 10px; }
+            .notification img { width: 30px; height: 30px; }
+            .comment img { width: 30px; height: 30px; }
+            footer a { font-size: 0.9rem; margin: 0 10px; }
         }
     </style>
 </head>
 <body>
     <canvas id="matrixCanvas" class="matrix-bg"></canvas>
-    <div class="comment-container">
-        <h2>// DEJA TU COMENTARIO //</h2>
-        <p style="color: var(--golden-accent); margin-bottom: 20px; text-align: center;">Comparte tus ideas con respeto. ¡Prohibidas las malas palabras!</p>
-        <form id="commentForm">
-            <div class="form-group">
-                <input type="text" id="nameInput" placeholder="Debes configurar tu nombre en el perfil" maxlength="30" class="form-control" disabled>
+    <canvas id="particlesCanvas" class="particles-bg"></canvas>
+    <div class="hamburger" id="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <nav id="navMenu">
+        <img src="assets/imagenes/logo.png" alt="DPCCrea Logo" class="logo">
+        <ul>
+            <li><a href="index.html">INICIO</a></li>
+            <li><a href="perfil.html">PERFIL</a></li>
+            <li><a href="comentario.html">COMENTARIO</a></li>
+            <li><a href="creadores.html">CREADORES</a></li>
+            <li><a href="campaña.html">CAMPAÑA</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <header>
+            <h1>COMENTARIOS</h1>
+            <p style="margin-top: 1rem; color: var(--golden-accent); font-size: 1.5rem;">// Comparte tus pensamientos sobre diversidad e inclusión //</p>
+        </header>
+        <div class="comment-section">
+            <div class="comment-form">
+                <h2>DEJA TU COMENTARIO</h2>
+                <input type="text" id="nameInput" placeholder="Nombre (opcional)" maxlength="30">
+                <textarea id="commentInput" placeholder="Escribe tu comentario..." maxlength="500"></textarea>
+                <button id="submitComment">ENVIAR</button>
             </div>
-            <div class="form-group">
-                <textarea id="messageInput" placeholder="Escribe tu mensaje aquí..." maxlength="500" rows="4" class="form-control"></textarea>
-            </div>
-            <button type="submit" class="btn">Enviar <i class="fas fa-paper-plane"></i></button>
-            <p class="error-message" id="errorMessage"></p>
-        </form>
-        <div id="commentsList" class="comments-list">
-            <p style="color: var(--golden-accent); text-align: center;">Cargando comentarios...</p>
+            <div class="comment-list" id="commentList"></div>
         </div>
     </div>
-
+    <footer>
+        <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
+        <div class="version">Versión 1.13</div>
+    </footer>
+    <script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";import{getFirestore,collection,addDoc,query,orderBy,onSnapshot,doc,updateDoc,increment,setDoc}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";if("file:"===window.location.protocol)console.error("❌ Error: Los módulos ES no funcionan en file://"),alert("Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.");else{try{const a={apiKey:"AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",authDomain:"dpccrea-login.firebaseapp.com",projectId:"dpccrea-login",appId:"1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"},b=initializeApp(a),c=getFirestore(b),d=collection(c,"comentarios"),e=document.getElementById("nameInput"),f=document.getElementById("commentInput"),g=document.getElementById("submitComment"),h=document.getElementById("commentList"),i=JSON.parse(localStorage.getItem("dpccrea_user"))||{},j=()=>{let a=new Audio("https://assets.codepen.io/3011180/notification-sound-1.mp3");a.volume=.3,a.play().catch(b=>console.error("❌ Error al reproducir sonido:",b))},k=(a,b,c)=>{let d=document.createElement("div");d.className="notification",d.innerHTML=`<img src="${c||i.profilePic||"assets/imagenes/placeholder.png"}" alt="Perfil"><div><strong style="color: var(--hacker-cyan);"><i class="fas fa-bell"></i> Nuevo comentario</strong><p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${a}</p></div>`,document.body.appendChild(d),setTimeout(()=>{d.style.animation="notifOut 0.5s ease-out",setTimeout(()=>{d.parentElement&&document.body.removeChild(d)},500)},5e3),j()},l=(a,b,c,d,e,f,g)=>{let h=document.createElement("div");h.className="comment",h.innerHTML=`<img src="${g||i.profilePic||"assets/imagenes/placeholder.png"}" alt="Perfil"><strong>${a||"Anónimo"}</strong><p>${b}</p><p class="timestamp">${c}</p><div class="comment-actions"><button class="like-button" data-id="${d}" data-liked="${f?"true":"false"}"><i class="fas fa-heart"></i> <span>${e||0}</span></button><button class="reply-button" data-id="${d}">Responder</button></div><div class="reply-form" data-id="${d}"><textarea placeholder="Escribe tu respuesta..." maxlength="500"></textarea><button>Enviar Respuesta</button></div><div class="replies" data-id="${d}"></div>`,h.querySelector(".like-button").addEventListener("click",()=>{let a=h.querySelector(".like-button"),b=a.dataset.id,c=a.dataset.liked==="true";updateDoc(doc(c,"comentarios",b),{likes:increment(c?-1:1)}).then(()=>{a.dataset.liked=c?"false":"true",a.classList.toggle("liked")}).catch(a=>console.error("❌ Error al actualizar like:",a))}),h.querySelector(".reply-button").addEventListener("click",()=>{let a=h.querySelector(".reply-form");a.classList.toggle("active")}),h.querySelector(".reply-form button").addEventListener("click",()=>{let a=h.querySelector(".reply-form textarea").value.trim();if(a){let b=e.value.trim()||i.username||"Anónimo",f=new Date().toISOString(),g=doc(collection(doc(c,"comentarios",d),"respuestas"));setDoc(g,{name:b,message:a,timestamp:f,profilePic:i.profilePic||"assets/imagenes/placeholder.png"}).then(()=>{h.querySelector(".reply-form textarea").value="",h.querySelector(".reply-form").classList.remove("active")}).catch(a=>console.error("❌ Error al enviar respuesta:",a))}}),h.prepend(h);let j=collection(c,"comentarios",d,"respuestas"),k=query(j,orderBy("timestamp","desc"));onSnapshot(k,a=>{a.docChanges().forEach(b=>{"added"===b.type&&b.doc&&b.doc.data&&b.doc.data()&&b.doc.id&&(()=>{let a=document.createElement("div");a.className="reply",a.innerHTML=`<img src="${b.doc.data().profilePic||"assets/imagenes/placeholder.png"}" alt="Perfil"><strong>${b.doc.data().name||"Anónimo"}</strong><p>${b.doc.data().message}</p><p class="timestamp">${new Date(b.doc.data().timestamp).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}</p>`,h.querySelector(`.replies[data-id="${d}"]`).prepend(a)})()})},a=>console.error("❌ Error al cargar respuestas:",a))},m=()=>{let a=e.value.trim()||i.username||"Anónimo",b=f.value.trim();if(!b)return alert("Por favor, escribe un comentario.");g.disabled=!0;let c=new Date().toISOString();addDoc(d,{name:a,message:b,timestamp:c,likes:0,profilePic:i.profilePic||"assets/imagenes/placeholder.png"}).then(()=>{f.value="",g.disabled=!1}).catch(a=>{console.error("❌ Error al enviar comentario:",a),alert("Error al enviar el comentario. Intenta de nuevo."),g.disabled=!1})},n=query(d,orderBy("timestamp","desc")),o=new Set;onSnapshot(n,a=>{a.docChanges().forEach(b=>{"added"===b.type&&b.doc&&b.doc.data&&b.doc.data()&&b.doc.id&&!o.has(b.doc.id)&&(o.add(b.doc.id),l(b.doc.data().name,b.doc.data().message,new Date(b.doc.data().timestamp).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"}),b.doc.id,b.doc.data().likes,b.doc.data().liked,b.doc.data().profilePic),b.doc.data().name!==i.username&&k(`${b.doc.data().name||"Anónimo"}: "${(b.doc.data().message||"").length>50?(b.doc.data().message||"").substring(0,47)+"...":b.doc.data().message||""}"`,null,b.doc.data().profilePic))})},a=>console.error("❌ Error al cargar comentarios:",a)),g.addEventListener("click",m)}catch(a){console.error("❌ Error al inicializar Firebase:",a),alert("No se pudo inicializar Firebase. Verifica la configuración o la conexión.")}}
+    </script>
     <script>
-        // Simulación de Firebase para el ejemplo
-        const commentsCollection = {
-            data: [],
-            listeners: [],
-            
-            addDoc: function(docData) {
-                return new Promise((resolve) => {
-                    const newDoc = {
-                        id: 'doc_' + Date.now() + Math.random().toString(36).substr(2, 5),
-                        data: function() {
-                            return docData;
-                        }
-                    };
-                    
-                    this.data.push(newDoc);
-                    
-                    // Notificar a los listeners
-                    this.listeners.forEach(listener => {
-                        listener({
-                            type: 'added',
-                            doc: newDoc
-                        });
-                    });
-                    
-                    resolve(newDoc);
-                });
-            },
-            
-            onSnapshot: function(callback, errorCallback) {
-                this.listeners.push(callback);
-                
-                // Simular datos iniciales
-                setTimeout(() => {
-                    this.data.forEach(doc => {
-                        callback({
-                            type: 'added',
-                            doc: doc
-                        });
-                    });
-                }, 500);
-            },
-            
-            where: function() { return this; },
-            orderBy: function() { return this; },
-            query: function() { return this; }
-        };
-
-        // Variables globales
-        const commentForm = document.getElementById('commentForm');
-        const nameInput = document.getElementById('nameInput');
-        const messageInput = document.getElementById('messageInput');
-        const commentsList = document.getElementById('commentsList');
-        const errorMessage = document.getElementById('errorMessage');
-        const badWords = ['idiota', 'estúpido', 'tonto', 'maldito', 'imbécil', 'grosero'];
-        const creatorNames = ['L_Adriano', 'SalchiHot'];
-        
-        // Obtener datos del usuario desde localStorage o crear uno por defecto
-        let currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
-        if (!currentUser.username) {
-            currentUser = {
-                username: 'Usuario_' + Math.floor(Math.random() * 10000),
-                photoURL: 'https://via.placeholder.com/50'
-            };
-            localStorage.setItem('dpccrea_user', JSON.stringify(currentUser));
-        }
-        
-        // Configurar campo de nombre
-        nameInput.value = currentUser.username;
-        nameInput.disabled = true;
-
-        // Efecto de escritura letra por letra
-        const typeText = (element, text, speed = 20) => {
-            return new Promise(resolve => {
-                let i = 0;
-                element.textContent = '';
-                const timer = setInterval(() => {
-                    if (i < text.length) {
-                        element.textContent += text.charAt(i);
-                        i++;
-                    } else {
-                        clearInterval(timer);
-                        resolve();
-                    }
-                }, speed);
-            });
-        };
-
-        // Filtrar malas palabras
-        const containsBadWords = (text) => {
-            const lowerText = text.toLowerCase();
-            return badWords.some(word => lowerText.includes(word));
-        };
-
-        // 🔔 Mostrar notificación emergente
-        const mostrarNotificacion = (mensaje) => {
-            // Crear el elemento
-            const notif = document.createElement('div');
-            notif.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(0, 0, 0, 0.95);
-                border: 2px solid var(--hacker-cyan);
-                color: white;
-                padding: 15px;
-                border-radius: 8px;
-                z-index: 10000;
-                max-width: 300px;
-                box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--diversity-pink);
-                font-family: 'Courier New';
-                animation: notifIn 0.5s ease-out;
-                pointer-events: auto;
-            `;
-            notif.innerHTML = `
-                <strong style="color: var(--hacker-cyan);">📢 Nuevo comentario</strong>
-                <p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${mensaje}</p>
-            `;
-
-            // Añadir a la página
-            document.body.appendChild(notif);
-
-            // Animación de entrada
-            const notifIn = document.createElement('style');
-            notifIn.textContent = `
-                @keyframes notifIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes notifOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(notifIn);
-
-            // Desaparecer después de 5 segundos
-            setTimeout(() => {
-                notif.style.animation = 'notifOut 0.5s ease-out';
-                setTimeout(() => {
-                    if (notif.parentElement) {
-                        document.body.removeChild(notif);
-                    }
-                }, 500);
-            }, 5000);
-        };
-
-        // 🔔 Sonido opcional de notificación
-        const playNotifySound = () => {
-            // Simulación de sonido para el ejemplo
-            console.log('🔊 Sonido de notificación reproducido');
-        };
-
-        // Función para añadir comentarios al DOM
-        const addCommentToDOM = async (data, id) => {
-            const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString('es-ES') : 'ahora';
-            const name = data.name || 'Usuario';
-            const message = data.message || '';
-            const likes = data.likes || 0;
-            const isCreator = creatorNames.includes(name);
-            const photoURL = data.photoURL || 'https://via.placeholder.com/50';
-
-            const commentEl = document.createElement('div');
-            commentEl.className = 'comment';
-            commentEl.dataset.id = id;
-            commentEl.innerHTML = `
-                <div class="comment-header">
-                    <img src="${photoURL}" alt="Foto de Perfil">
-                    <span class="name">${name}</span>
-                    ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                </div>
-                <div class="comment-body"></div>
-                <div class="comment-footer">
-                    <span class="date">${date}</span>
-                    <span class="like-btn" data-id="${id}"><i class="far fa-heart"></i> ${likes}</span>
-                    <span class="reply-btn" data-id="${id}">Responder</span>
-                    <span class="show-replies-btn" data-id="${id}" style="display: none;">Ver respuestas</span>
-                </div>
-                <div class="reply-form" data-id="${id}">
-                    <form>
-                        <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
-                        <button type="submit" class="btn">Enviar Respuesta</button>
-                    </form>
-                </div>
-                <div class="replies" data-id="${id}"></div>
-            `;
-            commentsList.appendChild(commentEl);
-
-            // Animar el mensaje
-            const msgEl = commentEl.querySelector('.comment-body');
-            await typeText(msgEl, message, 10);
-        };
-
-        // Mostrar todos los comentarios al inicio
-        const renderComments = (querySnapshot) => {
-            commentsList.innerHTML = '';
-            if (commentsCollection.data.length === 0) {
-                const p = document.createElement('p');
-                p.style.color = '#777';
-                p.textContent = 'No hay comentarios aún. ¡Sé el primero!';
-                commentsList.appendChild(p);
-                return;
-            }
-
-            commentsCollection.data.forEach(async (doc) => {
-                const data = doc.data();
-                await addCommentToDOM(data, doc.id);
-            });
-        };
-
-        // Añadir un nuevo comentario al DOM con animación
-        const renderNewComment = async (data, id) => {
-            const commentEl = document.createElement('div');
-            commentEl.className = 'comment';
-            commentEl.dataset.id = id;
-            commentEl.style.opacity = '0';
-            commentEl.style.transform = 'translateY(10px)';
-            commentEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-            const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString('es-ES') : 'ahora';
-            const name = data.name || 'Usuario';
-            const message = data.message || '';
-            const likes = data.likes || 0;
-            const isCreator = creatorNames.includes(name);
-            const photoURL = data.photoURL || 'https://via.placeholder.com/50';
-
-            commentEl.innerHTML = `
-                <div class="comment-header">
-                    <img src="${photoURL}" alt="Foto de Perfil">
-                    <span class="name">${name}</span>
-                    ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                </div>
-                <div class="comment-body"></div>
-                <div class="comment-footer">
-                    <span class="date">${date}</span>
-                    <span class="like-btn" data-id="${id}"><i class="far fa-heart"></i> ${likes}</span>
-                    <span class="reply-btn" data-id="${id}">Responder</span>
-                    <span class="show-replies-btn" data-id="${id}" style="display: none;">Ver respuestas</span>
-                </div>
-                <div class="reply-form" data-id="${id}">
-                    <form>
-                        <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
-                        <button type="submit" class="btn">Enviar Respuesta</button>
-                    </form>
-                </div>
-                <div class="replies" data-id="${id}"></div>
-            `;
-
-            commentsList.insertBefore(commentEl, commentsList.firstChild);
-
-            // Animación de entrada
-            setTimeout(() => {
-                commentEl.style.opacity = 1;
-                commentEl.style.transform = 'translateY(0)';
-            }, 10);
-
-            // Efecto de escritura
-            const msgEl = commentEl.querySelector('.comment-body');
-            await typeText(msgEl, message, 10);
-        };
-
-        // 🔄 Cargar comentarios con notificaciones
-        const loadComments = () => {
-            let loadedCommentIds = new Set();
-
-            commentsCollection.onSnapshot((change) => {
-                // Primera carga: guardar IDs existentes
-                if (loadedCommentIds.size === 0) {
-                    commentsCollection.data.forEach(doc => {
-                        loadedCommentIds.add(doc.id);
-                    });
-                    // Mostrar comentarios iniciales
-                    renderComments();
-                } else {
-                    // Nuevos comentarios
-                    if (change.type === "added") {
-                        const doc = change.doc;
-                        const data = doc.data();
-                        const name = data.name || 'Anónimo';
-                        const message = data.message || '';
-
-                        // Evitar notificar al que comentó
-                        if (!loadedCommentIds.has(doc.id)) {
-                            loadedCommentIds.add(doc.id);
-
-                            // Mostrar notificación
-                            const mensaje = `${name}: "${message.length > 50 ? message.substring(0, 47) + '...' : message}"`;
-                            mostrarNotificacion(mensaje);
-
-                            // Sonido (opcional)
-                            playNotifySound();
-
-                            // Añadir comentario al inicio
-                            renderNewComment(data, doc.id);
-                        }
-                    }
-                }
-            }, (error) => {
-                console.error("Error en tiempo real:", error);
-            });
-        };
-
-        // Enviar comentario
-        commentForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorMessage.style.display = 'none';
-            const name = currentUser.username;
-            const message = messageInput.value.trim();
-
-            // Verificar si el usuario está intentando usar un nombre de creador
-            if (creatorNames.includes(name) && !creatorNames.includes(currentUser.username)) {
-                errorMessage.textContent = 'No puedes usar un nombre de creador. Elige otro nombre en tu perfil.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            if (message.length < 3) {
-                errorMessage.textContent = 'El mensaje debe tener al menos 3 caracteres.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            if (containsBadWords(message)) {
-                errorMessage.textContent = 'Por favor, evita usar malas palabras.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            try {
-                const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                await commentsCollection.addDoc({
-                    name: name,
-                    message: message,
-                    timestamp: Date.now(),
-                    likes: 0,
-                    photoURL: photoURL
-                });
-                messageInput.value = '';
-                console.log('%c💬 Comentario enviado:', 'color: #DAA520', name);
-            } catch (error) {
-                console.error('❌ Error al enviar comentario:', error);
-                errorMessage.textContent = 'Error al enviar el comentario: ' + error.message;
-                errorMessage.style.display = 'block';
-            }
-        });
-
-        // Manejar clics en likes, responder y ver respuestas
-        commentsList.addEventListener('click', async (e) => {
-            const target = e.target.closest('.like-btn, .reply-btn, .show-replies-btn');
-            if (!target) return;
-
-            const commentId = target.dataset.id;
-            const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
-
-            if (target.classList.contains('like-btn') && (!replyForm || !replyForm.classList.contains('active'))) {
-                target.classList.toggle('liked');
-                const isLiked = target.classList.contains('liked');
-                
-                // Actualizar contador de likes
-                const heartIcon = target.querySelector('i');
-                let likesCount = parseInt(target.textContent.match(/\d+/) || 0);
-                likesCount = isLiked ? likesCount + 1 : likesCount - 1;
-                
-                target.innerHTML = `<i class="${isLiked ? 'fas' : 'far'} fa-heart"></i> ${likesCount}`;
-                console.log('%c❤️ Like actualizado', 'color: #FF0000');
-            } else if (target.classList.contains('reply-btn')) {
-                replyForm.classList.toggle('active');
-                if (replyForm.classList.contains('active')) {
-                    replyForm.querySelector('textarea').focus();
-                }
-            } else if (target.classList.contains('show-replies-btn')) {
-                const repliesEl = document.querySelector(`.replies[data-id="${commentId}"]`);
-                repliesEl.classList.toggle('active');
-                const replyCount = repliesEl.children.length;
-                target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${replyCount})`;
-            }
-        });
-
-        // Enviar respuesta
-        commentsList.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const replyForm = e.target.closest('.reply-form form');
-            if (!replyForm) return;
-            const commentId = replyForm.parentElement.dataset.id;
-            const replyText = replyForm.querySelector('textarea').value.trim();
-
-            if (replyText.length < 3) {
-                errorMessage.textContent = 'La respuesta debe tener al menos 3 caracteres.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            if (containsBadWords(replyText)) {
-                errorMessage.textContent = 'Por favor, evita usar malas palabras.';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            try {
-                const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                await commentsCollection.addDoc({
-                    name: currentUser.username,
-                    message: replyText,
-                    timestamp: Date.now(),
-                    likes: 0,
-                    photoURL: photoURL,
-                    parentId: commentId
-                });
-                replyForm.querySelector('textarea').value = '';
-                replyForm.parentElement.classList.remove('active');
-                console.log('%c💬 Respuesta enviada:', 'color: #DAA520');
-            } catch (error) {
-                console.error('❌ Error al enviar respuesta:', error);
-                errorMessage.textContent = 'Error al enviar la respuesta: ' + error.message;
-                errorMessage.style.display = 'block';
-            }
-        });
-
-        // Cargar comentarios al inicio
-        loadComments();
-
-        // Efecto Matrix de fondo
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
@@ -711,7 +495,6 @@
         for (let i = 0; i < columns; i++) {
             drops[i] = Math.floor(Math.random() * matrixCanvas.height);
         }
-        
         function drawMatrix() {
             matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
             matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
@@ -727,10 +510,75 @@
             }
         }
         setInterval(drawMatrix, 40);
-        
+        const particlesCanvas = document.getElementById('particlesCanvas');
+        const particlesCtx = particlesCanvas.getContext('2d');
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+        const particlesArray = [];
+        const particleCount = 50;
+        class Particle {
+            constructor() {
+                this.x = Math.random() * particlesCanvas.width;
+                this.y = Math.random() * particlesCanvas.height;
+                this.size = Math.random() * 5 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.size > 0.2) this.size -= 0.05;
+                if (this.x < 0 || this.x > particlesCanvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > particlesCanvas.height) this.speedY *= -1;
+            }
+            draw() {
+                particlesCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--golden-accent').trim();
+                particlesCtx.beginPath();
+                particlesCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                particlesCtx.fill();
+            }
+        }
+        function initParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+        function animateParticles() {
+            particlesCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            particlesCtx.fillRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                if (particlesArray[i].size <= 0.2) {
+                    particlesArray.splice(i, 1);
+                    i--;
+                    particlesArray.push(new Particle());
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            if (navMenu.classList.contains('active')) {
+                hamburger.children[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
+                hamburger.children[1].style.opacity = '0';
+                hamburger.children[2].style.transform = 'rotate(-45deg) translate(8px, -8px)';
+            } else {
+                hamburger.children[0].style.transform = 'none';
+                hamburger.children[1].style.opacity = '1';
+                hamburger.children[2].style.transform = 'none';
+            }
+        });
         window.addEventListener('resize', () => {
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
         });
     </script>
 </body>
