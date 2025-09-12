@@ -338,6 +338,10 @@
         .replies {
             margin-top: 10px;
             padding-left: 20px;
+            display: none;
+        }
+        .replies.active {
+            display: block;
         }
         .reply {
             background: rgba(0, 0, 0, 0.8);
@@ -396,6 +400,42 @@
         @keyframes notifOut {
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(100%); opacity: 0; }
+        }
+        .profile-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--golden-main);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
+            z-index: 10001;
+            text-align: center;
+            display: none;
+        }
+        .profile-popup.active {
+            display: block;
+        }
+        .profile-popup p {
+            margin-bottom: 20px;
+            color: var(--golden-main);
+            font-size: 1.2rem;
+        }
+        .profile-popup button {
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        .profile-popup button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
         }
         footer {
             background: rgba(0, 0, 0, 0.9);
@@ -461,6 +501,14 @@
             <li><a href="campaña.html">CAMPAÑA</a></li>
         </ul>
     </nav>
+
+    <!-- Popup para redirigir al perfil -->
+    <div class="profile-popup" id="profilePopup">
+        <p>Debes configurar tu nombre en el perfil para comentar.</p>
+        <button id="goToProfile">Ir al Perfil</button>
+        <button id="cancelPopup">Cancelar</button>
+    </div>
+
     <div class="content">
         <header>
             <h1>COMENTARIOS</h1>
@@ -469,7 +517,7 @@
         <div class="comment-section">
             <div class="comment-form">
                 <h2>DEJA TU COMENTARIO</h2>
-                <input type="text" id="nameInput" placeholder="Nombre (opcional)" maxlength="30">
+                <input type="text" id="nameInput" placeholder="Nombre (configura en tu perfil)" maxlength="30" readonly>
                 <textarea id="commentInput" placeholder="Escribe tu comentario..." maxlength="500"></textarea>
                 <button id="submitComment">ENVIAR</button>
             </div>
@@ -485,7 +533,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, increment, setDoc, getDocs, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
         // Configuración de Firebase
         const firebaseConfig = {
@@ -505,15 +553,55 @@
         const commentInput = document.getElementById('commentInput');
         const submitComment = document.getElementById('submitComment');
         const commentList = document.getElementById('commentList');
+        const profilePopup = document.getElementById('profilePopup');
+        const goToProfile = document.getElementById('goToProfile');
+        const cancelPopup = document.getElementById('cancelPopup');
+        
+        // Nombres de creadores (solo pueden ser usados una vez)
+        const creatorNames = ["L_Adriano", "SalchiHot"];
+        let usedCreatorNames = [];
         
         // Obtener datos del usuario desde localStorage
         let currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
         
-        // Configurar campo de nombre si existe
-        if (nameInput && currentUser.username) {
-            nameInput.value = currentUser.username;
-            nameInput.disabled = true;
-        }
+        // Cargar nombres de creadores ya usados
+        const loadUsedCreatorNames = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "comentarios"));
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (creatorNames.includes(data.name)) {
+                        usedCreatorNames.push(data.name);
+                    }
+                });
+            } catch (error) {
+                console.error("❌ Error al cargar nombres de creadores:", error);
+            }
+        };
+        
+        // Configurar campo de nombre
+        const setupNameField = () => {
+            if (nameInput && currentUser.username) {
+                nameInput.value = currentUser.username;
+                nameInput.title = "Nombre configurado en tu perfil";
+            } else {
+                nameInput.value = "";
+                nameInput.placeholder = "Haz clic aquí para configurar tu nombre";
+                nameInput.addEventListener('click', showProfilePopup);
+            }
+        };
+
+        // Mostrar popup para ir al perfil
+        const showProfilePopup = () => {
+            profilePopup.classList.add('active');
+            document.querySelector('.content').classList.add('blur');
+        };
+
+        // Ocultar popup
+        const hideProfilePopup = () => {
+            profilePopup.classList.remove('active');
+            document.querySelector('.content').classList.remove('blur');
+        };
 
         // Función para reproducir sonido de notificación
         const playNotificationSound = () => {
@@ -560,9 +648,11 @@
             commentEl.className = "comment";
             commentEl.dataset.id = id;
             
+            const isCreator = creatorNames.includes(name);
+            
             commentEl.innerHTML = `
-                <img src="${profilePic || currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
-                <strong>${name || "Anónimo"}</strong>
+                <img src="${profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                <strong>${name || "Anónimo"} ${isCreator ? '<span style="color: var(--neon-cyan);">[Creador]</span>' : ''}</strong>
                 <p>${message}</p>
                 <p class="timestamp">${new Date(timestamp).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})}</p>
                 <div class="comment-actions">
@@ -570,6 +660,7 @@
                         <i class="${liked ? "fas" : "far"} fa-heart"></i> <span>${likes || 0}</span>
                     </button>
                     <button class="reply-button" data-id="${id}">Responder</button>
+                    <button class="show-replies-button" data-id="${id}">Ver respuestas</button>
                 </div>
                 <div class="reply-form" data-id="${id}">
                     <textarea placeholder="Escribe tu respuesta..." maxlength="500"></textarea>
@@ -609,6 +700,15 @@
                 replyForm.classList.toggle("active");
             });
             
+            // Añadir evento al botón de mostrar/ocultar respuestas
+            commentEl.querySelector(".show-replies-button").addEventListener("click", function() {
+                let commentId = this.dataset.id;
+                let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
+                repliesContainer.classList.toggle("active");
+                
+                this.textContent = repliesContainer.classList.contains("active") ? "Ocultar respuestas" : "Ver respuestas";
+            });
+            
             // Añadir evento al botón de enviar respuesta
             commentEl.querySelector(".reply-form button").addEventListener("click", function() {
                 let commentId = this.parentElement.dataset.id;
@@ -616,7 +716,7 @@
                 let replyText = replyTextarea.value.trim();
                 
                 if (replyText) {
-                    let replyName = nameInput.value.trim() || currentUser.username || "Anónimo";
+                    let replyName = currentUser.username || "Anónimo";
                     let replyTimestamp = new Date().toISOString();
                     
                     // Crear elemento de respuesta
@@ -646,11 +746,23 @@
 
         // Función para enviar comentario
         const submitCommentHandler = () => {
-            let name = nameInput.value.trim() || currentUser.username || "Anónimo";
+            let name = currentUser.username || "Anónimo";
             let message = commentInput.value.trim();
+            
+            if (!currentUser.username) {
+                showProfilePopup();
+                return;
+            }
             
             if (!message) {
                 alert("Por favor, escribe un comentario.");
+                return;
+            }
+            
+            // Verificar si el nombre es de creador y ya está en uso
+            if (creatorNames.includes(name) && usedCreatorNames.includes(name)) {
+                alert("Este nombre de creador ya está en uso. Por favor, elige otro nombre en tu perfil.");
+                showProfilePopup();
                 return;
             }
             
@@ -669,6 +781,11 @@
                 commentInput.value = "";
                 submitComment.disabled = false;
                 console.log("💬 Comentario enviado:", name);
+                
+                // Si es un nombre de creador, agregarlo a la lista de usados
+                if (creatorNames.includes(name) && !usedCreatorNames.includes(name)) {
+                    usedCreatorNames.push(name);
+                }
             }).catch(error => {
                 console.error("❌ Error al enviar comentario:", error);
                 alert("Error al enviar el comentario. Intenta de nuevo.");
@@ -689,6 +806,7 @@
                     commentList.innerHTML = '';
                 }
                 
+                // Procesar todos los documentos existentes primero
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
                         let doc = change.doc;
@@ -711,7 +829,7 @@
                             // Añadir comentario a la lista
                             commentList.appendChild(commentEl);
                             
-                            // Mostrar notificación si no es el usuario actual
+                            // Mostrar notificación si no es el usuario actual y es un cambio nuevo
                             if (data.name !== currentUser.username) {
                                 showNotification(data.name, data.message, data.profilePic);
                             }
@@ -725,7 +843,13 @@
         };
 
         // Inicializar
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Cargar nombres de creadores ya usados
+            await loadUsedCreatorNames();
+            
+            // Configurar campo de nombre
+            setupNameField();
+            
             // Añadir evento al botón de enviar comentario
             if (submitComment) {
                 submitComment.addEventListener("click", submitCommentHandler);
@@ -739,6 +863,17 @@
                         submitCommentHandler();
                     }
                 });
+            }
+            
+            // Añadir eventos a los botones del popup
+            if (goToProfile) {
+                goToProfile.addEventListener("click", () => {
+                    window.location.href = "perfil.html";
+                });
+            }
+            
+            if (cancelPopup) {
+                cancelPopup.addEventListener("click", hideProfilePopup);
             }
             
             // Cargar comentarios
