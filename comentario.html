@@ -428,7 +428,7 @@
             border: 2px solid var(--golden-main);
             color: #000;
             padding: 10px 20px;
-            border-radius: 5px;
+            borderRadius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
             margin: 0 10px;
@@ -436,6 +436,18 @@
         .profile-popup button:hover {
             background: var(--golden-main);
             box-shadow: 0 0 15px var(--golden-accent);
+        }
+        .creator-badge {
+            animation: rgbGlow 3s infinite;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        @keyframes rgbGlow {
+            0% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+            33% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+            66% { color: #0000ff; text-shadow: 0 0 10px #0000ff; }
+            100% { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
         }
         footer {
             background: rgba(0, 0, 0, 0.9);
@@ -651,8 +663,8 @@
             const isCreator = creatorNames.includes(name);
             
             commentEl.innerHTML = `
-                <img src="${profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
-                <strong>${name || "Anónimo"} ${isCreator ? '<span style="color: var(--neon-cyan);">[Creador]</span>' : ''}</strong>
+                <img src="${profilePic || currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                <strong>${name || "Anónimo"} ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}</strong>
                 <p>${message}</p>
                 <p class="timestamp">${new Date(timestamp).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})}</p>
                 <div class="comment-actions">
@@ -660,7 +672,7 @@
                         <i class="${liked ? "fas" : "far"} fa-heart"></i> <span>${likes || 0}</span>
                     </button>
                     <button class="reply-button" data-id="${id}">Responder</button>
-                    <button class="show-replies-button" data-id="${id}">Ver respuestas</button>
+                    <button class="show-replies-button" data-id="${id}" style="display: none;">Ver respuestas</button>
                 </div>
                 <div class="reply-form" data-id="${id}">
                     <textarea placeholder="Escribe tu respuesta..." maxlength="500"></textarea>
@@ -700,15 +712,6 @@
                 replyForm.classList.toggle("active");
             });
             
-            // Añadir evento al botón de mostrar/ocultar respuestas
-            commentEl.querySelector(".show-replies-button").addEventListener("click", function() {
-                let commentId = this.dataset.id;
-                let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
-                repliesContainer.classList.toggle("active");
-                
-                this.textContent = repliesContainer.classList.contains("active") ? "Ocultar respuestas" : "Ver respuestas";
-            });
-            
             // Añadir evento al botón de enviar respuesta
             commentEl.querySelector(".reply-form button").addEventListener("click", function() {
                 let commentId = this.parentElement.dataset.id;
@@ -733,12 +736,25 @@
                     let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
                     repliesContainer.appendChild(replyEl);
                     
+                    // Mostrar el botón de ver respuestas
+                    let showRepliesButton = document.querySelector(`.show-replies-button[data-id="${commentId}"]`);
+                    showRepliesButton.style.display = "inline-block";
+                    
                     // Limpiar textarea y ocultar formulario
                     replyTextarea.value = "";
                     this.parentElement.classList.remove("active");
                     
                     console.log(`💬 Respuesta enviada al comentario ${commentId}`);
                 }
+            });
+            
+            // Añadir evento al botón de mostrar/ocultar respuestas
+            commentEl.querySelector(".show-replies-button").addEventListener("click", function() {
+                let commentId = this.dataset.id;
+                let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
+                repliesContainer.classList.toggle("active");
+                
+                this.textContent = repliesContainer.classList.contains("active") ? "Ocultar respuestas" : "Ver respuestas";
             });
             
             return commentEl;
@@ -807,6 +823,29 @@
                 }
                 
                 // Procesar todos los documentos existentes primero
+                snapshot.forEach((doc) => {
+                    let data = doc.data();
+                    
+                    if (!loadedCommentIds.has(doc.id)) {
+                        loadedCommentIds.add(doc.id);
+                        
+                        // Crear elemento de comentario
+                        let commentEl = createCommentElement(
+                            data.name,
+                            data.message,
+                            data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp),
+                            doc.id,
+                            data.likes || 0,
+                            false,
+                            data.profilePic
+                        );
+                        
+                        // Añadir comentario a la lista
+                        commentList.appendChild(commentEl);
+                    }
+                });
+                
+                // Escuchar cambios en tiempo real
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
                         let doc = change.doc;
@@ -815,21 +854,7 @@
                         if (!loadedCommentIds.has(doc.id)) {
                             loadedCommentIds.add(doc.id);
                             
-                            // Crear elemento de comentario
-                            let commentEl = createCommentElement(
-                                data.name,
-                                data.message,
-                                data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp),
-                                doc.id,
-                                data.likes || 0,
-                                false,
-                                data.profilePic
-                            );
-                            
-                            // Añadir comentario a la lista
-                            commentList.appendChild(commentEl);
-                            
-                            // Mostrar notificación si no es el usuario actual y es un cambio nuevo
+                            // Mostrar notificación si no es el usuario actual
                             if (data.name !== currentUser.username) {
                                 showNotification(data.name, data.message, data.profilePic);
                             }
