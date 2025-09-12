@@ -473,17 +473,280 @@
                 <textarea id="commentInput" placeholder="Escribe tu comentario..." maxlength="500"></textarea>
                 <button id="submitComment">ENVIAR</button>
             </div>
-            <div class="comment-list" id="commentList"></div>
+            <div class="comment-list" id="commentList">
+                <p style="color: var(--golden-accent); text-align: center;">Cargando comentarios...</p>
+            </div>
         </div>
     </div>
     <footer>
         <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
         <div class="version">Versión 1.13</div>
     </footer>
+
     <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";import{getFirestore,collection,addDoc,query,orderBy,onSnapshot,doc,updateDoc,increment,setDoc}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";if("file:"===window.location.protocol)console.error("❌ Error: Los módulos ES no funcionan en file://"),alert("Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.");else{try{const a={apiKey:"AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",authDomain:"dpccrea-login.firebaseapp.com",projectId:"dpccrea-login",appId:"1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"},b=initializeApp(a),c=getFirestore(b),d=collection(c,"comentarios"),e=document.getElementById("nameInput"),f=document.getElementById("commentInput"),g=document.getElementById("submitComment"),h=document.getElementById("commentList"),i=JSON.parse(localStorage.getItem("dpccrea_user"))||{},j=()=>{let a=new Audio("https://assets.codepen.io/3011180/notification-sound-1.mp3");a.volume=.3,a.play().catch(b=>console.error("❌ Error al reproducir sonido:",b))},k=(a,b,c)=>{let d=document.createElement("div");d.className="notification",d.innerHTML=`<img src="${c||i.profilePic||"assets/imagenes/placeholder.png"}" alt="Perfil"><div><strong style="color: var(--hacker-cyan);"><i class="fas fa-bell"></i> Nuevo comentario</strong><p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${a}</p></div>`,document.body.appendChild(d),setTimeout(()=>{d.style.animation="notifOut 0.5s ease-out",setTimeout(()=>{d.parentElement&&document.body.removeChild(d)},500)},5e3),j()},l=(a,b,c,d,e,f,g)=>{let h=document.createElement("div");h.className="comment",h.innerHTML=`<img src="${g||i.profilePic||"assets/imagenes/placeholder.png"}" alt="Perfil"><strong>${a||"Anónimo"}</strong><p>${b}</p><p class="timestamp">${c}</p><div class="comment-actions"><button class="like-button" data-id="${d}" data-liked="${f?"true":"false"}"><i class="fas fa-heart"></i> <span>${e||0}</span></button><button class="reply-button" data-id="${d}">Responder</button></div><div class="reply-form" data-id="${d}"><textarea placeholder="Escribe tu respuesta..." maxlength="500"></textarea><button>Enviar Respuesta</button></div><div class="replies" data-id="${d}"></div>`,h.querySelector(".like-button").addEventListener("click",()=>{let a=h.querySelector(".like-button"),b=a.dataset.id,c=a.dataset.liked==="true";updateDoc(doc(c,"comentarios",b),{likes:increment(c?-1:1)}).then(()=>{a.dataset.liked=c?"false":"true",a.classList.toggle("liked")}).catch(a=>console.error("❌ Error al actualizar like:",a))}),h.querySelector(".reply-button").addEventListener("click",()=>{let a=h.querySelector(".reply-form");a.classList.toggle("active")}),h.querySelector(".reply-form button").addEventListener("click",()=>{let a=h.querySelector(".reply-form textarea").value.trim();if(a){let b=e.value.trim()||i.username||"Anónimo",f=new Date().toISOString(),g=doc(collection(doc(c,"comentarios",d),"respuestas"));setDoc(g,{name:b,message:a,timestamp:f,profilePic:i.profilePic||"assets/imagenes/placeholder.png"}).then(()=>{h.querySelector(".reply-form textarea").value="",h.querySelector(".reply-form").classList.remove("active")}).catch(a=>console.error("❌ Error al enviar respuesta:",a))}}),h.prepend(h);let j=collection(c,"comentarios",d,"respuestas"),k=query(j,orderBy("timestamp","desc"));onSnapshot(k,a=>{a.docChanges().forEach(b=>{"added"===b.type&&b.doc&&b.doc.data&&b.doc.data()&&b.doc.id&&(()=>{let a=document.createElement("div");a.className="reply",a.innerHTML=`<img src="${b.doc.data().profilePic||"assets/imagenes/placeholder.png"}" alt="Perfil"><strong>${b.doc.data().name||"Anónimo"}</strong><p>${b.doc.data().message}</p><p class="timestamp">${new Date(b.doc.data().timestamp).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}</p>`,h.querySelector(`.replies[data-id="${d}"]`).prepend(a)})()})},a=>console.error("❌ Error al cargar respuestas:",a))},m=()=>{let a=e.value.trim()||i.username||"Anónimo",b=f.value.trim();if(!b)return alert("Por favor, escribe un comentario.");g.disabled=!0;let c=new Date().toISOString();addDoc(d,{name:a,message:b,timestamp:c,likes:0,profilePic:i.profilePic||"assets/imagenes/placeholder.png"}).then(()=>{f.value="",g.disabled=!1}).catch(a=>{console.error("❌ Error al enviar comentario:",a),alert("Error al enviar el comentario. Intenta de nuevo."),g.disabled=!1})},n=query(d,orderBy("timestamp","desc")),o=new Set;onSnapshot(n,a=>{a.docChanges().forEach(b=>{"added"===b.type&&b.doc&&b.doc.data&&b.doc.data()&&b.doc.id&&!o.has(b.doc.id)&&(o.add(b.doc.id),l(b.doc.data().name,b.doc.data().message,new Date(b.doc.data().timestamp).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"}),b.doc.id,b.doc.data().likes,b.doc.data().liked,b.doc.data().profilePic),b.doc.data().name!==i.username&&k(`${b.doc.data().name||"Anónimo"}: "${(b.doc.data().message||"").length>50?(b.doc.data().message||"").substring(0,47)+"...":b.doc.data().message||""}"`,null,b.doc.data().profilePic))})},a=>console.error("❌ Error al cargar comentarios:",a)),g.addEventListener("click",m)}catch(a){console.error("❌ Error al inicializar Firebase:",a),alert("No se pudo inicializar Firebase. Verifica la configuración o la conexión.")}}
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
+            authDomain: "dpccrea-login.firebaseapp.com",
+            projectId: "dpccrea-login",
+            appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const commentsCollection = collection(db, "comentarios");
+
+        // Variables globales
+        const nameInput = document.getElementById('nameInput');
+        const commentInput = document.getElementById('commentInput');
+        const submitComment = document.getElementById('submitComment');
+        const commentList = document.getElementById('commentList');
+        
+        // Obtener datos del usuario desde localStorage
+        let currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
+        
+        // Configurar campo de nombre si existe
+        if (nameInput && currentUser.username) {
+            nameInput.value = currentUser.username;
+            nameInput.disabled = true;
+        }
+
+        // Función para reproducir sonido de notificación
+        const playNotificationSound = () => {
+            try {
+                let audio = new Audio("https://assets.codepen.io/3011180/notification-sound-1.mp3");
+                audio.volume = 0.3;
+                audio.play().catch(err => console.error("❌ Error al reproducir sonido:", err));
+            } catch (error) {
+                console.error("❌ Error al crear audio:", error);
+            }
+        };
+
+        // Función para mostrar notificación
+        const showNotification = (name, message, profilePic) => {
+            let notification = document.createElement("div");
+            notification.className = "notification";
+            notification.innerHTML = `
+                <img src="${profilePic || currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                <div>
+                    <strong style="color: var(--hacker-cyan);"><i class="fas fa-bell"></i> Nuevo comentario</strong>
+                    <p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${name}: "${message.length > 50 ? message.substring(0, 47) + '...' : message}"</p>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Reproducir sonido
+            playNotificationSound();
+            
+            // Desaparecer después de 5 segundos
+            setTimeout(() => {
+                notification.style.animation = "notifOut 0.5s ease-out";
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        document.body.removeChild(notification);
+                    }
+                }, 500);
+            }, 5000);
+        };
+
+        // Función para crear un comentario en el DOM
+        const createCommentElement = (name, message, timestamp, id, likes, liked, profilePic) => {
+            let commentEl = document.createElement("div");
+            commentEl.className = "comment";
+            commentEl.dataset.id = id;
+            
+            commentEl.innerHTML = `
+                <img src="${profilePic || currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                <strong>${name || "Anónimo"}</strong>
+                <p>${message}</p>
+                <p class="timestamp">${new Date(timestamp).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})}</p>
+                <div class="comment-actions">
+                    <button class="like-button" data-id="${id}" data-liked="${liked ? "true" : "false"}">
+                        <i class="${liked ? "fas" : "far"} fa-heart"></i> <span>${likes || 0}</span>
+                    </button>
+                    <button class="reply-button" data-id="${id}">Responder</button>
+                </div>
+                <div class="reply-form" data-id="${id}">
+                    <textarea placeholder="Escribe tu respuesta..." maxlength="500"></textarea>
+                    <button>Enviar Respuesta</button>
+                </div>
+                <div class="replies" data-id="${id}"></div>
+            `;
+            
+            // Añadir evento al botón de like
+            commentEl.querySelector(".like-button").addEventListener("click", function() {
+                let commentId = this.dataset.id;
+                let isLiked = this.dataset.liked === "true";
+                
+                // Actualizar en Firebase
+                updateDoc(doc(db, "comentarios", commentId), {
+                    likes: increment(isLiked ? -1 : 1)
+                }).then(() => {
+                    this.dataset.liked = isLiked ? "false" : "true";
+                    this.classList.toggle("liked");
+                    
+                    let heartIcon = this.querySelector("i");
+                    let likesCount = this.querySelector("span");
+                    
+                    heartIcon.className = isLiked ? "far fa-heart" : "fas fa-heart";
+                    likesCount.textContent = isLiked ? (parseInt(likesCount.textContent) - 1) : (parseInt(likesCount.textContent) + 1);
+                    
+                    console.log(`❤️ Like ${isLiked ? "eliminado" : "agregado"} al comentario ${commentId}`);
+                }).catch(error => {
+                    console.error("❌ Error al actualizar like:", error);
+                });
+            });
+            
+            // Añadir evento al botón de responder
+            commentEl.querySelector(".reply-button").addEventListener("click", function() {
+                let commentId = this.dataset.id;
+                let replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
+                replyForm.classList.toggle("active");
+            });
+            
+            // Añadir evento al botón de enviar respuesta
+            commentEl.querySelector(".reply-form button").addEventListener("click", function() {
+                let commentId = this.parentElement.dataset.id;
+                let replyTextarea = this.parentElement.querySelector("textarea");
+                let replyText = replyTextarea.value.trim();
+                
+                if (replyText) {
+                    let replyName = nameInput.value.trim() || currentUser.username || "Anónimo";
+                    let replyTimestamp = new Date().toISOString();
+                    
+                    // Crear elemento de respuesta
+                    let replyEl = document.createElement("div");
+                    replyEl.className = "reply";
+                    replyEl.innerHTML = `
+                        <img src="${currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                        <strong>${replyName}</strong>
+                        <p>${replyText}</p>
+                        <p class="timestamp">${new Date(replyTimestamp).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})}</p>
+                    `;
+                    
+                    // Añadir respuesta al contenedor de respuestas
+                    let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
+                    repliesContainer.appendChild(replyEl);
+                    
+                    // Limpiar textarea y ocultar formulario
+                    replyTextarea.value = "";
+                    this.parentElement.classList.remove("active");
+                    
+                    console.log(`💬 Respuesta enviada al comentario ${commentId}`);
+                }
+            });
+            
+            return commentEl;
+        };
+
+        // Función para enviar comentario
+        const submitCommentHandler = () => {
+            let name = nameInput.value.trim() || currentUser.username || "Anónimo";
+            let message = commentInput.value.trim();
+            
+            if (!message) {
+                alert("Por favor, escribe un comentario.");
+                return;
+            }
+            
+            submitComment.disabled = true;
+            
+            let timestamp = new Date().toISOString();
+            
+            // Enviar a Firebase
+            addDoc(commentsCollection, {
+                name: name,
+                message: message,
+                timestamp: timestamp,
+                likes: 0,
+                profilePic: currentUser.profilePic || 'https://via.placeholder.com/50'
+            }).then(() => {
+                commentInput.value = "";
+                submitComment.disabled = false;
+                console.log("💬 Comentario enviado:", name);
+            }).catch(error => {
+                console.error("❌ Error al enviar comentario:", error);
+                alert("Error al enviar el comentario. Intenta de nuevo.");
+                submitComment.disabled = false;
+            });
+        };
+
+        // Cargar comentarios existentes
+        const loadComments = () => {
+            let loadedCommentIds = new Set();
+            
+            // Consulta para obtener comentarios ordenados por fecha (más recientes primero)
+            const q = query(commentsCollection, orderBy("timestamp", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                // Limpiar mensaje de carga
+                if (commentList.querySelector('p')) {
+                    commentList.innerHTML = '';
+                }
+                
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        let doc = change.doc;
+                        let data = doc.data();
+                        
+                        if (!loadedCommentIds.has(doc.id)) {
+                            loadedCommentIds.add(doc.id);
+                            
+                            // Crear elemento de comentario
+                            let commentEl = createCommentElement(
+                                data.name,
+                                data.message,
+                                data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp),
+                                doc.id,
+                                data.likes || 0,
+                                false,
+                                data.profilePic
+                            );
+                            
+                            // Añadir comentario a la lista
+                            commentList.appendChild(commentEl);
+                            
+                            // Mostrar notificación si no es el usuario actual
+                            if (data.name !== currentUser.username) {
+                                showNotification(data.name, data.message, data.profilePic);
+                            }
+                        }
+                    }
+                });
+            }, (error) => {
+                console.error("❌ Error al cargar comentarios:", error);
+                commentList.innerHTML = '<p style="color: var(--neon-pink); text-align: center;">Error al cargar comentarios. Intenta recargar la página.</p>';
+            });
+        };
+
+        // Inicializar
+        document.addEventListener("DOMContentLoaded", () => {
+            // Añadir evento al botón de enviar comentario
+            if (submitComment) {
+                submitComment.addEventListener("click", submitCommentHandler);
+            }
+            
+            // Añadir evento al campo de comentario para enviar con Enter
+            if (commentInput) {
+                commentInput.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        submitCommentHandler();
+                    }
+                });
+            }
+            
+            // Cargar comentarios
+            loadComments();
+        });
     </script>
     <script>
+        // Efectos visuales de fondo
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
@@ -495,6 +758,7 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-ap
         for (let i = 0; i < columns; i++) {
             drops[i] = Math.floor(Math.random() * matrixCanvas.height);
         }
+        
         function drawMatrix() {
             matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
             matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
@@ -510,12 +774,14 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-ap
             }
         }
         setInterval(drawMatrix, 40);
+        
         const particlesCanvas = document.getElementById('particlesCanvas');
         const particlesCtx = particlesCanvas.getContext('2d');
         particlesCanvas.width = window.innerWidth;
         particlesCanvas.height = window.innerHeight;
         const particlesArray = [];
         const particleCount = 50;
+        
         class Particle {
             constructor() {
                 this.x = Math.random() * particlesCanvas.width;
@@ -538,11 +804,13 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-ap
                 particlesCtx.fill();
             }
         }
+        
         function initParticles() {
             for (let i = 0; i < particleCount; i++) {
                 particlesArray.push(new Particle());
             }
         }
+        
         function animateParticles() {
             particlesCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             particlesCtx.fillRect(0, 0, particlesCanvas.width, particlesCanvas.height);
@@ -557,23 +825,22 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-ap
             }
             requestAnimationFrame(animateParticles);
         }
+        
         initParticles();
         animateParticles();
+        
+        // Menú hamburguesa
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-            if (navMenu.classList.contains('active')) {
-                hamburger.children[0].style.transform = 'rotate(45deg) translate(8px, 8px)';
-                hamburger.children[1].style.opacity = '0';
-                hamburger.children[2].style.transform = 'rotate(-45deg) translate(8px, -8px)';
-            } else {
-                hamburger.children[0].style.transform = 'none';
-                hamburger.children[1].style.opacity = '1';
-                hamburger.children[2].style.transform = 'none';
-            }
-        });
+        
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // Ajustar canvas al redimensionar
         window.addEventListener('resize', () => {
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
