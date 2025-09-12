@@ -3,20 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comentarios - EcoCiberPerú</title>
-    <meta name="description" content="Comparte tus ideas en EcoCiberPerú. Usa tu perfil para comentar, dar corazones y responder al estilo YouTube.">
-    <meta name="keywords" content="comentarios, EcoCiberPerú, reciclaje, sostenibilidad, IA ética, comunidad">
+    <title>Comentarios - DPCCrea</title>
+    <meta name="description" content="Comparte tus ideas en DPCCrea. Usa tu perfil para comentar, dar corazones y responder al estilo YouTube.">
+    <meta name="keywords" content="comentarios, DPCCrea, sexualidad, identidad, diversidad, comunidad">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Comentarios - EcoCiberPerú">
-    <meta property="og:description" content="Únete a la comunidad de EcoCiberPerú, comenta y da corazones.">
-    <meta property="og:image" content="https://ecociberperu.com/assets/imagenes/og-image.jpg">
-    <meta property="og:url" content="https://ecociberperu.com/comentario.html">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/imagenes/favicon.ico">
-    <link rel="icon" type="image/png" sizes="128x128" href="/assets/imagenes/favicon-128x128.png">
-    <link rel="apple-touch-icon" sizes="128x128" href="/assets/imagenes/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/imagenes/favicon-192x192.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         :root {
@@ -289,438 +279,427 @@
             <p style="color: var(--golden-accent); text-align: center;">Cargando comentarios...</p>
         </div>
     </div>
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, orderBy, query, onSnapshot, doc, updateDoc, increment, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-        if (window.location.protocol === 'file:') {
-            console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
-            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.');
-        } else {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
-                    authDomain: "dpccrea-login.firebaseapp.com",
-                    projectId: "dpccrea-login",
-                    appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
-                };
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore();
-                const commentsCollection = collection(db, "comentarios");
-
-                const commentForm = document.getElementById('commentForm');
-                const nameInput = document.getElementById('nameInput');
-                const messageInput = document.getElementById('messageInput');
-                const commentsList = document.getElementById('commentsList');
-                const errorMessage = document.getElementById('errorMessage');
-                const badWords = ['idiota', 'estúpido', 'tonto', 'maldito', 'imbécil', 'grosero'];
-
-                // Obtener datos del usuario desde localStorage
-                const currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
-                if (currentUser.username) {
-                    nameInput.value = currentUser.username;
-                    nameInput.disabled = true;
-                } else {
-                    nameInput.value = '';
-                    nameInput.disabled = true;
-                    commentForm.querySelector('button').disabled = true;
-                    errorMessage.textContent = 'Debes configurar tu nombre en el perfil para comentar.';
-                    errorMessage.style.display = 'block';
-                }
-
-                // Efecto de escritura letra por letra
-                const typeText = (element, text, speed = 20) => {
-                    return new Promise(resolve => {
-                        let i = 0;
-                        element.textContent = '';
-                        const timer = setInterval(() => {
-                            if (i < text.length) {
-                                element.textContent += text.charAt(i);
-                                i++;
-                            } else {
-                                clearInterval(timer);
-                                resolve();
-                            }
-                        }, speed);
-                    });
-                };
-
-                // Filtrar malas palabras
-                const containsBadWords = (text) => {
-                    const lowerText = text.toLowerCase();
-                    return badWords.some(word => lowerText.includes(word));
-                };
-
-                // 🔔 Mostrar notificación emergente
-                const mostrarNotificacion = (mensaje) => {
-                    // Crear el elemento
-                    const notif = document.createElement('div');
-                    notif.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: rgba(0, 0, 0, 0.95);
-                        border: 2px solid var(--hacker-cyan);
-                        color: white;
-                        padding: 15px;
-                        border-radius: 8px;
-                        z-index: 10000;
-                        max-width: 300px;
-                        box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--diversity-pink);
-                        font-family: 'Courier New';
-                        animation: notifIn 0.5s ease-out;
-                        pointer-events: auto;
-                    `;
-                    notif.innerHTML = `
-                        <strong style="color: var(--hacker-cyan);">📢 Nuevo comentario</strong>
-                        <p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${mensaje}</p>
-                    `;
-
-                    // Añadir a la página
-                    document.body.appendChild(notif);
-
-                    // Animación de entrada
-                    const notifIn = document.createElement('style');
-                    notifIn.textContent = `
-                        @keyframes notifIn {
-                            from { transform: translateX(100%); opacity: 0; }
-                            to { transform: translateX(0); opacity: 1; }
-                        }
-                        @keyframes notifOut {
-                            from { transform: translateX(0); opacity: 1; }
-                            to { transform: translateX(100%); opacity: 0; }
-                        }
-                    `;
-                    document.head.appendChild(notifIn);
-
-                    // Desaparecer después de 5 segundos
-                    setTimeout(() => {
-                        notif.style.animation = 'notifOut 0.5s ease-out';
-                        setTimeout(() => {
-                            if (notif.parentElement) {
-                                document.body.removeChild(notif);
-                            }
-                        }, 500);
-                    }, 5000);
-                };
-
-                // 🔔 Sonido opcional de notificación
-                const playNotifySound = () => {
-                    const audio = new Audio('https://assets.codepen.io/3011180/notification-sound-1.mp3');
-                    audio.volume = 0.3;
-                    audio.play().catch(() => {});
-                };
-
-                // Mostrar todos los comentarios al inicio
-                const renderComments = (querySnapshot) => {
-                    commentsList.innerHTML = '';
-                    if (querySnapshot.empty) {
-                        const p = document.createElement('p');
-                        p.style.color = '#777';
-                        p.textContent = 'No hay comentarios aún. ¡Sé el primero!';
-                        commentsList.appendChild(p);
-                        return;
-                    }
-
-                    querySnapshot.forEach(async (doc) => {
-                        const data = doc.data();
-                        await addCommentToDOM(data, doc.id);
-                    });
-                };
-
-                // Añadir un nuevo comentario al DOM con animación
-                const renderNewComment = async (data, id) => {
-                    const commentEl = document.createElement('div');
-                    commentEl.className = 'comment';
-                    commentEl.dataset.id = id;
-                    commentEl.style.opacity = '0';
-                    commentEl.style.transform = 'translateY(10px)';
-                    commentEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-                    const date = data.timestamp?.toDate().toLocaleDateString('es-ES') || 'ahora';
-                    const name = data.name || 'Anónimo';
-                    const message = data.message || '';
-                    const photoURL = data.photoURL || 'https://via.placeholder.com/50';
-
-                    commentEl.innerHTML = `
-                        <div class="comment-header">
-                            <img src="${photoURL}" alt="Foto">
-                            <span class="name">${name}</span>
-                        </div>
-                        <div class="comment-body"></div>
-                        <div class="comment-footer">
-                            <span class="date">${date}</span>
-                        </div>
-                    `;
-
-                    commentsList.insertBefore(commentEl, commentsList.firstChild);
-
-                    // Animación de entrada
-                    setTimeout(() => {
-                        commentEl.style.opacity = 1;
-                        commentEl.style.transform = 'translateY(0)';
-                    }, 10);
-
-                    // Efecto de escritura
-                    const msgEl = commentEl.querySelector('.comment-body');
-                    await typeText(msgEl, message, 10);
-                };
-
-                // 🔄 Cargar comentarios con notificaciones
-                const loadComments = () => {
-                    const q = query(commentsCollection, orderBy("timestamp", "desc"));
-                    
-                    let loadedCommentIds = new Set();
-
-                    onSnapshot(q, (querySnapshot) => {
-                        // Primera carga: guardar IDs existentes
-                        if (loadedCommentIds.size === 0) {
-                            querySnapshot.forEach(doc => {
-                                loadedCommentIds.add(doc.id);
-                            });
-                            // Mostrar comentarios iniciales
-                            renderComments(querySnapshot);
-                        } else {
-                            // Nuevos comentarios
-                            querySnapshot.docChanges().forEach((change) => {
-                                if (change.type === "added") {
-                                    const doc = change.doc;
-                                    const data = doc.data();
-                                    const name = data.name || 'Anónimo';
-                                    const message = data.message || '';
-
-                                    // Evitar notificar al que comentó
-                                    if (!loadedCommentIds.has(doc.id)) {
-                                        loadedCommentIds.add(doc.id);
-
-                                        // Mostrar notificación
-                                        const mensaje = `${name}: "${message.length > 50 ? message.substring(0, 47) + '...' : message}"`;
-                                        mostrarNotificacion(mensaje);
-
-                                        // Sonido (opcional)
-                                        playNotifySound();
-
-                                        // Añadir comentario al inicio
-                                        renderNewComment(data, doc.id);
-                                    }
-                                }
-                            });
-                        }
-                    }, (error) => {
-                        console.error("Error en tiempo real:", error);
-                    });
-                };
-
-                // Función auxiliar para añadir comentarios al DOM
-                const addCommentToDOM = async (data, id) => {
-                    const date = data.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                    const name = data.name || 'Usuario';
-                    const message = data.message || '';
-                    const likes = data.likes || 0;
-                    const isCreator = ['L_Adriano', 'SalchiHot'].includes(name);
-                    const photoURL = data.photoURL || 'https://via.placeholder.com/50';
-
-                    const commentEl = document.createElement('div');
-                    commentEl.className = 'comment';
-                    commentEl.innerHTML = `
-                        <div class="comment-header">
-                            <img src="${photoURL}" alt="Foto de Perfil">
-                            <span class="name">${name}</span>
-                            ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                        </div>
-                        <div class="comment-body"></div>
-                        <div class="comment-footer">
-                            <span class="date">${date}</span>
-                            <span class="like-btn" data-id="${id}"><i class="far fa-heart"></i> ${likes}</span>
-                            <span class="reply-btn" data-id="${id}">Responder</span>
-                            <span class="show-replies-btn" data-id="${id}" style="display: none;">Ver respuestas</span>
-                        </div>
-                        <div class="reply-form" data-id="${id}">
-                            <form>
-                                <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
-                                <button type="submit" class="btn">Enviar Respuesta</button>
-                            </form>
-                        </div>
-                        <div class="replies" data-id="${id}"></div>
-                    `;
-                    commentsList.appendChild(commentEl);
-
-                    // Animar el mensaje
-                    const msgEl = commentEl.querySelector('.comment-body');
-                    await typeText(msgEl, message, 10);
-
-                    // Cargar respuestas
-                    const repliesQuery = query(commentsCollection, where("parentId", "==", id), orderBy("timestamp", "desc"));
-                    onSnapshot(repliesQuery, (replySnapshot) => {
-                        const repliesEl = commentEl.querySelector('.replies');
-                        const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
-                        repliesEl.innerHTML = '';
-                        if (!replySnapshot.empty) {
-                            showRepliesBtn.style.display = 'inline';
-                            showRepliesBtn.textContent = `Ver respuestas (${replySnapshot.size})`;
-                            replySnapshot.forEach(async (replyDoc) => {
-                                const reply = replyDoc.data();
-                                const replyDate = reply.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                                const replyName = reply.name || 'Usuario';
-                                const replyMessage = reply.message || '';
-                                const replyLikes = reply.likes || 0;
-                                const isReplyCreator = ['L_Adriano', 'SalchiHot'].includes(replyName);
-                                const replyPhotoURL = reply.photoURL || 'https://via.placeholder.com/50';
-
-                                const replyEl = document.createElement('div');
-                                replyEl.className = 'comment reply';
-                                replyEl.innerHTML = `
-                                    <div class="comment-header">
-                                        <img src="${replyPhotoURL}" alt="Foto de Perfil">
-                                        <span class="name">${replyName}</span>
-                                        ${isReplyCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                                    </div>
-                                    <div class="comment-body"></div>
-                                    <div class="comment-footer">
-                                        <span class="date">${replyDate}</span>
-                                        <span class="like-btn" data-id="${replyDoc.id}"><i class="far fa-heart"></i> ${replyLikes}</span>
-                                    </div>
-                                `;
-                                repliesEl.appendChild(replyEl);
-                                await typeText(replyEl.querySelector('.comment-body'), replyMessage, 10);
-                            });
-                        } else {
-                            showRepliesBtn.style.display = 'none';
-                        }
-                    }, (error) => {
-                        console.error('❌ Error al cargar respuestas:', error);
-                        errorMessage.textContent = 'Error al cargar respuestas: ' + error.message;
-                        errorMessage.style.display = 'block';
-                    });
-                };
-
-                // Enviar comentario
-                commentForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    errorMessage.style.display = 'none';
-                    const name = currentUser.username;
-                    const message = messageInput.value.trim();
-
-                    if (!name) {
-                        errorMessage.textContent = 'Debes configurar tu nombre en el perfil para comentar.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (message.length < 3) {
-                        errorMessage.textContent = 'El mensaje debe tener al menos 3 caracteres.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (containsBadWords(message)) {
-                        errorMessage.textContent = 'Por favor, evita usar malas palabras.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-
-                    try {
-                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                        await addDoc(commentsCollection, {
-                            name: name,
-                            message: message,
-                            timestamp: new Date(),
-                            likes: 0,
-                            photoURL: photoURL
-                        });
-                        messageInput.value = '';
-                        console.log('%c💬 Comentario enviado:', 'color: #DAA520', name);
-                    } catch (error) {
-                        console.error('❌ Error al enviar comentario:', error);
-                        errorMessage.textContent = 'Error al enviar el comentario: ' + error.message;
-                        errorMessage.style.display = 'block';
-                    }
-                });
-
-                // Manejar clics en likes, responder y ver respuestas
-                commentsList.addEventListener('click', async (e) => {
-                    const target = e.target.closest('.like-btn, .reply-btn, .show-replies-btn');
-                    if (!target) return;
-
-                    const commentId = target.dataset.id;
-                    const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
-
-                    if (target.classList.contains('like-btn') && (!replyForm || !replyForm.classList.contains('active'))) {
-                        target.classList.toggle('liked');
-                        const isLiked = target.classList.contains('liked');
-                        const commentDoc = doc(db, 'comentarios', commentId);
-                        await updateDoc(commentDoc, { likes: increment(isLiked ? 1 : -1) }).catch(error => {
-                            console.error('❌ Error al actualizar like:', error);
-                            errorMessage.textContent = 'Error al dar like: ' + error.message;
-                            errorMessage.style.display = 'block';
-                        });
-                        target.querySelector('i').classList.toggle('fas', isLiked);
-                        target.querySelector('i').classList.toggle('far', !isLiked);
-                        console.log('%c❤️ Like actualizado', 'color: #FF0000');
-                    } else if (target.classList.contains('reply-btn')) {
-                        replyForm.classList.toggle('active');
-                        if (replyForm.classList.contains('active')) {
-                            replyForm.querySelector('textarea').focus();
-                        }
-                    } else if (target.classList.contains('show-replies-btn')) {
-                        const repliesEl = document.querySelector(`.replies[data-id="${commentId}"]`);
-                        repliesEl.classList.toggle('active');
-                        const replyCount = repliesEl.children.length;
-                        target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${replyCount})`;
-                    }
-                });
-
-                // Enviar respuesta
-                commentsList.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const replyForm = e.target.closest('.reply-form form');
-                    if (!replyForm) return;
-                    const commentId = replyForm.parentElement.dataset.id;
-                    const replyText = replyForm.querySelector('textarea').value.trim();
-
-                    if (!currentUser.username) {
-                        errorMessage.textContent = 'Debes configurar tu nombre en el perfil para responder.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (replyText.length < 3) {
-                        errorMessage.textContent = 'La respuesta debe tener al menos 3 caracteres.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (containsBadWords(replyText)) {
-                        errorMessage.textContent = 'Por favor, evita usar malas palabras.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-
-                    try {
-                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                        await addDoc(commentsCollection, {
-                            name: currentUser.username,
-                            message: replyText,
-                            timestamp: new Date(),
-                            likes: 0,
-                            photoURL: photoURL,
-                            parentId: commentId
-                        });
-                        replyForm.querySelector('textarea').value = '';
-                        replyForm.parentElement.classList.remove('active');
-                        console.log('%c💬 Respuesta enviada:', 'color: #DAA520');
-                    } catch (error) {
-                        console.error('❌ Error al enviar respuesta:', error);
-                        errorMessage.textContent = 'Error al enviar la respuesta: ' + error.message;
-                        errorMessage.style.display = 'block';
-                    }
-                });
-
-                // Cargar comentarios al inicio
-                loadComments();
-            } catch (e) {
-                console.error('❌ Error al inicializar Firebase:', e);
-                alert('No se pudo inicializar Firebase: ' + e.message + '. Verifica la configuración o la conexión.');
-            }
-        }
-    </script>
     <script>
+        // Simulación de Firebase para el ejemplo
+        const commentsCollection = {
+            data: [],
+            listeners: [],
+            
+            addDoc: function(docData) {
+                return new Promise((resolve) => {
+                    const newDoc = {
+                        id: 'doc_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                        data: function() {
+                            return docData;
+                        }
+                    };
+                    
+                    this.data.push(newDoc);
+                    
+                    // Notificar a los listeners
+                    this.listeners.forEach(listener => {
+                        listener({
+                            type: 'added',
+                            doc: newDoc
+                        });
+                    });
+                    
+                    resolve(newDoc);
+                });
+            },
+            
+            onSnapshot: function(callback, errorCallback) {
+                this.listeners.push(callback);
+                
+                // Simular datos iniciales
+                setTimeout(() => {
+                    this.data.forEach(doc => {
+                        callback({
+                            type: 'added',
+                            doc: doc
+                        });
+                    });
+                }, 500);
+            },
+            
+            where: function() { return this; },
+            orderBy: function() { return this; },
+            query: function() { return this; }
+        };
+
+        // Variables globales
+        const commentForm = document.getElementById('commentForm');
+        const nameInput = document.getElementById('nameInput');
+        const messageInput = document.getElementById('messageInput');
+        const commentsList = document.getElementById('commentsList');
+        const errorMessage = document.getElementById('errorMessage');
+        const badWords = ['idiota', 'estúpido', 'tonto', 'maldito', 'imbécil', 'grosero'];
+        const creatorNames = ['L_Adriano', 'SalchiHot'];
+        
+        // Obtener datos del usuario desde localStorage o crear uno por defecto
+        let currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
+        if (!currentUser.username) {
+            currentUser = {
+                username: 'Usuario_' + Math.floor(Math.random() * 10000),
+                photoURL: 'https://via.placeholder.com/50'
+            };
+            localStorage.setItem('dpccrea_user', JSON.stringify(currentUser));
+        }
+        
+        // Configurar campo de nombre
+        nameInput.value = currentUser.username;
+        nameInput.disabled = true;
+
+        // Efecto de escritura letra por letra
+        const typeText = (element, text, speed = 20) => {
+            return new Promise(resolve => {
+                let i = 0;
+                element.textContent = '';
+                const timer = setInterval(() => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, speed);
+            });
+        };
+
+        // Filtrar malas palabras
+        const containsBadWords = (text) => {
+            const lowerText = text.toLowerCase();
+            return badWords.some(word => lowerText.includes(word));
+        };
+
+        // 🔔 Mostrar notificación emergente
+        const mostrarNotificacion = (mensaje) => {
+            // Crear el elemento
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.95);
+                border: 2px solid var(--hacker-cyan);
+                color: white;
+                padding: 15px;
+                border-radius: 8px;
+                z-index: 10000;
+                max-width: 300px;
+                box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--diversity-pink);
+                font-family: 'Courier New';
+                animation: notifIn 0.5s ease-out;
+                pointer-events: auto;
+            `;
+            notif.innerHTML = `
+                <strong style="color: var(--hacker-cyan);">📢 Nuevo comentario</strong>
+                <p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${mensaje}</p>
+            `;
+
+            // Añadir a la página
+            document.body.appendChild(notif);
+
+            // Animación de entrada
+            const notifIn = document.createElement('style');
+            notifIn.textContent = `
+                @keyframes notifIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes notifOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(notifIn);
+
+            // Desaparecer después de 5 segundos
+            setTimeout(() => {
+                notif.style.animation = 'notifOut 0.5s ease-out';
+                setTimeout(() => {
+                    if (notif.parentElement) {
+                        document.body.removeChild(notif);
+                    }
+                }, 500);
+            }, 5000);
+        };
+
+        // 🔔 Sonido opcional de notificación
+        const playNotifySound = () => {
+            // Simulación de sonido para el ejemplo
+            console.log('🔊 Sonido de notificación reproducido');
+        };
+
+        // Función para añadir comentarios al DOM
+        const addCommentToDOM = async (data, id) => {
+            const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString('es-ES') : 'ahora';
+            const name = data.name || 'Usuario';
+            const message = data.message || '';
+            const likes = data.likes || 0;
+            const isCreator = creatorNames.includes(name);
+            const photoURL = data.photoURL || 'https://via.placeholder.com/50';
+
+            const commentEl = document.createElement('div');
+            commentEl.className = 'comment';
+            commentEl.dataset.id = id;
+            commentEl.innerHTML = `
+                <div class="comment-header">
+                    <img src="${photoURL}" alt="Foto de Perfil">
+                    <span class="name">${name}</span>
+                    ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
+                </div>
+                <div class="comment-body"></div>
+                <div class="comment-footer">
+                    <span class="date">${date}</span>
+                    <span class="like-btn" data-id="${id}"><i class="far fa-heart"></i> ${likes}</span>
+                    <span class="reply-btn" data-id="${id}">Responder</span>
+                    <span class="show-replies-btn" data-id="${id}" style="display: none;">Ver respuestas</span>
+                </div>
+                <div class="reply-form" data-id="${id}">
+                    <form>
+                        <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
+                        <button type="submit" class="btn">Enviar Respuesta</button>
+                    </form>
+                </div>
+                <div class="replies" data-id="${id}"></div>
+            `;
+            commentsList.appendChild(commentEl);
+
+            // Animar el mensaje
+            const msgEl = commentEl.querySelector('.comment-body');
+            await typeText(msgEl, message, 10);
+        };
+
+        // Mostrar todos los comentarios al inicio
+        const renderComments = (querySnapshot) => {
+            commentsList.innerHTML = '';
+            if (commentsCollection.data.length === 0) {
+                const p = document.createElement('p');
+                p.style.color = '#777';
+                p.textContent = 'No hay comentarios aún. ¡Sé el primero!';
+                commentsList.appendChild(p);
+                return;
+            }
+
+            commentsCollection.data.forEach(async (doc) => {
+                const data = doc.data();
+                await addCommentToDOM(data, doc.id);
+            });
+        };
+
+        // Añadir un nuevo comentario al DOM con animación
+        const renderNewComment = async (data, id) => {
+            const commentEl = document.createElement('div');
+            commentEl.className = 'comment';
+            commentEl.dataset.id = id;
+            commentEl.style.opacity = '0';
+            commentEl.style.transform = 'translateY(10px)';
+            commentEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+            const date = data.timestamp ? new Date(data.timestamp).toLocaleDateString('es-ES') : 'ahora';
+            const name = data.name || 'Usuario';
+            const message = data.message || '';
+            const likes = data.likes || 0;
+            const isCreator = creatorNames.includes(name);
+            const photoURL = data.photoURL || 'https://via.placeholder.com/50';
+
+            commentEl.innerHTML = `
+                <div class="comment-header">
+                    <img src="${photoURL}" alt="Foto de Perfil">
+                    <span class="name">${name}</span>
+                    ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
+                </div>
+                <div class="comment-body"></div>
+                <div class="comment-footer">
+                    <span class="date">${date}</span>
+                    <span class="like-btn" data-id="${id}"><i class="far fa-heart"></i> ${likes}</span>
+                    <span class="reply-btn" data-id="${id}">Responder</span>
+                    <span class="show-replies-btn" data-id="${id}" style="display: none;">Ver respuestas</span>
+                </div>
+                <div class="reply-form" data-id="${id}">
+                    <form>
+                        <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
+                        <button type="submit" class="btn">Enviar Respuesta</button>
+                    </form>
+                </div>
+                <div class="replies" data-id="${id}"></div>
+            `;
+
+            commentsList.insertBefore(commentEl, commentsList.firstChild);
+
+            // Animación de entrada
+            setTimeout(() => {
+                commentEl.style.opacity = 1;
+                commentEl.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Efecto de escritura
+            const msgEl = commentEl.querySelector('.comment-body');
+            await typeText(msgEl, message, 10);
+        };
+
+        // 🔄 Cargar comentarios con notificaciones
+        const loadComments = () => {
+            let loadedCommentIds = new Set();
+
+            commentsCollection.onSnapshot((change) => {
+                // Primera carga: guardar IDs existentes
+                if (loadedCommentIds.size === 0) {
+                    commentsCollection.data.forEach(doc => {
+                        loadedCommentIds.add(doc.id);
+                    });
+                    // Mostrar comentarios iniciales
+                    renderComments();
+                } else {
+                    // Nuevos comentarios
+                    if (change.type === "added") {
+                        const doc = change.doc;
+                        const data = doc.data();
+                        const name = data.name || 'Anónimo';
+                        const message = data.message || '';
+
+                        // Evitar notificar al que comentó
+                        if (!loadedCommentIds.has(doc.id)) {
+                            loadedCommentIds.add(doc.id);
+
+                            // Mostrar notificación
+                            const mensaje = `${name}: "${message.length > 50 ? message.substring(0, 47) + '...' : message}"`;
+                            mostrarNotificacion(mensaje);
+
+                            // Sonido (opcional)
+                            playNotifySound();
+
+                            // Añadir comentario al inicio
+                            renderNewComment(data, doc.id);
+                        }
+                    }
+                }
+            }, (error) => {
+                console.error("Error en tiempo real:", error);
+            });
+        };
+
+        // Enviar comentario
+        commentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.style.display = 'none';
+            const name = currentUser.username;
+            const message = messageInput.value.trim();
+
+            // Verificar si el usuario está intentando usar un nombre de creador
+            if (creatorNames.includes(name) && !creatorNames.includes(currentUser.username)) {
+                errorMessage.textContent = 'No puedes usar un nombre de creador. Elige otro nombre en tu perfil.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            if (message.length < 3) {
+                errorMessage.textContent = 'El mensaje debe tener al menos 3 caracteres.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (containsBadWords(message)) {
+                errorMessage.textContent = 'Por favor, evita usar malas palabras.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            try {
+                const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
+                await commentsCollection.addDoc({
+                    name: name,
+                    message: message,
+                    timestamp: Date.now(),
+                    likes: 0,
+                    photoURL: photoURL
+                });
+                messageInput.value = '';
+                console.log('%c💬 Comentario enviado:', 'color: #DAA520', name);
+            } catch (error) {
+                console.error('❌ Error al enviar comentario:', error);
+                errorMessage.textContent = 'Error al enviar el comentario: ' + error.message;
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        // Manejar clics en likes, responder y ver respuestas
+        commentsList.addEventListener('click', async (e) => {
+            const target = e.target.closest('.like-btn, .reply-btn, .show-replies-btn');
+            if (!target) return;
+
+            const commentId = target.dataset.id;
+            const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
+
+            if (target.classList.contains('like-btn') && (!replyForm || !replyForm.classList.contains('active'))) {
+                target.classList.toggle('liked');
+                const isLiked = target.classList.contains('liked');
+                
+                // Actualizar contador de likes
+                const heartIcon = target.querySelector('i');
+                let likesCount = parseInt(target.textContent.match(/\d+/) || 0);
+                likesCount = isLiked ? likesCount + 1 : likesCount - 1;
+                
+                target.innerHTML = `<i class="${isLiked ? 'fas' : 'far'} fa-heart"></i> ${likesCount}`;
+                console.log('%c❤️ Like actualizado', 'color: #FF0000');
+            } else if (target.classList.contains('reply-btn')) {
+                replyForm.classList.toggle('active');
+                if (replyForm.classList.contains('active')) {
+                    replyForm.querySelector('textarea').focus();
+                }
+            } else if (target.classList.contains('show-replies-btn')) {
+                const repliesEl = document.querySelector(`.replies[data-id="${commentId}"]`);
+                repliesEl.classList.toggle('active');
+                const replyCount = repliesEl.children.length;
+                target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${replyCount})`;
+            }
+        });
+
+        // Enviar respuesta
+        commentsList.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const replyForm = e.target.closest('.reply-form form');
+            if (!replyForm) return;
+            const commentId = replyForm.parentElement.dataset.id;
+            const replyText = replyForm.querySelector('textarea').value.trim();
+
+            if (replyText.length < 3) {
+                errorMessage.textContent = 'La respuesta debe tener al menos 3 caracteres.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (containsBadWords(replyText)) {
+                errorMessage.textContent = 'Por favor, evita usar malas palabras.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            try {
+                const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
+                await commentsCollection.addDoc({
+                    name: currentUser.username,
+                    message: replyText,
+                    timestamp: Date.now(),
+                    likes: 0,
+                    photoURL: photoURL,
+                    parentId: commentId
+                });
+                replyForm.querySelector('textarea').value = '';
+                replyForm.parentElement.classList.remove('active');
+                console.log('%c💬 Respuesta enviada:', 'color: #DAA520');
+            } catch (error) {
+                console.error('❌ Error al enviar respuesta:', error);
+                errorMessage.textContent = 'Error al enviar la respuesta: ' + error.message;
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        // Cargar comentarios al inicio
+        loadComments();
+
+        // Efecto Matrix de fondo
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
@@ -732,6 +711,7 @@
         for (let i = 0; i < columns; i++) {
             drops[i] = Math.floor(Math.random() * matrixCanvas.height);
         }
+        
         function drawMatrix() {
             matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
             matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
@@ -747,6 +727,7 @@
             }
         }
         setInterval(drawMatrix, 40);
+        
         window.addEventListener('resize', () => {
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
