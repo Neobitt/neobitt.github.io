@@ -225,6 +225,38 @@
             font-size: 1rem;
             text-decoration: underline;
         }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--neon-cyan);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 10000;
+            max-width: 300px;
+            box-shadow: 0 0 20px var(--neon-cyan), 0 0 10px var(--inclusive-purple);
+            font-family: 'Courier New', monospace;
+            animation: notifIn 0.5s ease-out;
+            pointer-events: auto;
+        }
+        .notification strong {
+            color: var(--neon-cyan);
+        }
+        .notification p {
+            margin: 8px 0;
+            color: var(--golden-accent);
+            font-size: 0.9rem;
+        }
+        @keyframes notifIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes notifOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
         @media (max-width: 768px) {
             .comment-container {
                 width: 95%;
@@ -265,6 +297,10 @@
             .comment.reply:before {
                 font-size: 1rem;
             }
+            .notification {
+                max-width: 250px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -287,303 +323,7 @@
             <p style="color: var(--golden-accent); text-align: center;">Cargando comentarios...</p>
         </div>
     </div>
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, orderBy, query, onSnapshot, doc, updateDoc, increment, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-
-        if (window.location.protocol === 'file:') {
-            console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
-            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.');
-        } else {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
-                    authDomain: "dpccrea-login.firebaseapp.com",
-                    projectId: "dpccrea-login",
-                    appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
-                };
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore();
-                const commentsCollection = collection(db, "comentarios");
-
-                const commentForm = document.getElementById('commentForm');
-                const nameInput = document.getElementById('nameInput');
-                const messageInput = document.getElementById('messageInput');
-                const commentsList = document.getElementById('commentsList');
-                const errorMessage = document.getElementById('errorMessage');
-                const badWords = ['idiota', 'estúpido', 'tonto', 'maldito', 'imbécil', 'grosero'];
-
-                // Obtener datos del usuario desde localStorage
-                const currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
-                if (currentUser.username) {
-                    nameInput.value = currentUser.username;
-                    nameInput.disabled = true;
-                } else {
-                    nameInput.value = '';
-                    nameInput.disabled = true;
-                    commentForm.querySelector('button').disabled = true;
-                    errorMessage.textContent = 'Debes configurar tu nombre en el perfil para comentar.';
-                    errorMessage.style.display = 'block';
-                }
-
-                // Efecto de escritura letra por letra
-                const typeText = (element, text, speed = 20) => {
-                    return new Promise(resolve => {
-                        let i = 0;
-                        element.textContent = '';
-                        const timer = setInterval(() => {
-                            if (i < text.length) {
-                                element.textContent += text.charAt(i);
-                                i++;
-                            } else {
-                                clearInterval(timer);
-                                resolve();
-                            }
-                        }, speed);
-                    });
-                };
-
-                // Filtrar malas palabras
-                const containsBadWords = (text) => {
-                    const lowerText = text.toLowerCase();
-                    return badWords.some(word => lowerText.includes(word));
-                };
-
-                // Cargar comentarios y respuestas
-                const loadComments = () => {
-                    const q = query(commentsCollection, orderBy("timestamp", "desc"));
-                    onSnapshot(q, (querySnapshot) => {
-                        commentsList.innerHTML = '';
-                        if (querySnapshot.empty) {
-                            const p = document.createElement('p');
-                            p.style.color = 'var(--golden-accent)';
-                            p.style.textAlign = 'center';
-                            p.textContent = 'No hay comentarios aún. ¡Sé el primero!';
-                            commentsList.appendChild(p);
-                            return;
-                        }
-
-                        // Obtener todos los comentarios
-                        const comments = [];
-                        querySnapshot.forEach(doc => {
-                            comments.push({ id: doc.id, ...doc.data() });
-                        });
-
-                        // Renderizar comentarios principales (sin parentId)
-                        comments.filter(c => !c.parentId).forEach(async (comment) => {
-                            const date = comment.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                            const name = comment.name || 'Usuario';
-                            const message = comment.message || '';
-                            const likes = comment.likes || 0;
-                            const isCreator = ['L_Adriano', 'SalchiHot'].includes(name);
-                            const photoURL = comment.photoURL || 'https://via.placeholder.com/50';
-
-                            const commentEl = document.createElement('div');
-                            commentEl.className = 'comment';
-                            commentEl.innerHTML = `
-                                <div class="comment-header">
-                                    <img src="${photoURL}" alt="Foto de Perfil">
-                                    <span class="name">${name}</span>
-                                    ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                                </div>
-                                <div class="comment-body"></div>
-                                <div class="comment-footer">
-                                    <span class="date">${date}</span>
-                                    <span class="like-btn" data-id="${comment.id}"><i class="far fa-heart"></i> ${likes}</span>
-                                    <span class="reply-btn" data-id="${comment.id}">Responder</span>
-                                    <span class="show-replies-btn" data-id="${comment.id}" style="display: none;">Ver respuestas</span>
-                                </div>
-                                <div class="reply-form" data-id="${comment.id}">
-                                    <form>
-                                        <textarea class="form-control" placeholder="Escribe tu respuesta..." maxlength="500" rows="2"></textarea>
-                                        <button type="submit" class="btn">Enviar Respuesta</button>
-                                    </form>
-                                </div>
-                                <div class="replies" data-id="${comment.id}"></div>
-                            `;
-                            commentsList.appendChild(commentEl);
-
-                            // Animar el mensaje
-                            const msgEl = commentEl.querySelector('.comment-body');
-                            await typeText(msgEl, message, 10);
-
-                            // Cargar respuestas
-                            const repliesQuery = query(commentsCollection, where("parentId", "==", comment.id), orderBy("timestamp", "desc"));
-                            onSnapshot(repliesQuery, (replySnapshot) => {
-                                const repliesEl = commentEl.querySelector('.replies');
-                                const showRepliesBtn = commentEl.querySelector('.show-replies-btn');
-                                repliesEl.innerHTML = '';
-                                if (!replySnapshot.empty) {
-                                    showRepliesBtn.style.display = 'inline';
-                                    showRepliesBtn.textContent = `Ver respuestas (${replySnapshot.size})`;
-                                    replySnapshot.forEach(async (replyDoc) => {
-                                        const reply = replyDoc.data();
-                                        const replyDate = reply.timestamp?.toDate().toLocaleDateString('es-ES') || 'Fecha desconocida';
-                                        const replyName = reply.name || 'Usuario';
-                                        const replyMessage = reply.message || '';
-                                        const replyLikes = reply.likes || 0;
-                                        const isReplyCreator = ['L_Adriano', 'SalchiHot'].includes(replyName);
-                                        const replyPhotoURL = reply.photoURL || 'https://via.placeholder.com/50';
-
-                                        const replyEl = document.createElement('div');
-                                        replyEl.className = 'comment reply';
-                                        replyEl.innerHTML = `
-                                            <div class="comment-header">
-                                                <img src="${replyPhotoURL}" alt="Foto de Perfil">
-                                                <span class="name">${replyName}</span>
-                                                ${isReplyCreator ? '<span class="creator-badge">[Creador]</span>' : ''}
-                                            </div>
-                                            <div class="comment-body"></div>
-                                            <div class="comment-footer">
-                                                <span class="date">${replyDate}</span>
-                                                <span class="like-btn" data-id="${replyDoc.id}"><i class="far fa-heart"></i> ${replyLikes}</span>
-                                            </div>
-                                        `;
-                                        repliesEl.appendChild(replyEl);
-                                        await typeText(replyEl.querySelector('.comment-body'), replyMessage, 10);
-                                    });
-                                } else {
-                                    showRepliesBtn.style.display = 'none';
-                                }
-                            }, (error) => {
-                                console.error('❌ Error al cargar respuestas:', error);
-                                errorMessage.textContent = 'Error al cargar respuestas: ' + error.message;
-                                errorMessage.style.display = 'block';
-                            });
-                        });
-                    }, (error) => {
-                        console.error('❌ Error al cargar comentarios:', error);
-                        errorMessage.textContent = 'Error al cargar comentarios: ' + error.message;
-                        errorMessage.style.display = 'block';
-                    });
-                };
-
-                // Enviar comentario
-                commentForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    errorMessage.style.display = 'none';
-                    const name = currentUser.username;
-                    const message = messageInput.value.trim();
-
-                    if (!name) {
-                        errorMessage.textContent = 'Debes configurar tu nombre en el perfil para comentar.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (message.length < 3) {
-                        errorMessage.textContent = 'El mensaje debe tener al menos 3 caracteres.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (containsBadWords(message)) {
-                        errorMessage.textContent = 'Por favor, evita usar malas palabras.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-
-                    try {
-                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                        await addDoc(commentsCollection, {
-                            name: name,
-                            message: message,
-                            timestamp: new Date(),
-                            likes: 0,
-                            photoURL: photoURL
-                        });
-                        messageInput.value = '';
-                        console.log('%c💬 Comentario enviado:', 'color: #DAA520', name);
-                    } catch (error) {
-                        console.error('❌ Error al enviar comentario:', error);
-                        errorMessage.textContent = 'Error al enviar el comentario: ' + error.message;
-                        errorMessage.style.display = 'block';
-                    }
-                });
-
-                // Manejar clics en likes, responder y ver respuestas
-                commentsList.addEventListener('click', async (e) => {
-                    const target = e.target.closest('.like-btn, .reply-btn, .show-replies-btn');
-                    if (!target) return;
-
-                    const commentId = target.dataset.id;
-                    const replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
-
-                    if (target.classList.contains('like-btn') && (!replyForm || !replyForm.classList.contains('active'))) {
-                        target.classList.toggle('liked');
-                        const isLiked = target.classList.contains('liked');
-                        const commentDoc = doc(db, 'comentarios', commentId);
-                        await updateDoc(commentDoc, { likes: increment(isLiked ? 1 : -1) }).catch(error => {
-                            console.error('❌ Error al actualizar like:', error);
-                            errorMessage.textContent = 'Error al dar like: ' + error.message;
-                            errorMessage.style.display = 'block';
-                        });
-                        target.querySelector('i').classList.toggle('fas', isLiked);
-                        target.querySelector('i').classList.toggle('far', !isLiked);
-                        console.log('%c❤️ Like actualizado', 'color: #FF0000');
-                    } else if (target.classList.contains('reply-btn')) {
-                        replyForm.classList.toggle('active');
-                        if (replyForm.classList.contains('active')) {
-                            replyForm.querySelector('textarea').focus();
-                        }
-                    } else if (target.classList.contains('show-replies-btn')) {
-                        const repliesEl = document.querySelector(`.replies[data-id="${commentId}"]`);
-                        repliesEl.classList.toggle('active');
-                        const replyCount = repliesEl.children.length;
-                        target.textContent = repliesEl.classList.contains('active') ? 'Ocultar respuestas' : `Ver respuestas (${replyCount})`;
-                    }
-                });
-
-                // Enviar respuesta
-                commentsList.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const replyForm = e.target.closest('.reply-form form');
-                    if (!replyForm) return;
-                    const commentId = replyForm.parentElement.dataset.id;
-                    const replyText = replyForm.querySelector('textarea').value.trim();
-
-                    if (!currentUser.username) {
-                        errorMessage.textContent = 'Debes configurar tu nombre en el perfil para responder.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (replyText.length < 3) {
-                        errorMessage.textContent = 'La respuesta debe tener al menos 3 caracteres.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-                    if (containsBadWords(replyText)) {
-                        errorMessage.textContent = 'Por favor, evita usar malas palabras.';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-
-                    try {
-                        const photoURL = currentUser.photoURL || 'https://via.placeholder.com/50';
-                        await addDoc(commentsCollection, {
-                            name: currentUser.username,
-                            message: replyText,
-                            timestamp: new Date(),
-                            likes: 0,
-                            photoURL: photoURL,
-                            parentId: commentId
-                        });
-                        replyForm.querySelector('textarea').value = '';
-                        replyForm.parentElement.classList.remove('active');
-                        console.log('%c💬 Respuesta enviada:', 'color: #DAA520');
-                    } catch (error) {
-                        console.error('❌ Error al enviar respuesta:', error);
-                        errorMessage.textContent = 'Error al enviar la respuesta: ' + error.message;
-                        errorMessage.style.display = 'block';
-                    }
-                });
-
-                // Cargar comentarios al inicio
-                loadComments();
-            } catch (e) {
-                console.error('❌ Error al inicializar Firebase:', e);
-                alert('No se pudo inicializar Firebase: ' + e.message + '. Verifica la configuración o la conexión.');
-            }
-        }
-    </script>
+    <script type="module" src="comments.js"></script>
     <script>
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
