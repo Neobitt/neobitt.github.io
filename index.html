@@ -516,6 +516,38 @@
         .list-item:hover img {
             transform: scale(1.05);
         }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--neon-cyan);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 10000;
+            max-width: 300px;
+            box-shadow: 0 0 20px var(--neon-cyan), 0 0 10px var(--inclusive-purple);
+            font-family: 'Courier New', monospace;
+            animation: notifIn 0.5s ease-out;
+            pointer-events: auto;
+        }
+        .notification strong {
+            color: var(--neon-cyan);
+        }
+        .notification p {
+            margin: 8px 0;
+            color: var(--golden-accent);
+            font-size: 0.9rem;
+        }
+        @keyframes notifIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes notifOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
         @media (max-width: 768px) {
             .counter-container {
                 font-size: 1.2rem;
@@ -562,6 +594,10 @@
                 height: 150px;
             }
             footer a { font-size: 0.9rem; margin: 0 10px; }
+            .notification {
+                max-width: 250px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -697,57 +733,7 @@
         <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
         <div class="version">Versión 1.13</div>
     </footer>
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-        import { getFirestore, doc, getDoc, updateDoc, increment, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-
-        if (window.location.protocol === 'file:') {
-            console.error('❌ Error: Los módulos ES no funcionan en file://. Usa un servidor HTTP/HTTPS.');
-            alert('Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.');
-        } else {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",
-                    authDomain: "dpccrea-login.firebaseapp.com",
-                    projectId: "dpccrea-login",
-                    appId: "1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"
-                };
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore();
-                const counterRef = doc(db, "visitas", "contador");
-
-                const counterEl = document.getElementById('visitor-counter');
-                onSnapshot(counterRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const count = docSnap.data().count;
-                        counterEl.innerHTML = `<strong>Visitas: ${new Intl.NumberFormat().format(count)}</strong>`;
-                    } else {
-                        counterEl.innerHTML = `<span class="counter-fallback">0</span>`;
-                    }
-                }, (error) => {
-                    console.error('❌ Error al escuchar contador:', error);
-                    counterEl.innerHTML = `<span class="counter-fallback">[--]</span>`;
-                });
-
-                const lastVisit = localStorage.getItem('dpccrea_lastVisit');
-                const now = Date.now();
-                const twelveHours = 12 * 60 * 60 * 1000; // 12 horas en milisegundos
-                if (!lastVisit || (now - parseInt(lastVisit)) > twelveHours) {
-                    updateDoc(counterRef, { count: increment(1) })
-                        .then(() => {
-                            localStorage.setItem('dpccrea_lastVisit', now.toString());
-                            console.log('%c📈 Contador incrementado', 'color: #FFD700');
-                        })
-                        .catch((error) => {
-                            console.error('❌ Error al aumentar contador:', error);
-                        });
-                }
-            } catch (e) {
-                console.error('❌ Error al inicializar Firebase:', e.message);
-                alert('No se pudo inicializar Firebase. Verifica la configuración o la conexión.');
-            }
-        }
-    </script>
+    <script type="module" src="scripts.js"></script>
     <script>
         const loader = document.getElementById('loader');
         const progressBar = document.getElementById('progressBar');
@@ -937,4 +923,3 @@
     </script>
 </body>
 </html>
-
