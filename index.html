@@ -17,6 +17,7 @@
     <link rel="icon" type="image/png" sizes="128x128" href="/assets/imagenes/favicon-128x128.png">
     <link rel="apple-touch-icon" sizes="128x128" href="/assets/imagenes/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/imagenes/favicon-192x192.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         :root {
             --golden-main: #FFD700;
@@ -25,6 +26,8 @@
             --dark-color: #000;
             --neon-cyan: #00CED1;
             --neon-pink: #FF69B4;
+            --hacker-cyan: #00ffcc;
+            --diversity-pink: #ff66c4;
         }
         * {
             margin: 0;
@@ -521,23 +524,23 @@
             top: 20px;
             right: 20px;
             background: rgba(0, 0, 0, 0.95);
-            border: 2px solid var(--neon-cyan);
+            border: 2px solid var(--hacker-cyan);
             color: white;
             padding: 15px;
             border-radius: 8px;
             z-index: 10000;
             max-width: 300px;
-            box-shadow: 0 0 20px var(--neon-cyan), 0 0 10px var(--inclusive-purple);
+            box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--diversity-pink);
             font-family: 'Courier New', monospace;
             animation: notifIn 0.5s ease-out;
             pointer-events: auto;
         }
         .notification strong {
-            color: var(--neon-cyan);
+            color: var(--hacker-cyan);
         }
         .notification p {
             margin: 8px 0;
-            color: var(--golden-accent);
+            color: #ddd;
             font-size: 0.9rem;
         }
         @keyframes notifIn {
@@ -593,11 +596,11 @@
                 width: 150px;
                 height: 150px;
             }
-            footer a { font-size: 0.9rem; margin: 0 10px; }
             .notification {
                 max-width: 250px;
                 padding: 10px;
             }
+            footer a { font-size: 0.9rem; margin: 0 10px; }
         }
     </style>
 </head>
@@ -733,7 +736,9 @@
         <a href="terminos.html">TÉRMINOS Y CONDICIONES</a>
         <div class="version">Versión 1.13</div>
     </footer>
-    <script type="module" src="scripts.js"></script>
+    <script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";import{getFirestore,doc,getDoc,updateDoc,increment,collection,query,orderBy,onSnapshot}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";if("file:"===window.location.protocol)console.error("❌ Error: Los módulos ES no funcionan en file://"),alert("Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.");else{try{const a={apiKey:"AIzaSyDp7VT6HMYBgqnrYfc84Tk9kh82nCBTYtM",authDomain:"dpccrea-login.firebaseapp.com",projectId:"dpccrea-login",appId:"1:822726011803:web:6b8f3e6a9d8c7b2e8f4e5d"},b=initializeApp(a),c=getFirestore(b),d=doc(c,"visitas","contador"),e=collection(c,"comentarios"),f=document.getElementById("visitor-counter"),g=JSON.parse(localStorage.getItem("dpccrea_user"))||{},h=()=>{let a=new Audio("https://assets.codepen.io/3011180/notification-sound-1.mp3");a.volume=.3,a.play().catch(b=>console.error("❌ Error al reproducir sonido:",b))},i=(a,b)=>{let c=document.createElement("div");c.className="notification",c.style.cssText="position: fixed; top: 20px; right: 20px; background: rgba(0, 0, 0, 0.95); border: 2px solid var(--hacker-cyan); color: white; padding: 15px; border-radius: 8px; z-index: 10000; max-width: 300px; box-shadow: 0 0 20px var(--hacker-cyan), 0 0 10px var(--diversity-pink); font-family: 'Courier New', monospace; animation: notifIn 0.5s ease-out; pointer-events: auto;",c.innerHTML=`<strong style="color: var(--hacker-cyan);"><i class="fas fa-bell"></i> Nuevo comentario</strong><p style="margin: 8px 0; color: #ddd; font-size: 0.9rem;">${a}</p>`,document.body.appendChild(c);let d=document.createElement("style");d.textContent="@keyframes notifIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes notifOut{from{transform:translateX(0);opacity:1}to{transform:translateX(100%);opacity:0}}",document.head.appendChild(d),setTimeout(()=>{c.style.animation="notifOut 0.5s ease-out",setTimeout(()=>{c.parentElement&&document.body.removeChild(c)},500)},5e3)};onSnapshot(d,a=>{if(a.exists()){const b=a.data().count;f.innerHTML=`<strong>Visitas: ${new Intl.NumberFormat().format(b)}</strong>`}else f.innerHTML='<span class="counter-fallback">0</span>'},a=>{console.error("❌ Error al escuchar contador:",a),f.innerHTML='<span class="counter-fallback">[--]</span>'});const j=localStorage.getItem("dpccrea_lastVisit"),k=Date.now(),l=432e5;!j||k-parseInt(j)>l?updateDoc(d,{count:increment(1)}).then(()=>{localStorage.setItem("dpccrea_lastVisit",k.toString()),console.log("%c📈 Contador incrementado","color: #FFD700")}).catch(a=>{console.error("❌ Error al aumentar contador:",a)}):null;const m=query(e,orderBy("timestamp","desc")),n=new Set;onSnapshot(m,a=>{a.docChanges().forEach(b=>{"added"===b.type&&b.doc&&b.doc.data&&b.doc.data().name!==g.username&&b.doc.id&&!n.has(b.doc.id)&&(n.add(b.doc.id),i(`${b.doc.data().name||"Anónimo"}: "${(b.doc.data().message||"").length>50?(b.doc.data().message||"").substring(0,47)+"...":b.doc.data().message||""}"`))})},a=>console.error("❌ Error al escuchar comentarios:",a))}catch(a){console.error("❌ Error al inicializar Firebase:",a),alert("No se pudo inicializar Firebase. Verifica la configuración o la conexión.")}}
+    </script>
     <script>
         const loader = document.getElementById('loader');
         const progressBar = document.getElementById('progressBar');
