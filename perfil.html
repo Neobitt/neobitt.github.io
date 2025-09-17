@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -473,6 +472,7 @@
                 <option value="5b">5b</option>
                 <option value="5c">5c</option>
             </select>
+            <input type="text" id="secretCodeInput" placeholder="Código secreto" style="display: none;">
             <button class="login-button" id="loginButton">Iniciar Sesión</button>
             <button class="google-button" id="googleButton">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
@@ -534,6 +534,8 @@
                 const courseSelect = document.getElementById('courseSelect');
                 const userVisits = document.getElementById('user-visits');
                 const profilePhotoInput = document.getElementById('profilePhotoInput');
+                const usernameInput = document.getElementById('username');
+                const secretCodeInput = document.getElementById('secretCodeInput');
 
                 const updateProfileDisplay = (user) => {
                     profileName.textContent = user.username || 'Usuario';
@@ -593,17 +595,39 @@
                     }
                 }
 
+                usernameInput.addEventListener('input', () => {
+                    const username = usernameInput.value.trim();
+                    const specialNames = ["L_Adriano", "SalchiHot"];
+                    if (specialNames.includes(username)) {
+                        secretCodeInput.style.display = 'block';
+                        secretCodeInput.style.opacity = '0';
+                        secretCodeInput.style.transform = 'translateY(-10px)';
+                        setTimeout(() => {
+                            secretCodeInput.style.opacity = '1';
+                            secretCodeInput.style.transform = 'translateY(0)';
+                        }, 100);
+                    } else {
+                        secretCodeInput.style.display = 'none';
+                        secretCodeInput.value = '';
+                    }
+                });
+
                 loginButton.addEventListener('click', async () => {
-                    const username = document.getElementById('username').value.trim();
-                    const course = document.getElementById('courseSelect').value;
+                    const username = usernameInput.value.trim();
+                    const course = courseSelect.value;
+                    const secretCode = secretCodeInput.value.trim();
                     errorMessage.style.display = 'none';
 
                     // Validar nombres especiales
                     const specialNames = ["L_Adriano", "SalchiHot"];
-                    const secretCode = "934902";
+                    const correctSecretCode = "232314";
                     if (specialNames.includes(username)) {
-                        const inputCode = prompt(`El nombre "${username}" requiere un código secreto. Por favor, ingrésalo:`);
-                        if (inputCode !== secretCode) {
+                        if (!secretCode) {
+                            errorMessage.textContent = 'Por favor, ingresa el código secreto.';
+                            errorMessage.style.display = 'block';
+                            return;
+                        }
+                        if (secretCode !== correctSecretCode) {
                             errorMessage.textContent = 'Código secreto incorrecto.';
                             errorMessage.style.display = 'block';
                             return;
@@ -639,7 +663,7 @@
                 });
 
                 googleButton.addEventListener('click', () => {
-                    const course = document.getElementById('courseSelect').value;
+                    const course = courseSelect.value;
                     signInWithPopup(auth, provider)
                         .then(async (result) => {
                             const username = result.user.displayName || result.user.email.split('@')[0];
@@ -676,6 +700,8 @@
                         loginContainer.style.display = 'block';
                         profileContainer.classList.remove('active');
                         courseSelect.value = '';
+                        secretCodeInput.style.display = 'none';
+                        secretCodeInput.value = '';
                         console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
                     }).catch((error) => {
                         console.error('❌ Error al cerrar sesión:', error);
@@ -773,4 +799,3 @@
     </script>
 </body>
 </html>
-```
