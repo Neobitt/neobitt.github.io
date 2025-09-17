@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -196,7 +197,7 @@
             text-shadow: 0 0 10px var(--golden-accent);
             margin-bottom: 20px;
         }
-        .login-container input {
+        .login-container input, .login-container select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -207,8 +208,10 @@
             border-radius: 5px;
             outline: none;
             transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
         }
-        .login-container input:focus {
+        .login-container input:focus, .login-container select:focus {
             border-color: var(--golden-main);
             box-shadow: 0 0 10px var(--golden-main);
         }
@@ -290,6 +293,21 @@
             font-size: 1.5rem;
             text-shadow: 0 0 10px var(--golden-accent);
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-container h3.bold-name {
+            font-weight: bold;
+        }
+        .course-name {
+            color: var(--neon-cyan);
+            font-size: 1rem;
+            transform: rotate(90deg);
+            transform-origin: center;
+            display: inline-block;
+            margin-right: 10px;
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
         .profile-container p {
             color: var(--golden-accent);
@@ -409,6 +427,10 @@
             }
             nav { width: 280px; }
             nav .logo { width: 80px; height: 80px; }
+            .course-name {
+                font-size: 0.9rem;
+                margin-right: 8px;
+            }
         }
     </style>
 </head>
@@ -433,6 +455,24 @@
         <div class="login-container" id="loginContainer">
             <h2>Crear o Acceder a Perfil</h2>
             <input type="text" id="username" placeholder="Nombre de usuario" required>
+            <select id="courseSelect">
+                <option value="">Selecciona tu curso</option>
+                <option value="1a">1a</option>
+                <option value="1b">1b</option>
+                <option value="1c">1c</option>
+                <option value="2a">2a</option>
+                <option value="2b">2b</option>
+                <option value="2c">2c</option>
+                <option value="3a">3a</option>
+                <option value="3b">3b</option>
+                <option value="3c">3c</option>
+                <option value="4a">4a</option>
+                <option value="4b">4b</option>
+                <option value="4c">4c</option>
+                <option value="5a">5a</option>
+                <option value="5b">5b</option>
+                <option value="5c">5c</option>
+            </select>
             <button class="login-button" id="loginButton">Iniciar Sesión</button>
             <button class="google-button" id="googleButton">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
@@ -446,7 +486,7 @@
                 <label for="profilePhotoInput" class="upload-label">Subir Foto o GIF</label>
                 <input type="file" id="profilePhotoInput" accept="image/*,image/gif">
             </div>
-            <h3 id="profileName">Usuario</h3>
+            <h3 id="profileName"><span class="course-name"></span>Usuario</h3>
             <div class="counter-container">
                 <div id="user-visits">Visitas: 0</div>
             </div>
@@ -490,28 +530,41 @@
                 const errorMessage = document.getElementById('errorMessage');
                 const profilePhoto = document.getElementById('profilePhoto');
                 const profileName = document.getElementById('profileName');
+                const courseName = document.querySelector('.course-name');
+                const courseSelect = document.getElementById('courseSelect');
                 const userVisits = document.getElementById('user-visits');
                 const profilePhotoInput = document.getElementById('profilePhotoInput');
+
+                const updateProfileDisplay = (user) => {
+                    profileName.textContent = user.username || 'Usuario';
+                    courseName.textContent = user.course || '';
+                    if (user.course === '5b') {
+                        profileName.classList.add('bold-name');
+                    } else {
+                        profileName.classList.remove('bold-name');
+                    }
+                    profilePhoto.src = user.profilePic || 'https://via.placeholder.com/100';
+                };
 
                 const currentUser = JSON.parse(localStorage.getItem('dpccrea_user'));
                 if (currentUser) {
                     loginContainer.style.display = 'none';
                     profileContainer.classList.add('active');
-                    profileName.textContent = currentUser.username || 'Usuario';
-                    profilePhoto.src = currentUser.profilePic || 'https://via.placeholder.com/100';
+                    updateProfileDisplay(currentUser);
                     updateUserVisits(currentUser.username);
+                    courseSelect.value = currentUser.course || '';
                 }
 
                 onAuthStateChanged(auth, async (user) => {
                     if (user && !currentUser) {
                         const username = user.displayName || user.email.split('@')[0];
                         const profilePic = user.photoURL || 'https://via.placeholder.com/100';
-                        localStorage.setItem('dpccrea_user', JSON.stringify({ username, profilePic }));
+                        const userData = { username, profilePic, course: '' };
+                        localStorage.setItem('dpccrea_user', JSON.stringify(userData));
                         loginContainer.style.display = 'none';
                         profileContainer.classList.add('active');
-                        profileName.textContent = username;
-                        profilePhoto.src = profilePic;
-                        await setDoc(doc(db, 'users', username), { username, visits: 0, profilePic }, { merge: true });
+                        updateProfileDisplay(userData);
+                        await setDoc(doc(db, 'users', username), { username, visits: 0, profilePic, course: '' }, { merge: true });
                         updateUserVisits(username);
                         console.log('%c🟢 Usuario autenticado con Google:', 'color: #FFD700', username);
                     }
@@ -525,7 +578,7 @@
                     try {
                         const userDoc = await getDoc(userDocRef);
                         if (!userDoc.exists()) {
-                            await setDoc(userDocRef, { username, visits: 0, profilePic: 'https://via.placeholder.com/100' });
+                            await setDoc(userDocRef, { username, visits: 0, profilePic: 'https://via.placeholder.com/100', course: '' });
                         }
                         if (!lastVisit || (now - parseInt(lastVisit)) > twelveHours) {
                             await updateDoc(userDocRef, { visits: increment(1) });
@@ -542,6 +595,7 @@
 
                 loginButton.addEventListener('click', async () => {
                     const username = document.getElementById('username').value.trim();
+                    const course = document.getElementById('courseSelect').value;
                     errorMessage.style.display = 'none';
 
                     // Validar nombres especiales
@@ -570,12 +624,11 @@
                         const userDocRef = doc(db, 'users', username);
                         const userDoc = await getDoc(userDocRef);
                         const profilePic = userDoc.exists() ? userDoc.data().profilePic || 'https://via.placeholder.com/100' : 'https://via.placeholder.com/100';
-                        await setDoc(userDocRef, { username, visits: userDoc.exists() ? userDoc.data().visits : 0, profilePic }, { merge: true });
-                        localStorage.setItem('dpccrea_user', JSON.stringify({ username, profilePic }));
+                        await setDoc(userDocRef, { username, visits: userDoc.exists() ? userDoc.data().visits : 0, profilePic, course }, { merge: true });
+                        localStorage.setItem('dpccrea_user', JSON.stringify({ username, profilePic, course }));
                         loginContainer.style.display = 'none';
                         profileContainer.classList.add('active');
-                        profileName.textContent = username;
-                        profilePhoto.src = profilePic;
+                        updateProfileDisplay({ username, profilePic, course });
                         updateUserVisits(username);
                         console.log('%c🎉 Inicio de sesión con nombre:', 'color: #DAA520', username);
                     } catch (error) {
@@ -586,16 +639,17 @@
                 });
 
                 googleButton.addEventListener('click', () => {
+                    const course = document.getElementById('courseSelect').value;
                     signInWithPopup(auth, provider)
                         .then(async (result) => {
                             const username = result.user.displayName || result.user.email.split('@')[0];
                             const profilePic = result.user.photoURL || 'https://via.placeholder.com/100';
-                            localStorage.setItem('dpccrea_user', JSON.stringify({ username, profilePic }));
+                            const userData = { username, profilePic, course };
+                            localStorage.setItem('dpccrea_user', JSON.stringify(userData));
                             loginContainer.style.display = 'none';
                             profileContainer.classList.add('active');
-                            profileName.textContent = username;
-                            profilePhoto.src = profilePic;
-                            await setDoc(doc(db, 'users', username), { username, visits: 0, profilePic }, { merge: true });
+                            updateProfileDisplay(userData);
+                            await setDoc(doc(db, 'users', username), { username, visits: 0, profilePic, course }, { merge: true });
                             updateUserVisits(username);
                             console.log('%c🟢 Usuario autenticado con Google:', 'color: #FFD700', username);
                         })
@@ -621,6 +675,7 @@
                         localStorage.removeItem('dpccrea_user');
                         loginContainer.style.display = 'block';
                         profileContainer.classList.remove('active');
+                        courseSelect.value = '';
                         console.log('%c👋 Sesión cerrada', 'color: #8A2BE2');
                     }).catch((error) => {
                         console.error('❌ Error al cerrar sesión:', error);
@@ -718,3 +773,4 @@
     </script>
 </body>
 </html>
+```
