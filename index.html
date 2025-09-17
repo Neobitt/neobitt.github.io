@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -343,7 +344,6 @@
         nav ul li:nth-child(3) { transition-delay: 0.3s; }
         nav ul li:nth-child(4) { transition-delay: 0.4s; }
         nav ul li:nth-child(5) { transition-delay: 0.5s; }
-        nav ul li:nth-child(6) { transition-delay: 0.6s; }
         nav ul li a {
             color: var(--golden-main);
             text-decoration: none;
@@ -535,6 +535,16 @@
             font-family: 'Courier New', monospace;
             animation: notifIn 0.5s ease-out;
             pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--hacker-cyan);
+            box-shadow: 0 0 10px var(--diversity-pink);
         }
         .notification strong {
             color: var(--hacker-cyan);
@@ -597,12 +607,14 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.7);
             background: rgba(0, 0, 0, 0.9);
-            padding: 25px;
+            padding: 30px;
             border-radius: 15px;
             border: 2px solid var(--golden-main);
             box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
             text-align: center;
-            min-width: 300px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
             color: var(--golden-main);
@@ -617,11 +629,6 @@
             font-size: 1.8rem;
             color: var(--golden-main);
             text-shadow: 0 0 10px var(--golden-accent);
-        }
-        .menu p {
-            color: var(--golden-accent);
-            font-size: 1rem;
-            text-shadow: 0 0 5px var(--golden-accent);
         }
         .menu button {
             margin: 10px 5px;
@@ -641,52 +648,213 @@
             transform: scale(1.05);
             box-shadow: 0 0 15px var(--golden-accent);
         }
-        .menu form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .comment-section {
+            max-width: 750px;
+            margin: 1rem auto;
+            padding: 0 20px;
         }
-        .menu input, .menu textarea {
-            width: 100%;
-            max-width: 250px;
-            margin: 10px 0;
-            padding: 10px;
+        .comment-form {
+            background: rgba(0, 0, 0, 0.9);
             border: 2px solid var(--golden-main);
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.8);
-            color: var(--golden-main);
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--golden-accent);
         }
-        .menu textarea {
+        .comment-form h2 {
+            color: var(--golden-main);
+            text-shadow: 0 0 10px var(--golden-accent);
+            margin-bottom: 20px;
+        }
+        .comment-form input, .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #111;
+            border: 1px solid var(--golden-accent);
+            color: white;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        .comment-form textarea {
             height: 100px;
             resize: none;
         }
-        .comment-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 20px;
-            width: 100%;
-            max-width: 300px;
-            border: 2px solid var(--golden-accent);
+        .comment-form button {
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            padding: 10px 20px;
             border-radius: 5px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
         }
-        .comment-item {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-bottom: 1px solid var(--golden-accent);
+        .comment-form button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+            transform: scale(1.05);
+        }
+        .comment-list {
+            margin-top: 2rem;
+        }
+        .comment {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--golden-main);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--inclusive-purple);
+            position: relative;
+        }
+        .comment img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--hacker-cyan);
+            box-shadow: 0 0 10px var(--diversity-pink);
+            margin-right: 10px;
+            float: left;
+        }
+        .comment strong {
             color: var(--golden-main);
-            font-size: 0.9rem;
+            text-shadow: 0 0 5px var(--golden-accent);
         }
-        .comment-item img {
+        .comment p {
+            margin: 8px 0;
+            color: #ddd;
+        }
+        .comment .timestamp {
+            font-size: 0.8rem;
+            color: var(--neon-cyan);
+        }
+        .comment-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .comment-actions button {
+            background: transparent;
+            border: 1px solid var(--hacker-cyan);
+            color: var(--hacker-cyan);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .comment-actions button:hover {
+            background: var(--hacker-cyan);
+            color: #000;
+            box-shadow: 0 0 10px var(--diversity-pink);
+        }
+        .comment-actions .like-button.liked {
+            color: var(--diversity-pink);
+            border-color: var(--diversity-pink);
+        }
+        .comment-actions .like-button.liked:hover {
+            background: var(--diversity-pink);
+            color: #000;
+        }
+        .reply-form {
+            margin-top: 10px;
+            display: none;
+        }
+        .reply-form.active {
+            display: block;
+        }
+        .reply-form textarea {
+            width: 100%;
+            padding: 10px;
+            background: #111;
+            border: 1px solid var(--golden-accent);
+            color: white;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            height: 60px;
+            resize: none;
+        }
+        .reply-form button {
+            margin-top: 10px;
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .reply-form button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+        }
+        .replies {
+            margin-top: 10px;
+            padding-left: 20px;
+            display: none;
+        }
+        .replies.active {
+            display: block;
+        }
+        .reply {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--golden-accent);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--inclusive-purple);
+        }
+        .reply img {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            vertical-align: middle;
-            margin-right: 10px;
+            border: 1px solid var(--hacker-cyan);
+            margin-right: 8px;
+            float: left;
+        }
+        .profile-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
             border: 2px solid var(--golden-main);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--golden-accent), 0 0 30px var(--inclusive-purple);
+            z-index: 10001;
+            text-align: center;
+            display: none;
+        }
+        .profile-popup.active {
+            display: block;
+        }
+        .profile-popup p {
+            margin-bottom: 20px;
+            color: var(--golden-main);
+            font-size: 1.2rem;
+        }
+        .profile-popup button {
+            background: var(--golden-accent);
+            border: 2px solid var(--golden-main);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        .profile-popup button:hover {
+            background: var(--golden-main);
+            box-shadow: 0 0 15px var(--golden-accent);
+        }
+        .creator-badge {
+            animation: rgbGlow 3s infinite;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
         }
         @media (max-width: 768px) {
             .counter-container {
@@ -737,6 +905,7 @@
                 max-width: 250px;
                 padding: 10px;
             }
+            .notification img { width: 30px; height: 30px; }
             .bubble {
                 width: 60px;
                 height: 60px;
@@ -745,21 +914,15 @@
                 right: 20px;
             }
             .menu {
-                min-width: 250px;
+                max-width: 95%;
+                max-width: 700px;
                 padding: 20px;
             }
             .menu h2 {
                 font-size: 1.5rem;
             }
-            .menu p {
-                font-size: 0.9rem;
-            }
-            .menu input, .menu textarea {
-                max-width: 200px;
-            }
-            .comment-list {
-                max-width: 250px;
-            }
+            .comment-section { padding: 0 10px; }
+            .comment img { width: 30px; height: 30px; }
             footer a { font-size: 0.9rem; margin: 0 10px; }
         }
     </style>
@@ -807,6 +970,11 @@
         <h2></h2>
         <p style="color: var(--golden-main); font-size: 1.2rem; text-shadow: 0 0 5px var(--golden-accent);"></p>
         <button class="campaign-button" id="campaignButton">Conoce más</button>
+    </div>
+    <div class="profile-popup" id="profilePopup">
+        <p>Debes configurar tu nombre en el perfil para comentar.</p>
+        <button id="goToProfile">Ir al Perfil</button>
+        <button id="cancelPopup">Cancelar</button>
     </div>
     <canvas id="matrixCanvas" class="matrix-bg"></canvas>
     <canvas id="particlesCanvas" class="particles-bg"></canvas>
@@ -895,13 +1063,17 @@
     <div class="menu-overlay" id="overlay">
         <div class="menu" id="menu">
             <h2>COMENTARIOS</h2>
-            <p>Comparte tus pensamientos con la comunidad.</p>
-            <form id="commentForm">
-                <input type="text" id="commentName" placeholder="Tu nombre" required>
-                <textarea id="commentMessage" placeholder="Escribe tu comentario..." required></textarea>
-                <button type="submit">Enviar Comentario</button>
-            </form>
-            <div class="comment-list" id="commentList"></div>
+            <div class="comment-section">
+                <div class="comment-form">
+                    <h2>DEJA TU COMENTARIO</h2>
+                    <input type="text" id="nameInput" placeholder="Nombre (configura en tu perfil)" maxlength="30" readonly>
+                    <textarea id="commentInput" placeholder="Escribe tu comentario..." maxlength="500"></textarea>
+                    <button id="submitComment">ENVIAR</button>
+                </div>
+                <div class="comment-list" id="commentList">
+                    <p style="color: var(--golden-accent); text-align: center;">Cargando comentarios...</p>
+                </div>
+            </div>
             <button onclick="toggleMenu()">Cerrar</button>
         </div>
     </div>
@@ -911,8 +1083,8 @@
     </footer>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc, increment, collection, query, orderBy, onSnapshot, addDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-        
+        import { getFirestore, doc, getDoc, updateDoc, increment, collection, query, orderBy, onSnapshot, addDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
         if ("file:" === window.location.protocol) {
             console.error("❌ Error: Los módulos ES no funcionan en file://");
             alert("Error: Esta página debe ejecutarse en un servidor HTTP/HTTPS.");
@@ -929,23 +1101,73 @@
                 const counterDoc = doc(db, "visitas", "contador");
                 const commentsCollection = collection(db, "comentarios");
                 const visitorCounter = document.getElementById("visitor-counter");
-                const user = JSON.parse(localStorage.getItem("dpccrea_user")) || {};
-                
-                const playNotificationSound = () => {
-                    let audio = new Audio("https://assets.codepen.io/3011180/notification-sound-1.mp3");
-                    audio.volume = 0.3;
-                    audio.play().catch(err => console.error("❌ Error al reproducir sonido:", err));
+                const nameInput = document.getElementById('nameInput');
+                const commentInput = document.getElementById('commentInput');
+                const submitComment = document.getElementById('submitComment');
+                const commentList = document.getElementById('commentList');
+                const profilePopup = document.getElementById('profilePopup');
+                const goToProfile = document.getElementById('goToProfile');
+                const cancelPopup = document.getElementById('cancelPopup');
+                const creatorNames = ["L_Adriano", "SalchiHot"];
+                let usedCreatorNames = [];
+                let currentUser = JSON.parse(localStorage.getItem('dpccrea_user')) || {};
+
+                const loadUsedCreatorNames = async () => {
+                    try {
+                        const querySnapshot = await getDocs(collection(db, "comentarios"));
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            if (creatorNames.includes(data.name)) {
+                                usedCreatorNames.push(data.name);
+                            }
+                        });
+                    } catch (error) {
+                        console.error("❌ Error al cargar nombres de creadores:", error);
+                    }
                 };
-                
-                const showNotification = (message, profilePic) => {
+
+                const setupNameField = () => {
+                    if (nameInput && currentUser.username) {
+                        nameInput.value = currentUser.username;
+                        nameInput.title = "Nombre configurado en tu perfil";
+                    } else {
+                        nameInput.value = "";
+                        nameInput.placeholder = "Haz clic aquí para configurar tu nombre";
+                        nameInput.addEventListener('click', showProfilePopup);
+                    }
+                };
+
+                const showProfilePopup = () => {
+                    profilePopup.classList.add('active');
+                    document.querySelector('.content').classList.add('blur');
+                };
+
+                const hideProfilePopup = () => {
+                    profilePopup.classList.remove('active');
+                };
+
+                const playNotificationSound = () => {
+                    try {
+                        let audio = new Audio("https://assets.codepen.io/3011180/notification-sound-1.mp3");
+                        audio.volume = 0.3;
+                        audio.play().catch(err => console.error("❌ Error al reproducir sonido:", err));
+                    } catch (error) {
+                        console.error("❌ Error al crear audio:", error);
+                    }
+                };
+
+                const showNotification = (name, message, profilePic) => {
                     let notification = document.createElement("div");
                     notification.className = "notification";
                     notification.innerHTML = `
-                        <strong><i class="fas fa-bell"></i> Nuevo comentario</strong>
-                        <p>${message}</p>
-                        ${profilePic ? `<img src="${profilePic}" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; margin-right: 10px; border: 2px solid var(--golden-main);">` : ''}
+                        <img src="${profilePic || currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                        <div>
+                            <strong><i class="fas fa-bell"></i> Nuevo comentario</strong>
+                            <p>${name}: "${message.length > 50 ? message.substring(0, 47) + '...' : message}"</p>
+                        </div>
                     `;
                     document.body.appendChild(notification);
+                    playNotificationSound();
                     setTimeout(() => {
                         notification.style.animation = "notifOut 0.5s ease-out";
                         setTimeout(() => {
@@ -953,7 +1175,164 @@
                         }, 500);
                     }, 5000);
                 };
-                
+
+                const createCommentElement = (name, message, timestamp, id, likes, liked, profilePic) => {
+                    let commentEl = document.createElement("div");
+                    commentEl.className = "comment";
+                    commentEl.dataset.id = id;
+                    const isCreator = creatorNames.includes(name);
+                    commentEl.innerHTML = `
+                        <img src="${profilePic || currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                        <strong>${name || "Anónimo"} ${isCreator ? '<span class="creator-badge">[Creador]</span>' : ''}</strong>
+                        <p>${message}</p>
+                        <p class="timestamp">${new Date(timestamp).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})}</p>
+                        <div class="comment-actions">
+                            <button class="like-button" data-id="${id}" data-liked="${liked ? "true" : "false"}">
+                                <i class="${liked ? "fas" : "far"} fa-heart"></i> <span>${likes || 0}</span>
+                            </button>
+                            <button class="reply-button" data-id="${id}">Responder</button>
+                            <button class="show-replies-button" data-id="${id}" style="display: none;">Ver respuestas</button>
+                        </div>
+                        <div class="reply-form" data-id="${id}">
+                            <textarea placeholder="Escribe tu respuesta..." maxlength="500"></textarea>
+                            <button>Enviar Respuesta</button>
+                        </div>
+                        <div class="replies" data-id="${id}"></div>
+                    `;
+                    commentEl.querySelector(".like-button").addEventListener("click", function() {
+                        let commentId = this.dataset.id;
+                        let isLiked = this.dataset.liked === "true";
+                        updateDoc(doc(db, "comentarios", commentId), {
+                            likes: increment(isLiked ? -1 : 1)
+                        }).then(() => {
+                            this.dataset.liked = isLiked ? "false" : "true";
+                            this.classList.toggle("liked");
+                            let heartIcon = this.querySelector("i");
+                            let likesCount = this.querySelector("span");
+                            heartIcon.className = isLiked ? "far fa-heart" : "fas fa-heart";
+                            likesCount.textContent = isLiked ? (parseInt(likesCount.textContent) - 1) : (parseInt(likesCount.textContent) + 1);
+                            console.log(`❤️ Like ${isLiked ? "eliminado" : "agregado"} al comentario ${commentId}`);
+                        }).catch(error => {
+                            console.error("❌ Error al actualizar like:", error);
+                        });
+                    });
+                    commentEl.querySelector(".reply-button").addEventListener("click", function() {
+                        let commentId = this.dataset.id;
+                        let replyForm = document.querySelector(`.reply-form[data-id="${commentId}"]`);
+                        replyForm.classList.toggle("active");
+                    });
+                    commentEl.querySelector(".reply-form button").addEventListener("click", function() {
+                        let commentId = this.parentElement.dataset.id;
+                        let replyTextarea = this.parentElement.querySelector("textarea");
+                        let replyText = replyTextarea.value.trim();
+                        if (replyText) {
+                            let replyName = currentUser.username || "Anónimo";
+                            let replyTimestamp = new Date().toISOString();
+                            let replyEl = document.createElement("div");
+                            replyEl.className = "reply";
+                            replyEl.innerHTML = `
+                                <img src="${currentUser.profilePic || 'https://via.placeholder.com/50'}" alt="Perfil">
+                                <strong>${replyName}</strong>
+                                <p>${replyText}</p>
+                                <p class="timestamp">${new Date(replyTimestamp).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})}</p>
+                            `;
+                            let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
+                            repliesContainer.appendChild(replyEl);
+                            let showRepliesButton = document.querySelector(`.show-replies-button[data-id="${commentId}"]`);
+                            showRepliesButton.style.display = "inline-block";
+                            replyTextarea.value = "";
+                            this.parentElement.classList.remove("active");
+                            console.log(`💬 Respuesta enviada al comentario ${commentId}`);
+                        }
+                    });
+                    commentEl.querySelector(".show-replies-button").addEventListener("click", function() {
+                        let commentId = this.dataset.id;
+                        let repliesContainer = document.querySelector(`.replies[data-id="${commentId}"]`);
+                        repliesContainer.classList.toggle("active");
+                        this.textContent = repliesContainer.classList.contains("active") ? "Ocultar respuestas" : "Ver respuestas";
+                    });
+                    return commentEl;
+                };
+
+                const submitCommentHandler = () => {
+                    let name = currentUser.username || "Anónimo";
+                    let message = commentInput.value.trim();
+                    if (!currentUser.username) {
+                        showProfilePopup();
+                        return;
+                    }
+                    if (!message) {
+                        alert("Por favor, escribe un comentario.");
+                        return;
+                    }
+                    if (creatorNames.includes(name) && usedCreatorNames.includes(name)) {
+                        alert("Este nombre de creador ya está en uso. Por favor, elige otro nombre en tu perfil.");
+                        showProfilePopup();
+                        return;
+                    }
+                    submitComment.disabled = true;
+                    let timestamp = new Date().toISOString();
+                    addDoc(commentsCollection, {
+                        name: name,
+                        message: message,
+                        timestamp: timestamp,
+                        likes: 0,
+                        profilePic: currentUser.profilePic || 'https://via.placeholder.com/50'
+                    }).then(() => {
+                        commentInput.value = "";
+                        submitComment.disabled = false;
+                        console.log("💬 Comentario enviado:", name);
+                        if (creatorNames.includes(name) && !usedCreatorNames.includes(name)) {
+                            usedCreatorNames.push(name);
+                        }
+                    }).catch(error => {
+                        console.error("❌ Error al enviar comentario:", error);
+                        alert("Error al enviar el comentario. Intenta de nuevo.");
+                        submitComment.disabled = false;
+                    });
+                };
+
+                const loadComments = () => {
+                    let loadedCommentIds = new Set();
+                    const q = query(commentsCollection, orderBy("timestamp", "desc"));
+                    onSnapshot(q, (snapshot) => {
+                        if (commentList.querySelector('p')) {
+                            commentList.innerHTML = '';
+                        }
+                        snapshot.forEach((doc) => {
+                            let data = doc.data();
+                            if (!loadedCommentIds.has(doc.id)) {
+                                loadedCommentIds.add(doc.id);
+                                let commentEl = createCommentElement(
+                                    data.name,
+                                    data.message,
+                                    data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp),
+                                    doc.id,
+                                    data.likes || 0,
+                                    false,
+                                    data.profilePic
+                                );
+                                commentList.appendChild(commentEl);
+                            }
+                        });
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.type === "added") {
+                                let doc = change.doc;
+                                let data = doc.data();
+                                if (!loadedCommentIds.has(doc.id)) {
+                                    loadedCommentIds.add(doc.id);
+                                    if (data.name !== currentUser.username) {
+                                        showNotification(data.name, data.message, data.profilePic);
+                                    }
+                                }
+                            }
+                        });
+                    }, (error) => {
+                        console.error("❌ Error al cargar comentarios:", error);
+                        commentList.innerHTML = '<p style="color: var(--neon-pink); text-align: center;">Error al cargar comentarios. Intenta recargar la página.</p>';
+                    });
+                };
+
                 onSnapshot(counterDoc, (doc) => {
                     if (doc.exists()) {
                         const count = doc.data().count;
@@ -965,7 +1344,7 @@
                     console.error("❌ Error al escuchar contador:", err);
                     visitorCounter.innerHTML = '<span class="counter-fallback">[--]</span>';
                 });
-                
+
                 const lastVisit = localStorage.getItem("dpccrea_lastVisit");
                 const now = Date.now();
                 const twelveHours = 43200000;
@@ -975,47 +1354,32 @@
                         console.log("%c📈 Contador incrementado", "color: #FFD700");
                     }).catch(err => console.error("❌ Error al aumentar contador:", err));
                 }
-                
-                const commentsQuery = query(commentsCollection, orderBy("timestamp", "desc"));
-                const seenComments = new Set();
-                onSnapshot(commentsQuery, (snapshot) => {
-                    const commentList = document.getElementById("commentList");
-                    commentList.innerHTML = "";
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        if (data.name && data.message) {
-                            const commentDiv = document.createElement("div");
-                            commentDiv.className = "comment-item";
-                            const profilePic = user.profilePic || "assets/imagenes/default-profile.png";
-                            commentDiv.innerHTML = `
-                                ${profilePic ? `<img src="${profilePic}" alt="Perfil">` : ''}
-                                <strong>${data.name || "Anónimo"}:</strong> ${data.message}
-                            `;
-                            commentList.appendChild(commentDiv);
-                            if (!seenComments.has(doc.id) && data.name !== user.username) {
-                                seenComments.add(doc.id);
-                                showNotification(`${data.name || "Anónimo"}: "${data.message.length > 50 ? data.message.substring(0, 47) + "..." : data.message}"`, profilePic);
-                                playNotificationSound();
-                            }
-                        }
-                    });
-                }, (err) => console.error("❌ Error al escuchar comentarios:", err));
-                
-                document.getElementById("commentForm").addEventListener("submit", (e) => {
-                    e.preventDefault();
-                    const name = document.getElementById("commentName").value;
-                    const message = document.getElementById("commentMessage").value;
-                    if (name && message) {
-                        addDoc(commentsCollection, {
-                            name: name,
-                            message: message,
-                            timestamp: new Date()
-                        }).then(() => {
-                            document.getElementById("commentForm").reset();
-                        }).catch(err => console.error("❌ Error al guardar comentario:", err));
+
+                document.addEventListener("DOMContentLoaded", async () => {
+                    await loadUsedCreatorNames();
+                    setupNameField();
+                    if (submitComment) {
+                        submitComment.addEventListener("click", submitCommentHandler);
                     }
+                    if (commentInput) {
+                        commentInput.addEventListener("keypress", (e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                submitCommentHandler();
+                            }
+                        });
+                    }
+                    if (goToProfile) {
+                        goToProfile.addEventListener("click", () => {
+                            window.location.href = "perfil.html";
+                        });
+                    }
+                    if (cancelPopup) {
+                        cancelPopup.addEventListener("click", hideProfilePopup);
+                    }
+                    loadComments();
                 });
-                
+
             } catch (err) {
                 console.error("❌ Error al inicializar Firebase:", err);
                 alert("No se pudo inicializar Firebase. Verifica la configuración o la conexión.");
@@ -1034,7 +1398,7 @@
         const commentBubble = document.getElementById('commentBubble');
         const menu = document.getElementById('menu');
         const overlay = document.getElementById('overlay');
-        
+
         const systemMessages = [
             {text: "> Conectando con servidor DPCCREA...", type: ""},
             {text: "[OK] Conexión establecida", type: "success"},
@@ -1047,10 +1411,10 @@
             {text: "> Cargando recursos de diversidad...", type: ""},
             {text: "[OK] Sistema listo para usar", type: "success"}
         ];
-        
+
         let progress = 0;
         let messageIndex = 0;
-        
+
         function centerPopups() {
             updatePopup.style.top = '50%';
             updatePopup.style.left = '50%';
@@ -1062,7 +1426,7 @@
             menu.style.left = '50%';
             menu.style.transform = menu.classList.contains('active') ? 'translate(-50%, -50%) scale(1)' : 'translate(-50%, -50%) scale(0.7)';
         }
-        
+
         function updateProgress() {
             if (progress < 100) {
                 progress += Math.random() * 10;
@@ -1095,27 +1459,27 @@
                 }, 500);
             }
         }
-        
+
         function getStatusText(progress) {
             if (progress < 30) return "Inicializando núcleo del sistema...";
             if (progress < 60) return "Cargando recursos de diversidad...";
             if (progress < 90) return "Optimizando rendimiento...";
             return "Finalizando procesos...";
         }
-        
+
         updateButton.addEventListener('click', () => {
             if (!updateButton.disabled) {
                 updatePopup.classList.remove('active');
                 mainContent.classList.remove('blur');
             }
         });
-        
+
         campaignButton.addEventListener('click', () => {
             campaignPopup.classList.remove('active');
             mainContent.classList.remove('blur');
             window.location.href = 'campaña.html';
         });
-        
+
         document.addEventListener('keydown', (event) => {
             if (event.key === 'ñ' || event.key === 'Ñ') {
                 campaignPopup.classList.toggle('active');
@@ -1123,24 +1487,24 @@
                 centerPopups();
             }
         });
-        
+
         commentBubble.addEventListener('click', () => {
             overlay.classList.add('active');
             menu.classList.add('active');
             mainContent.classList.add('blur');
             centerPopups();
         });
-        
+
         function toggleMenu() {
             overlay.classList.remove('active');
             menu.classList.remove('active');
             mainContent.classList.remove('blur');
         }
-        
+
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) toggleMenu();
         });
-        
+
         window.addEventListener('resize', () => {
             centerPopups();
             matrixCanvas.width = window.innerWidth;
@@ -1148,9 +1512,9 @@
             particlesCanvas.width = window.innerWidth;
             particlesCanvas.height = window.innerHeight;
         });
-        
+
         setTimeout(updateProgress, 2000);
-        
+
         const matrixCanvas = document.getElementById('matrixCanvas');
         const matrixCtx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
@@ -1162,7 +1526,7 @@
         for (let i = 0; i < columns; i++) {
             drops[i] = Math.floor(Math.random() * matrixCanvas.height);
         }
-        
+
         function drawMatrix() {
             matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
             matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
@@ -1177,16 +1541,15 @@
                 drops[i]++;
             }
         }
-        
         setInterval(drawMatrix, 40);
-        
+
         const particlesCanvas = document.getElementById('particlesCanvas');
         const particlesCtx = particlesCanvas.getContext('2d');
         particlesCanvas.width = window.innerWidth;
         particlesCanvas.height = window.innerHeight;
         const particlesArray = [];
         const particleCount = 50;
-        
+
         class Particle {
             constructor() {
                 this.x = Math.random() * particlesCanvas.width;
@@ -1209,13 +1572,13 @@
                 particlesCtx.fill();
             }
         }
-        
+
         function initParticles() {
             for (let i = 0; i < particleCount; i++) {
                 particlesArray.push(new Particle());
             }
         }
-        
+
         function animateParticles() {
             particlesCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             particlesCtx.fillRect(0, 0, particlesCanvas.width, particlesCanvas.height);
@@ -1230,13 +1593,13 @@
             }
             requestAnimationFrame(animateParticles);
         }
-        
+
         initParticles();
         animateParticles();
-        
+
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
-        
+
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
@@ -1253,3 +1616,4 @@
     </script>
 </body>
 </html>
+```
